@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  Log in to your NHS account - NHS
+{% endblock %}
+
+{% block beforeContent %}
+{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      <h1>Log in to your NHS account</h1>
+
+      <form action="/prototype_v3/login" method="post" novalidate>
+
+        <div class="nhsuk-form-group">
+          <label class="nhsuk-label" for="email">
+            Email address
+          </label>
+          <input class="nhsuk-input nhsuk-input--width-20" id="email" name="email" type="email" autocomplete="email" spellcheck="false">
+        </div>
+
+        <div class="nhsuk-form-group">
+          <label class="nhsuk-label" for="password">
+            Password
+          </label>
+          <input class="nhsuk-input nhsuk-input--width-20" id="password" name="password" type="password" autocomplete="current-password">
+        </div>
+
+        <p><a href="#">Forgot password?</a></p>
+
+        {{ button({
+          "text": "Continue"
+        }) }}
+
+      </form>
+
+      <p><a href="#">Log in with a passkey</a></p>
+
+      <p class="nhsuk-body-l"><strong>or</strong></p>
+
+      <p>
+        <a href="#" class="nhsuk-button nhsuk-button--secondary">
+          Create NHS account
+        </a>
+      </p>
+
+      <p>An NHS account allows you to access a range of online health services with one set of login details.</p>
+      <p><a href="#">Learn more about NHS account</a>.</p>
+
+      <div style="background-color: #ffffff; padding: 24px; margin-top: 32px; border: 1px solid #d8dde0;">
+        <h2 class="nhsuk-heading-m">Trouble with logging in?</h2>
+        <ul class="nhsuk-list">
+          <li><a href="#">I've lost access to my email address</a></li>
+          <li><a href="#">I'm not sure if I have an account</a></li>
+          <li><a href="#">Visit our Help centre</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}

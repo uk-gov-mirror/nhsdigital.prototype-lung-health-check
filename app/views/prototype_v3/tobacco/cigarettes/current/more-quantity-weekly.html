@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  When you smoked more cigarettes - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/cigarettes/current/more-quantity-weekly-answer" method="post">
+      
+      <h1 class="nhsuk-heading-l">When you smoked more than you do now, roughly how many cigarettes did you normally smoke a week?</h1>
+
+      {{ input({
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarettesCurrentMoreQuantityWeekly",
+        name: "cigarettesCurrentMoreQuantityWeekly",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "cigarettes"
+        },
+        value: data.cigarettesCurrentMoreQuantityWeekly
+      }) }}
+
+      {{ input({
+        label: {
+          text: "How long was this for?",
+          classes: "nhsuk-label--m"
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarettesCurrentMoreDurationWeekly",
+        name: "cigarettesCurrentMoreDurationWeekly",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "years"
+        },
+        value: data.cigarettesCurrentMoreDurationWeekly
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

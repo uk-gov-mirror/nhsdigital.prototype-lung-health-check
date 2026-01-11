@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  When you smoked less cigarillos - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/cigarillos/current/less-quantity-daily-answer" method="post">
+      
+      <h1 class="nhsuk-heading-l">When you smoked less than you do now, roughly how many cigarillos did you normally smoke a day?</h1>
+
+      {{ input({
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarillosCurrentLessQuantityDaily",
+        name: "cigarillosCurrentLessQuantityDaily",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "cigarillos"
+        },
+        value: data.cigarillosCurrentLessQuantityDaily
+      }) }}
+
+      {{ input({
+        label: {
+          text: "How long was this for?",
+          classes: "nhsuk-label--m"
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarillosCurrentLessDurationDaily",
+        name: "cigarillosCurrentLessDurationDaily",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "years"
+        },
+        value: data.cigarillosCurrentLessDurationDaily
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

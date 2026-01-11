@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  Roughly, how many hours a day do you normally smoke shisha for in a group - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/shisha/current/group-quantity-daily-answer" method="post">
+      
+      {{ input({
+        label: {
+          text: "Roughly, how many hours a day do you normally smoke shisha for in a group?",
+          classes: "nhsuk-label--l",
+          isPageHeading: true
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "shishaCurrentGroupQuantityDaily",
+        name: "shishaCurrentGroupQuantityDaily",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "hours"
+        },
+        value: data.shishaCurrentGroupQuantityDaily
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

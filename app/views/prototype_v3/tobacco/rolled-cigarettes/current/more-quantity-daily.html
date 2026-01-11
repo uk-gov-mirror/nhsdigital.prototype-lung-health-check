@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  When you smoked more rolled cigarettes - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-daily-answer" method="post">
+      
+      <h1 class="nhsuk-heading-l">When you smoked more than you do now, roughly how many grams of tobacco did you normally smoke a week?</h1>
+
+      {{ checkboxes({
+        idPrefix: "rolledCigarettesCurrentMoreQuantityDaily",
+        name: "rolledCigarettesCurrentMoreQuantityDaily",
+        hint: {
+          text: "A standard size pouch usually contains 30g of tobacco, a larger pouch is usually 50g"
+        },
+        items: [
+          {
+            value: "10g-30g",
+            text: "10g to 30g",
+            checked: checked("rolledCigarettesCurrentMoreQuantityDaily", "10g-30g")
+          },
+          {
+            value: "30g-50g",
+            text: "30g to 50g",
+            checked: checked("rolledCigarettesCurrentMoreQuantityDaily", "30g-50g")
+          },
+          {
+            value: "50g-75g",
+            text: "50g to 75g",
+            checked: checked("rolledCigarettesCurrentMoreQuantityDaily", "50g-75g")
+          },
+          {
+            value: "75g-100g",
+            text: "75g to 100g",
+            checked: checked("rolledCigarettesCurrentMoreQuantityDaily", "75g-100g")
+          }
+        ]
+      }) }}
+
+      {{ input({
+        label: {
+          text: "How long was this for?",
+          classes: "nhsuk-label--m"
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "rolledCigarettesCurrentMoreDurationDaily",
+        name: "rolledCigarettesCurrentMoreDurationDaily",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "years"
+        },
+        value: data.rolledCigarettesCurrentMoreDurationDaily
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

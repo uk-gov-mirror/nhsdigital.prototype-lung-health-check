@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  Cigar smoking - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/cigars/former/quantity-monthly-answer" method="post">
+      
+      <h1 class="nhsuk-heading-xl">Cigar smoking</h1>
+      
+      <p>Telling us the number of cigars you smoked a month helps us check if you need a lung scan.</p>
+
+      {{ input({
+        label: {
+          text: "Roughly how many cigars did you normally smoke a month?",
+          classes: "nhsuk-label--m"
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarsFormerQuantityMonthly",
+        name: "cigarsFormerQuantityMonthly",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "cigars"
+        },
+        value: data.cigarsFormerQuantityMonthly
+      }) }}
+
+      {{ checkboxes({
+        idPrefix: "cigarsFormerChanges",
+        name: "cigarsFormerChanges",
+        fieldset: {
+          legend: {
+            text: "Has the number of cigars you smoked changed over time?",
+            classes: "nhsuk-fieldset__legend--m"
+          }
+        },
+        hint: {
+          text: "Select all that apply"
+        },
+        items: [
+          {
+            value: "more",
+            text: "Yes, I used to smoke more than I did",
+            checked: checked("cigarsFormerChanges", "more")
+          },
+          {
+            value: "less",
+            text: "Yes, I used to smoke less than I did",
+            checked: checked("cigarsFormerChanges", "less")
+          },
+          {
+            value: "stopped",
+            text: "Yes, I stopped smoking for a period of 1 year or longer",
+            checked: checked("cigarsFormerChanges", "stopped")
+          },
+          {
+            divider: "or"
+          },
+          {
+            value: "no-change",
+            text: "No, it did not change",
+            checked: checked("cigarsFormerChanges", "no-change")
+          }
+        ]
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

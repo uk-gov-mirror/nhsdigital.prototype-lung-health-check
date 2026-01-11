@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  How long did you stop smoking for - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/cigarillos/current/stopped-years-answer" method="post">
+      
+      {{ input({
+        label: {
+          text: "How long did you stop smoking cigarillos for?",
+          classes: "nhsuk-label--l",
+          isPageHeading: true
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarillosCurrentStoppedYears",
+        name: "cigarillosCurrentStoppedYears",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "years"
+        },
+        value: data.cigarillosCurrentStoppedYears
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

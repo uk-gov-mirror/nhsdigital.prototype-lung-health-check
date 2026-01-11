@@ -1,0 +1,49 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  Do you currently smoke cigars - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/cigars/do-you-currently-smoke-answer" method="post">
+      
+      {{ radios({
+        idPrefix: "currentlySmokesCigars",
+        name: "currentlySmokesCigars",
+        fieldset: {
+          legend: {
+            text: "Do you currently smoke cigars?",
+            classes: "nhsuk-fieldset__legend--l",
+            isPageHeading: true
+          }
+        },
+        items: [
+          {
+            value: "Yes",
+            text: "Yes",
+            checked: checked("currentlySmokesCigars", "Yes")
+          },
+          {
+            value: "No",
+            text: "No",
+            checked: checked("currentlySmokesCigars", "No")
+          }
+        ]
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

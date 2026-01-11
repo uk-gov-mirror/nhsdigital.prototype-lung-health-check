@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  When you smoked less cigars - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/cigars/current/less-quantity-monthly-answer" method="post">
+      
+      <h1 class="nhsuk-heading-l">When you smoked less than you do now, roughly how many cigars did you normally smoke a month?</h1>
+
+      {{ input({
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarsCurrentLessQuantityMonthly",
+        name: "cigarsCurrentLessQuantityMonthly",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "cigars"
+        },
+        value: data.cigarsCurrentLessQuantityMonthly
+      }) }}
+
+      {{ input({
+        label: {
+          text: "How long was this for?",
+          classes: "nhsuk-label--m"
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarsCurrentLessDurationMonthly",
+        name: "cigarsCurrentLessDurationMonthly",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "years"
+        },
+        value: data.cigarsCurrentLessDurationMonthly
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

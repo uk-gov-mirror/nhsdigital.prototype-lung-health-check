@@ -1,7 +1,6 @@
 {% extends 'layout.html' %}
-{% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  Cigarette smoking - NHS
+  Roughly how many years have you smoked cigarettes - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -13,26 +12,22 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigarettes/current/years-smoked-answer" method="post">
-<h2>Cigarette smoking</h2>
-        {{ input({
-          label: {
-            text: "Roughly how many years have you smoked cigarettes?",
-            classes: "nhsuk-label--m"
-          },
-          hint: {
-            text: "Give an estimate if you are not sure"
-          },
-          id: "cigarettesCurrentYearsSmoked",
-          name: "cigarettesCurrentYearsSmoked",
-          classes: "nhsuk-input--width-2",
-          suffix: {
-            text: "years"
-          },
-          value: data.cigarettesCurrentYearsSmoked
-        }) }}
-        {{ button({
-          text: "Continue"
-        }) }}
+<h1 class="nhsuk-heading-l">Roughly how many years have you smoked cigarettes?</h1>
+      {{ input({
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "cigarettesCurrentYearsSmoked",
+        name: "cigarettesCurrentYearsSmoked",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "years"
+        },
+        value: data.cigarettesCurrentYearsSmoked
+      }) }}
+      {{ button({
+        text: "Continue"
+      }) }}
 </form>
 </div>
 </div>

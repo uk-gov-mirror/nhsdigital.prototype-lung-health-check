@@ -1,74 +1,85 @@
 {% extends 'layout.html' %}
-{% from 'input/macro.njk' import input %}
-{% from 'checkboxes/macro.njk' import checkboxes %}
+
 {% block pageTitle %}
-  Tell us about your pipe smoking history - NHS
+  Pipe smoking - NHS
 {% endblock %}
+
 {% block beforeContent %}
   {{ backLink({
     text: "Back",
     href: "javascript:history.back();"
   }) }}
 {% endblock %}
+
 {% block content %}
 <div class="nhsuk-grid-row">
-<div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/pipe/current/quantity-monthly-answer" method="post">
-<h2>Tell us about your pipe smoking history</h2>
-        {{ input({
-          label: {
-            text: "What is the highest number of bowls you smoked a month on a regular basis?",
-            classes: "nhsuk-label--m"
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/pipe/current/quantity-monthly-answer" method="post">
+      
+      <h1 class="nhsuk-heading-xl">Pipe smoking</h1>
+      
+      <p>Telling us the number of full pipe loads you smoke a month helps us check if you need a lung scan.</p>
+
+      {{ input({
+        label: {
+          text: "Roughly how many full pipe loads do you normally smoke a month now?",
+          classes: "nhsuk-label--m"
+        },
+        hint: {
+          text: "Give an estimate if you are not sure"
+        },
+        id: "pipeCurrentQuantityMonthly",
+        name: "pipeCurrentQuantityMonthly",
+        classes: "nhsuk-input--width-2",
+        suffix: {
+          text: "full pipe loads"
+        },
+        value: data.pipeCurrentQuantityMonthly
+      }) }}
+
+      {{ checkboxes({
+        idPrefix: "pipeCurrentChanges",
+        name: "pipeCurrentChanges",
+        fieldset: {
+          legend: {
+            text: "Has the number of full pipe loads you smoke changed over time?",
+            classes: "nhsuk-fieldset__legend--m"
+          }
+        },
+        hint: {
+          text: "Select all that apply"
+        },
+        items: [
+          {
+            value: "more",
+            text: "Yes, I used to smoke more than I do now",
+            checked: checked("pipeCurrentChanges", "more")
           },
-          id: "pipeCurrentQuantityMonthly",
-          name: "pipeCurrentQuantityMonthly",
-          classes: "nhsuk-input--width-5",
-          prefix: {
-            text: "Number of bowls"
+          {
+            value: "less",
+            text: "Yes, I used to smoke less than I do now",
+            checked: checked("pipeCurrentChanges", "less")
           },
-          value: data.pipeCurrentQuantityMonthly
-        }) }}
-        {{ checkboxes({
-          idPrefix: "pipeCurrentChanges",
-          name: "pipeCurrentChanges",
-          fieldset: {
-            legend: {
-              text: "Has the amount of pipe you smoke changed over time?",
-              classes: "nhsuk-fieldset__legend--m"
-            }
+          {
+            value: "stopped",
+            text: "Yes, I stopped smoking for a period of 1 year or longer",
+            checked: checked("pipeCurrentChanges", "stopped")
           },
-          hint: {
-            text: "Select all that apply"
+          {
+            divider: "or"
           },
-          value: data.pipeCurrentChanges,
-          items: [
-            {
-              value: "increased",
-              text: "Yes, it has increased"
-            },
-            {
-              value: "decreased",
-              text: "Yes, it has decreased"
-            },
-            {
-              value: "stopped",
-              text: "Yes, I stopped smoking for a period of 1 year or longer",
-              exclusive: false
-            },
-            {
-              divider: "or"
-            },
-            {
-              value: "no-change",
-              text: "No, it has not changed",
-              behaviour: "exclusive"
-            }
-          ]
-        }) }}
-        {{ button({
-          text: "Continue"
-        }) }}
-</form>
-</div>
+          {
+            value: "no-change",
+            text: "No, it has not changed",
+            checked: checked("pipeCurrentChanges", "no-change")
+          }
+        ]
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
 </div>
 {% endblock %}

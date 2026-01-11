@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  When you smoked more cigarillos - NHS
+{% endblock %}
+
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+
+{% block content %}
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="/prototype_v3/tobacco/cigarillos/former/more-frequency-answer" method="post">
+      
+      {{ radios({
+        idPrefix: "cigarillosFormerMoreFrequency",
+        name: "cigarillosFormerMoreFrequency",
+        fieldset: {
+          legend: {
+            text: "When you smoked more than you did, how often did you smoke cigarillos?",
+            classes: "nhsuk-fieldset__legend--l",
+            isPageHeading: true
+          }
+        },
+        items: [
+          {
+            value: "Daily",
+            text: "Daily",
+            checked: checked("cigarillosFormerMoreFrequency", "Daily")
+          },
+          {
+            value: "Weekly",
+            text: "Weekly",
+            hint: {
+              text: "For example, on the weekend"
+            },
+            checked: checked("cigarillosFormerMoreFrequency", "Weekly")
+          },
+          {
+            value: "Monthly",
+            text: "Monthly",
+            checked: checked("cigarillosFormerMoreFrequency", "Monthly")
+          }
+        ]
+      }) }}
+
+      {{ button({
+        text: "Continue"
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

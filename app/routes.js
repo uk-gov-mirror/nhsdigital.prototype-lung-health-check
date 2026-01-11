@@ -523,26 +523,47 @@ router.post('/prototype_v2/tobaccoHookahGroupToIndividual', function(request, re
 // Prototype 3 //
 /////////////////
 
-router.post('/prototype_v3/relatives-with-cancer-answer', function(request, response) {
-  var relativesHaveCancer = request.session.data['relativesHaveCancer']
-
-  if (relativesHaveCancer == "Yes"){
-    response.redirect("/prototype_v3/relatives-age-when-diagnosed")
-  } else if (relativesHaveCancer == "No" || relativesHaveCancer == "I don't know"){
-    response.redirect("/prototype_v3/how-old-when-started-smoking")
-  } else {
-    response.redirect("/prototype_v3/relatives-with-cancer")
-  }
-})
-
-router.post('/prototype_v3/relatives-age-answer', function(request, response) {
-  response.redirect("/prototype_v3/how-old-when-started-smoking")
-})
+// ============================================
+// START AND LOGIN FLOW
+// ============================================
 
 router.get('/prototype_v3/start-journey', function (request, response) {
   delete request.session.data
-  response.redirect("/prototype_v3/have-you-completed-by-phone")
+  response.redirect("/prototype_v3/login")
 })
+
+router.post('/prototype_v3/login', function (request, response) {
+  response.redirect('/prototype_v3/accept-terms')
+})
+
+// Show accept terms page (GET request clears any error state)
+router.get('/prototype_v3/accept-terms', function (request, response) {
+  // Clear any previous error state
+  delete request.session.data['accept-terms-error']
+  response.render('prototype_v3/accept-terms')
+})
+
+// Accept terms validation (POST)
+router.post('/prototype_v3/accept-terms', function (request, response) {
+  const acceptTerms = request.session.data['accept-terms']
+  
+  // Check if acceptTerms is an array containing 'yes' or if it's the string 'yes'
+  const isAccepted = (Array.isArray(acceptTerms) && acceptTerms.includes('yes')) || acceptTerms === 'yes'
+  
+  if (!isAccepted) {
+    // Checkbox not ticked - show error
+    request.session.data['accept-terms-error'] = true
+    response.redirect('/prototype_v3/accept-terms')
+  } else {
+    // Checkbox ticked - clear error and continue to next page
+    delete request.session.data['accept-terms-error']
+    response.redirect('/prototype_v3/have-you-completed-by-phone')
+  }
+})
+
+// ============================================
+// INITIAL ELIGIBILITY CHECKS
+// ============================================
 
 router.post('/prototype_v3/have-you-completed-by-phone-answer', function(request, response) {
   const completedByPhone = request.session.data['completedByPhone']
@@ -609,15 +630,38 @@ router.post('/prototype_v3/who-should-not-use-answer', function(request, respons
   }
 })
 
+// ============================================
+// MEDICAL HISTORY
+// ============================================
 router.post('/prototype_v3/diagnosed-with-cancer-answer', function(request, response) {
   response.redirect("/prototype_v3/relatives-with-cancer")
 })
 
-router.post('/prototype_v3/ageStartedSmokingAnswer', function(request, response) {
+router.post('/prototype_v3/relatives-with-cancer-answer', function(request, response) {
+  var relativesHaveCancer = request.session.data['relativesHaveCancer']
+
+  if (relativesHaveCancer == "Yes"){
+    response.redirect("/prototype_v3/relatives-age-when-diagnosed")
+  } else if (relativesHaveCancer == "No" || relativesHaveCancer == "I don't know"){
+    response.redirect("/prototype_v3/how-old-when-started-smoking")
+  } else {
+    response.redirect("/prototype_v3/relatives-with-cancer")
+  }
+})
+
+router.post('/prototype_v3/relatives-age-answer', function(request, response) {
+  response.redirect("/prototype_v3/how-old-when-started-smoking")
+})
+
+// ============================================
+// SMOKING HISTORY - AGE STARTED & QUIT DATE
+// ============================================
+
+router.post('/prototype_v3/how-old-when-started-smoking-answer', function(request, response) {
   var smokedRegularly = request.session.data['smokedRegularly']
   
   if (smokedRegularly == "Yes-currently") {
-    response.redirect("/prototype_v3/what-do-or-did-smoke")
+    response.redirect("/prototype_v3/periods-when-you-stopped-smoking") 
   } else if (smokedRegularly == "Yes-usedToRegularly") {
     response.redirect("/prototype_v3/former-smoker-when-quit-smoking")
   } else {
@@ -625,189 +669,102 @@ router.post('/prototype_v3/ageStartedSmokingAnswer', function(request, response)
   }
 })
 
-// Former smoker quit date - skip periods page and go straight to tobacco selection
+
+// ============================================
+// ROUTING FOR PERIODS WHEN YOU STOPPED SMOKING
+// ============================================
+
+// Route handler for "How old when started smoking" page
+// This sends current smokers to "periods when stopped" and former smokers to "when quit"
+router.post('/prototype_v3/how-old-when-started-smoking-answer', function(request, response) {
+  var smokedRegularly = request.session.data['smokedRegularly']
+  
+  if (smokedRegularly == "Yes-currently") {
+    response.redirect("/prototype_v3/periods-when-you-stopped-smoking")
+  } else if (smokedRegularly == "Yes-usedToRegularly") {
+    response.redirect("/prototype_v3/former-smoker-when-quit-smoking")
+  } else {
+    // Fallback
+    response.redirect("/prototype_v3/how-old-when-started-smoking")
+  }
+})
+
+// Route handler for "Former smoker when quit" page
+// This sends former smokers to "periods when stopped"
 router.post('/prototype_v3/former-smoker-when-quit-smoking-answer', function(request, response) {
+  response.redirect("/prototype_v3/periods-when-you-stopped-smoking")
+})
+
+// Route handler for "Periods when you stopped smoking" page
+// This sends everyone to the tobacco selection page
+router.post('/prototype_v3/periods-when-you-stopped-smoking-answer', function(request, response) {
   response.redirect("/prototype_v3/what-do-or-did-smoke")
 })
+
 
 // ============================================
 // HELPER FUNCTIONS
 // ============================================
 
 function moveToNextTobaccoType(request, response) {
-  var queue = request.session.data['tobaccoQueue'] || []
-  var index = request.session.data['tobaccoQueueIndex'] || 0
-  index++
-  request.session.data['tobaccoQueueIndex'] = index
+  var tobaccoQueue = request.session.data['tobaccoQueue'] || []
+  var currentIndex = request.session.data['tobaccoQueueIndex'] || 0
   
-  if (index < queue.length) {
-    response.redirect(queue[index])
+  currentIndex++
+  request.session.data['tobaccoQueueIndex'] = currentIndex
+  
+  if (currentIndex < tobaccoQueue.length) {
+    response.redirect(tobaccoQueue[currentIndex])
   } else {
     response.redirect('/prototype_v3/check-your-answers')
   }
 }
 
-function routeByFrequency(request, response, fieldPrefix, basePath) {
-  var frequency = request.session.data[fieldPrefix + 'Frequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect(basePath + '/quantity-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect(basePath + '/quantity-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect(basePath + '/quantity-monthly')
-  } else {
-    response.redirect(basePath + '/frequency')
-  }
-}
-
-function handleChangesRouting(request, response, changesFieldName, basePath) {
-  var changes = request.session.data[changesFieldName]
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('increased')) {
-    response.redirect(basePath + '/increased-frequency')
-  } else if (changes.includes('decreased')) {
-    response.redirect(basePath + '/decreased-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect(basePath + '/stopped-years')
-  } else {
-    moveToNextTobaccoType(request, response)
-  }
-}
-
-function handleIncreasedRouting(request, response, changesFieldName, frequencyFieldName, basePath) {
-  var frequency = request.session.data[frequencyFieldName]
-  
-  if (frequency === 'Daily') {
-    response.redirect(basePath + '/increased-quantity-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect(basePath + '/increased-quantity-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect(basePath + '/increased-quantity-monthly')
-  } else {
-    response.redirect(basePath + '/increased-frequency')
-  }
-}
-
-function handleAfterIncreasedQuantity(request, response, changesFieldName, basePath) {
-  var changes = request.session.data[changesFieldName]
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('decreased')) {
-    response.redirect(basePath + '/decreased-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect(basePath + '/stopped-years')
-  } else {
-    moveToNextTobaccoType(request, response)
-  }
-}
-
-function handleDecreasedRouting(request, response, frequencyFieldName, basePath) {
-  var frequency = request.session.data[frequencyFieldName]
-  
-  if (frequency === 'Daily') {
-    response.redirect(basePath + '/decreased-quantity-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect(basePath + '/decreased-quantity-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect(basePath + '/decreased-quantity-monthly')
-  } else {
-    response.redirect(basePath + '/decreased-frequency')
-  }
-}
-
-function handleAfterDecreasedQuantity(request, response, changesFieldName, basePath) {
-  var changes = request.session.data[changesFieldName]
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect(basePath + '/stopped-years')
-  } else {
-    moveToNextTobaccoType(request, response)
-  }
-}
-
 // ============================================
-// TOBACCO TYPE SELECTION ROUTING
+// TOBACCO TYPE SELECTION - UPDATED FOR SINGLE LIST
 // ============================================
 
-router.post('/prototype_v3/whatDoYouSmokeAnswer', function(request, response) {
-  var selectedCurrent = request.session.data['whatSmokeNow']
-  var selectedFormer = request.session.data['whatDidSmoke']
+router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, response) {
+  var selectedTobacco = request.session.data['tobaccoTypes']
+  var smokedRegularly = request.session.data['smokedRegularly']
   
-  // Ensure they're arrays
-  if (!Array.isArray(selectedCurrent)) {
-    selectedCurrent = selectedCurrent ? [selectedCurrent] : []
-  }
-  if (!Array.isArray(selectedFormer)) {
-    selectedFormer = selectedFormer ? [selectedFormer] : []
-  }
-  
-  const tobaccoRoutes = {
-    'Cigarettes': { current: '/prototype_v3/tobacco/cigarettes/current/years-smoked', former: '/prototype_v3/tobacco/cigarettes/former/years-smoked' },
-    'Rolled cigarettes': { current: '/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked', former: '/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked' },
-    'Pipe': { current: '/prototype_v3/tobacco/pipe/current/years-smoked', former: '/prototype_v3/tobacco/pipe/former/years-smoked' },
-    'Cigars': { current: '/prototype_v3/tobacco/cigars/current/years-smoked', former: '/prototype_v3/tobacco/cigars/former/years-smoked' },
-    'Hookah': { current: '/prototype_v3/tobacco/hookah/current/years-smoked', former: '/prototype_v3/tobacco/hookah/former/years-smoked' }
-  }
-  
-  var tobaccoQueue = []
-  var tobaccoOrder = ['Cigarettes', 'Rolled cigarettes', 'Pipe', 'Cigars', 'Hookah']
-  
-  // Add current tobacco types first, then former
-  tobaccoOrder.forEach(function(type) {
-    if (selectedCurrent.includes(type)) {
-      tobaccoQueue.push(tobaccoRoutes[type].current)
-    }
-  })
-  
-  tobaccoOrder.forEach(function(type) {
-    if (selectedFormer.includes(type)) {
-      tobaccoQueue.push(tobaccoRoutes[type].former)
-    }
-  })
-  
-  request.session.data['tobaccoQueue'] = tobaccoQueue
-  request.session.data['tobaccoQueueIndex'] = 0
-  
-  if (tobaccoQueue.length > 0) {
-    response.redirect(tobaccoQueue[0])
-  } else {
-    response.redirect('/prototype_v3/check-your-answers')
-  }
-})
-
-router.post('/prototype_v3/whatDidYouSmokeAnswer', function(request, response) {
-  var selectedTobacco = request.session.data['whatDidSmoke']
-  
+  // Ensure it's an array
   if (!Array.isArray(selectedTobacco)) {
     selectedTobacco = selectedTobacco ? [selectedTobacco] : []
   }
   
   const tobaccoRoutes = {
-    'Cigarettes': '/prototype_v3/tobacco/cigarettes/former/years-smoked',
-    'Rolled cigarettes': '/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked',
-    'Pipe': '/prototype_v3/tobacco/pipe/former/years-smoked',
-    'Cigars': '/prototype_v3/tobacco/cigars/former/years-smoked',
-    'Hookah': '/prototype_v3/tobacco/hookah/former/years-smoked'
+    'Cigarettes': '/prototype_v3/tobacco/cigarettes',
+    'Rolled cigarettes': '/prototype_v3/tobacco/rolled-cigarettes',
+    'Pipe': '/prototype_v3/tobacco/pipe',
+    'Cigars': '/prototype_v3/tobacco/cigars',
+    'Cigarillos': '/prototype_v3/tobacco/cigarillos',
+    'Shisha': '/prototype_v3/tobacco/shisha'
   }
   
   var tobaccoQueue = []
-  var tobaccoOrder = ['Cigarettes', 'Rolled cigarettes', 'Pipe', 'Cigars', 'Hookah']
+  var tobaccoOrder = ['Cigarettes', 'Rolled cigarettes', 'Pipe', 'Cigars', 'Cigarillos', 'Shisha']
   
+  // Check if user selected multiple tobacco types
+  var multipleTypes = selectedTobacco.length > 1
+  
+  // For CURRENT smokers with MULTIPLE types, add "do you currently smoke X" pages
+  // For CURRENT smokers with ONE type, go straight to current pages (we already know they currently smoke)
+  // For FORMER smokers, skip directly to former tobacco pages
   tobaccoOrder.forEach(function(type) {
     if (selectedTobacco.includes(type)) {
-      tobaccoQueue.push(tobaccoRoutes[type])
+      if (smokedRegularly === "Yes-currently") {
+        if (multipleTypes) {
+          // Multiple types - need to ask which ones they currently smoke
+          tobaccoQueue.push(tobaccoRoutes[type] + '/do-you-currently-smoke')
+        } else {
+          // Single type and they're a current smoker - go straight to current pages
+          tobaccoQueue.push(tobaccoRoutes[type] + '/current/years-smoked')
+        }
+      } else if (smokedRegularly === "Yes-usedToRegularly") {
+        // Former smoker - go straight to former pages
+        tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
+      }
     }
   })
   
@@ -820,6 +777,21 @@ router.post('/prototype_v3/whatDidYouSmokeAnswer', function(request, response) {
     response.redirect('/prototype_v3/check-your-answers')
   }
 })
+
+// ============================================
+// "DO YOU CURRENTLY SMOKE" ROUTING - CIGARETTES
+// ============================================
+
+router.post('/prototype_v3/tobacco/cigarettes/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesCigarettes = request.session.data['currentlySmokesCigarettes']
+  
+  if (currentlySmokesCigarettes === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/years-smoked')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/years-smoked')
+  }
+})
+
 
 // ============================================
 // CIGARETTES ROUTING - CURRENT
@@ -830,51 +802,187 @@ router.post('/prototype_v3/tobacco/cigarettes/current/years-smoked-answer', func
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/current/frequency-answer', function(request, response) {
-  routeByFrequency(request, response, 'cigarettesCurrent', '/prototype_v3/tobacco/cigarettes/current')
+  var frequency = request.session.data['cigarettesCurrentFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/frequency')
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/current/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+  var changes = request.session.data['cigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/current/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+  var changes = request.session.data['cigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/current/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+  var changes = request.session.data['cigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarettesCurrentChanges', 'cigarettesCurrentIncreasedFrequency', '/prototype_v3/tobacco/cigarettes/current')
+// MORE (formerly increased) routing
+router.post('/prototype_v3/tobacco/cigarettes/current/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarettesCurrentMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+router.post('/prototype_v3/tobacco/cigarettes/current/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+router.post('/prototype_v3/tobacco/cigarettes/current/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+router.post('/prototype_v3/tobacco/cigarettes/current/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarettesCurrentDecreasedFrequency', '/prototype_v3/tobacco/cigarettes/current')
+router.post('/prototype_v3/tobacco/cigarettes/current/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarettesCurrentAnotherPeriodMore']
+  var changes = request.session.data['cigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarettesCurrentMoreFrequency']
+    delete request.session.data['cigarettesCurrentMoreQuantityDaily']
+    delete request.session.data['cigarettesCurrentMoreDurationDaily']
+    delete request.session.data['cigarettesCurrentMoreQuantityWeekly']
+    delete request.session.data['cigarettesCurrentMoreDurationWeekly']
+    delete request.session.data['cigarettesCurrentMoreQuantityMonthly']
+    delete request.session.data['cigarettesCurrentMoreDurationMonthly']
+    
+    // Loop back to more-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/more-frequency')
+  } else {
+    // Check if they also selected 'less'
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+// LESS (formerly decreased) routing
+router.post('/prototype_v3/tobacco/cigarettes/current/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarettesCurrentLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+router.post('/prototype_v3/tobacco/cigarettes/current/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarettesCurrentChanges', '/prototype_v3/tobacco/cigarettes/current')
+router.post('/prototype_v3/tobacco/cigarettes/current/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/cigarettes/current/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/cigarettes/current/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarettesCurrentAnotherPeriodLess']
+  var changes = request.session.data['cigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarettesCurrentLessFrequency']
+    delete request.session.data['cigarettesCurrentLessQuantityDaily']
+    delete request.session.data['cigarettesCurrentLessDurationDaily']
+    delete request.session.data['cigarettesCurrentLessQuantityWeekly']
+    delete request.session.data['cigarettesCurrentLessDurationWeekly']
+    delete request.session.data['cigarettesCurrentLessQuantityMonthly']
+    delete request.session.data['cigarettesCurrentLessDurationMonthly']
+    
+    // Loop back to less-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
+  } else {
+    // Check if they also selected 'stopped'
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/current/stopped-years-answer', function(request, response) {
@@ -890,55 +998,197 @@ router.post('/prototype_v3/tobacco/cigarettes/former/years-smoked-answer', funct
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/former/frequency-answer', function(request, response) {
-  routeByFrequency(request, response, 'cigarettesFormer', '/prototype_v3/tobacco/cigarettes/former')
+  var frequency = request.session.data['cigarettesFormerFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/frequency')
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/former/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+  var changes = request.session.data['cigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/former/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+  var changes = request.session.data['cigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/former/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+  var changes = request.session.data['cigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarettesFormerChanges', 'cigarettesFormerIncreasedFrequency', '/prototype_v3/tobacco/cigarettes/former')
+// MORE (formerly increased) routing - FORMER
+router.post('/prototype_v3/tobacco/cigarettes/former/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarettesFormerMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+router.post('/prototype_v3/tobacco/cigarettes/former/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+router.post('/prototype_v3/tobacco/cigarettes/former/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+router.post('/prototype_v3/tobacco/cigarettes/former/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarettesFormerDecreasedFrequency', '/prototype_v3/tobacco/cigarettes/former')
+router.post('/prototype_v3/tobacco/cigarettes/former/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarettesFormerAnotherPeriodMore']
+  var changes = request.session.data['cigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarettesFormerMoreFrequency']
+    delete request.session.data['cigarettesFormerMoreQuantityDaily']
+    delete request.session.data['cigarettesFormerMoreDurationDaily']
+    delete request.session.data['cigarettesFormerMoreQuantityWeekly']
+    delete request.session.data['cigarettesFormerMoreDurationWeekly']
+    delete request.session.data['cigarettesFormerMoreQuantityMonthly']
+    delete request.session.data['cigarettesFormerMoreDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/more-frequency')
+  } else {
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+// LESS (formerly decreased) routing - FORMER
+router.post('/prototype_v3/tobacco/cigarettes/former/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarettesFormerLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+router.post('/prototype_v3/tobacco/cigarettes/former/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarettesFormerChanges', '/prototype_v3/tobacco/cigarettes/former')
+router.post('/prototype_v3/tobacco/cigarettes/former/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
+router.post('/prototype_v3/tobacco/cigarettes/former/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/cigarettes/former/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarettesFormerAnotherPeriodLess']
+  var changes = request.session.data['cigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarettesFormerLessFrequency']
+    delete request.session.data['cigarettesFormerLessQuantityDaily']
+    delete request.session.data['cigarettesFormerLessDurationDaily']
+    delete request.session.data['cigarettesFormerLessQuantityWeekly']
+    delete request.session.data['cigarettesFormerLessDurationWeekly']
+    delete request.session.data['cigarettesFormerLessQuantityMonthly']
+    delete request.session.data['cigarettesFormerLessDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
+  } else {
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
+})
+
+// ============================================
+// "DO YOU CURRENTLY SMOKE" ROUTING - ROLLED CIGARETTES
+// ============================================
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesRolledCigarettes = request.session.data['currentlySmokesRolledCigarettes']
+  
+  if (currentlySmokesRolledCigarettes === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked')
+  } else {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked')
+  }
 })
 
 // ============================================
@@ -950,51 +1200,187 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked-answer
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/current/frequency-answer', function(request, response) {
-  routeByFrequency(request, response, 'rolledCigarettesCurrent', '/prototype_v3/tobacco/rolled-cigarettes/current')
+  var frequency = request.session.data['rolledCigarettesCurrentFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/frequency')
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+  var changes = request.session.data['rolledCigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+  var changes = request.session.data['rolledCigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+  var changes = request.session.data['rolledCigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'rolledCigarettesCurrentChanges', 'rolledCigarettesCurrentIncreasedFrequency', '/prototype_v3/tobacco/rolled-cigarettes/current')
+// MORE (formerly increased) routing
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['rolledCigarettesCurrentMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'rolledCigarettesCurrentDecreasedFrequency', '/prototype_v3/tobacco/rolled-cigarettes/current')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['rolledCigarettesCurrentAnotherPeriodMore']
+  var changes = request.session.data['rolledCigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['rolledCigarettesCurrentMoreFrequency']
+    delete request.session.data['rolledCigarettesCurrentMoreQuantityDaily']
+    delete request.session.data['rolledCigarettesCurrentMoreDurationDaily']
+    delete request.session.data['rolledCigarettesCurrentMoreQuantityWeekly']
+    delete request.session.data['rolledCigarettesCurrentMoreDurationWeekly']
+    delete request.session.data['rolledCigarettesCurrentMoreQuantityMonthly']
+    delete request.session.data['rolledCigarettesCurrentMoreDurationMonthly']
+    
+    // Loop back to more-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency')
+  } else {
+    // Check if they also selected 'less'
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+// LESS (formerly decreased) routing
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['rolledCigarettesCurrentLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'rolledCigarettesCurrentChanges', '/prototype_v3/tobacco/rolled-cigarettes/current')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['rolledCigarettesCurrentAnotherPeriodLess']
+  var changes = request.session.data['rolledCigarettesCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['rolledCigarettesCurrentLessFrequency']
+    delete request.session.data['rolledCigarettesCurrentLessQuantityDaily']
+    delete request.session.data['rolledCigarettesCurrentLessDurationDaily']
+    delete request.session.data['rolledCigarettesCurrentLessQuantityWeekly']
+    delete request.session.data['rolledCigarettesCurrentLessDurationWeekly']
+    delete request.session.data['rolledCigarettesCurrentLessQuantityMonthly']
+    delete request.session.data['rolledCigarettesCurrentLessDurationMonthly']
+    
+    // Loop back to less-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+  } else {
+    // Check if they also selected 'stopped'
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years-answer', function(request, response) {
@@ -1010,55 +1396,201 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked-answer'
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/former/frequency-answer', function(request, response) {
-  routeByFrequency(request, response, 'rolledCigarettesFormer', '/prototype_v3/tobacco/rolled-cigarettes/former')
+  var frequency = request.session.data['rolledCigarettesFormerFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/frequency')
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+  var changes = request.session.data['rolledCigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+  var changes = request.session.data['rolledCigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+  var changes = request.session.data['rolledCigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'rolledCigarettesFormerChanges', 'rolledCigarettesFormerIncreasedFrequency', '/prototype_v3/tobacco/rolled-cigarettes/former')
+// MORE (formerly increased) routing - FORMER
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['rolledCigarettesFormerMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'rolledCigarettesFormerDecreasedFrequency', '/prototype_v3/tobacco/rolled-cigarettes/former')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['rolledCigarettesFormerAnotherPeriodMore']
+  var changes = request.session.data['rolledCigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['rolledCigarettesFormerMoreFrequency']
+    delete request.session.data['rolledCigarettesFormerMoreQuantityDaily']
+    delete request.session.data['rolledCigarettesFormerMoreDurationDaily']
+    delete request.session.data['rolledCigarettesFormerMoreQuantityWeekly']
+    delete request.session.data['rolledCigarettesFormerMoreDurationWeekly']
+    delete request.session.data['rolledCigarettesFormerMoreQuantityMonthly']
+    delete request.session.data['rolledCigarettesFormerMoreDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency')
+  } else {
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+// LESS (formerly decreased) routing - FORMER
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['rolledCigarettesFormerLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'rolledCigarettesFormerChanges', '/prototype_v3/tobacco/rolled-cigarettes/former')
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['rolledCigarettesFormerAnotherPeriodLess']
+  var changes = request.session.data['rolledCigarettesFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['rolledCigarettesFormerLessFrequency']
+    delete request.session.data['rolledCigarettesFormerLessQuantityDaily']
+    delete request.session.data['rolledCigarettesFormerLessDurationDaily']
+    delete request.session.data['rolledCigarettesFormerLessQuantityWeekly']
+    delete request.session.data['rolledCigarettesFormerLessDurationWeekly']
+    delete request.session.data['rolledCigarettesFormerLessQuantityMonthly']
+    delete request.session.data['rolledCigarettesFormerLessDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+  } else {
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
 router.post('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years-answer', function(request, response) {
   moveToNextTobaccoType(request, response)
+})
+
+// ============================================
+// "DO YOU CURRENTLY SMOKE" ROUTING - PIPE
+// ============================================
+
+router.post('/prototype_v3/tobacco/pipe/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesPipe = request.session.data['currentlySmokesPipe']
+  
+  if (currentlySmokesPipe === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/years-smoked')
+  } else {
+    response.redirect('/prototype_v3/tobacco/pipe/former/years-smoked')
+  }
 })
 
 // ============================================
@@ -1070,51 +1602,187 @@ router.post('/prototype_v3/tobacco/pipe/current/years-smoked-answer', function(r
 })
 
 router.post('/prototype_v3/tobacco/pipe/current/frequency-answer', function(request, response) {
-  routeByFrequency(request, response, 'pipeCurrent', '/prototype_v3/tobacco/pipe/current')
+  var frequency = request.session.data['pipeCurrentFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/pipe/current/frequency')
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/current/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+  var changes = request.session.data['pipeCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/current/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+  var changes = request.session.data['pipeCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/current/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+  var changes = request.session.data['pipeCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'pipeCurrentChanges', 'pipeCurrentIncreasedFrequency', '/prototype_v3/tobacco/pipe/current')
+// MORE (formerly increased) routing
+router.post('/prototype_v3/tobacco/pipe/current/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['pipeCurrentMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+router.post('/prototype_v3/tobacco/pipe/current/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+router.post('/prototype_v3/tobacco/pipe/current/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+router.post('/prototype_v3/tobacco/pipe/current/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'pipeCurrentDecreasedFrequency', '/prototype_v3/tobacco/pipe/current')
+router.post('/prototype_v3/tobacco/pipe/current/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['pipeCurrentAnotherPeriodMore']
+  var changes = request.session.data['pipeCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['pipeCurrentMoreFrequency']
+    delete request.session.data['pipeCurrentMoreQuantityDaily']
+    delete request.session.data['pipeCurrentMoreDurationDaily']
+    delete request.session.data['pipeCurrentMoreQuantityWeekly']
+    delete request.session.data['pipeCurrentMoreDurationWeekly']
+    delete request.session.data['pipeCurrentMoreQuantityMonthly']
+    delete request.session.data['pipeCurrentMoreDurationMonthly']
+    
+    // Loop back to more-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/pipe/current/more-frequency')
+  } else {
+    // Check if they also selected 'less'
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+// LESS (formerly decreased) routing
+router.post('/prototype_v3/tobacco/pipe/current/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['pipeCurrentLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+router.post('/prototype_v3/tobacco/pipe/current/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'pipeCurrentChanges', '/prototype_v3/tobacco/pipe/current')
+router.post('/prototype_v3/tobacco/pipe/current/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/pipe/current/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/pipe/current/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['pipeCurrentAnotherPeriodLess']
+  var changes = request.session.data['pipeCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['pipeCurrentLessFrequency']
+    delete request.session.data['pipeCurrentLessQuantityDaily']
+    delete request.session.data['pipeCurrentLessDurationDaily']
+    delete request.session.data['pipeCurrentLessQuantityWeekly']
+    delete request.session.data['pipeCurrentLessDurationWeekly']
+    delete request.session.data['pipeCurrentLessQuantityMonthly']
+    delete request.session.data['pipeCurrentLessDurationMonthly']
+    
+    // Loop back to less-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
+  } else {
+    // Check if they also selected 'stopped'
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/current/stopped-years-answer', function(request, response) {
@@ -1130,55 +1798,201 @@ router.post('/prototype_v3/tobacco/pipe/former/years-smoked-answer', function(re
 })
 
 router.post('/prototype_v3/tobacco/pipe/former/frequency-answer', function(request, response) {
-  routeByFrequency(request, response, 'pipeFormer', '/prototype_v3/tobacco/pipe/former')
+  var frequency = request.session.data['pipeFormerFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/pipe/former/frequency')
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/former/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+  var changes = request.session.data['pipeFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/former/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+  var changes = request.session.data['pipeFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/former/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+  var changes = request.session.data['pipeFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'pipeFormerChanges', 'pipeFormerIncreasedFrequency', '/prototype_v3/tobacco/pipe/former')
+// MORE (formerly increased) routing - FORMER
+router.post('/prototype_v3/tobacco/pipe/former/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['pipeFormerMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+router.post('/prototype_v3/tobacco/pipe/former/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+router.post('/prototype_v3/tobacco/pipe/former/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+router.post('/prototype_v3/tobacco/pipe/former/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'pipeFormerDecreasedFrequency', '/prototype_v3/tobacco/pipe/former')
+router.post('/prototype_v3/tobacco/pipe/former/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['pipeFormerAnotherPeriodMore']
+  var changes = request.session.data['pipeFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['pipeFormerMoreFrequency']
+    delete request.session.data['pipeFormerMoreQuantityDaily']
+    delete request.session.data['pipeFormerMoreDurationDaily']
+    delete request.session.data['pipeFormerMoreQuantityWeekly']
+    delete request.session.data['pipeFormerMoreDurationWeekly']
+    delete request.session.data['pipeFormerMoreQuantityMonthly']
+    delete request.session.data['pipeFormerMoreDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/pipe/former/more-frequency')
+  } else {
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+// LESS (formerly decreased) routing - FORMER
+router.post('/prototype_v3/tobacco/pipe/former/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['pipeFormerLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
+  }
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+router.post('/prototype_v3/tobacco/pipe/former/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'pipeFormerChanges', '/prototype_v3/tobacco/pipe/former')
+router.post('/prototype_v3/tobacco/pipe/former/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/pipe/former/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/pipe/former/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['pipeFormerAnotherPeriodLess']
+  var changes = request.session.data['pipeFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['pipeFormerLessFrequency']
+    delete request.session.data['pipeFormerLessQuantityDaily']
+    delete request.session.data['pipeFormerLessDurationDaily']
+    delete request.session.data['pipeFormerLessQuantityWeekly']
+    delete request.session.data['pipeFormerLessDurationWeekly']
+    delete request.session.data['pipeFormerLessQuantityMonthly']
+    delete request.session.data['pipeFormerLessDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
+  } else {
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
 router.post('/prototype_v3/tobacco/pipe/former/stopped-years-answer', function(request, response) {
   moveToNextTobaccoType(request, response)
+})
+
+// ============================================
+// "DO YOU CURRENTLY SMOKE" ROUTING - CIGARS
+// ============================================
+
+router.post('/prototype_v3/tobacco/cigars/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesCigars = request.session.data['currentlySmokesCigars']
+  
+  if (currentlySmokesCigars === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/years-smoked')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigars/former/years-smoked')
+  }
 })
 
 // ============================================
@@ -1190,251 +2004,191 @@ router.post('/prototype_v3/tobacco/cigars/current/years-smoked-answer', function
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/cigars/current/size')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/size-answer', function(request, response) {
-  var selectedSizes = request.session.data['cigarsCurrentSize']
   var frequency = request.session.data['cigarsCurrentFrequency']
   
-  if (!Array.isArray(selectedSizes)) {
-    selectedSizes = selectedSizes ? [selectedSizes] : []
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigars/current/frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/quantity-daily-answer', function(request, response) {
+  var changes = request.session.data['cigarsCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
   }
   
-  // Create queue for cigar sizes: cigarillo, small, medium, large
-  var sizeQueue = []
-  var sizeOrder = ['cigarillo', 'small', 'medium', 'large']
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/quantity-weekly-answer', function(request, response) {
+  var changes = request.session.data['cigarsCurrentChanges']
   
-  sizeOrder.forEach(function(size) {
-    if (selectedSizes.includes(size)) {
-      sizeQueue.push(size)
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/quantity-monthly-answer', function(request, response) {
+  var changes = request.session.data['cigarsCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+// MORE (formerly increased) routing
+router.post('/prototype_v3/tobacco/cigars/current/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarsCurrentMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/another-period-more')
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/another-period-more')
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/another-period-more')
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarsCurrentAnotherPeriodMore']
+  var changes = request.session.data['cigarsCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarsCurrentMoreFrequency']
+    delete request.session.data['cigarsCurrentMoreQuantityDaily']
+    delete request.session.data['cigarsCurrentMoreDurationDaily']
+    delete request.session.data['cigarsCurrentMoreQuantityWeekly']
+    delete request.session.data['cigarsCurrentMoreDurationWeekly']
+    delete request.session.data['cigarsCurrentMoreQuantityMonthly']
+    delete request.session.data['cigarsCurrentMoreDurationMonthly']
+    
+    // Loop back to more-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/cigars/current/more-frequency')
+  } else {
+    // Check if they also selected 'less'
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
     }
-  })
-  
-  request.session.data['cigarSizeQueue'] = sizeQueue
-  request.session.data['cigarSizeIndex'] = 0
-  
-  if (sizeQueue.length > 0) {
-    var firstSize = sizeQueue[0]
-    var frequencyPath = frequency === 'Daily' ? 'daily' : frequency === 'Weekly' ? 'weekly' : 'monthly'
-    response.redirect('/prototype_v3/tobacco/cigars/current/' + firstSize + '/quantity-' + frequencyPath)
-  } else {
-    moveToNextTobaccoType(request, response)
   }
 })
 
-// Helper function for moving to next cigar size or tobacco type
-function moveToNextCigarSize(request, response, statusType) {
-  var sizeQueue = request.session.data['cigarSizeQueue'] || []
-  var sizeIndex = request.session.data['cigarSizeIndex'] || 0
-  var frequency = request.session.data['cigars' + statusType + 'Frequency']
+// LESS (formerly decreased) routing
+router.post('/prototype_v3/tobacco/cigars/current/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarsCurrentLessFrequency']
   
-  sizeIndex++
-  request.session.data['cigarSizeIndex'] = sizeIndex
-  
-  if (sizeIndex < sizeQueue.length) {
-    var nextSize = sizeQueue[sizeIndex]
-    var frequencyPath = frequency === 'Daily' ? 'daily' : frequency === 'Weekly' ? 'weekly' : 'monthly'
-    response.redirect('/prototype_v3/tobacco/cigars/' + statusType.toLowerCase() + '/' + nextSize + '/quantity-' + frequencyPath)
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-quantity-monthly')
   } else {
-    moveToNextTobaccoType(request, response)
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
   }
-}
-
-// Cigarillo - Current
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
 })
 
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
+router.post('/prototype_v3/tobacco/cigars/current/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
+router.post('/prototype_v3/tobacco/cigars/current/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsCurrentCigarilloChanges', 'cigarsCurrentCigarilloIncreasedFrequency', '/prototype_v3/tobacco/cigars/current/cigarillo')
+router.post('/prototype_v3/tobacco/cigars/current/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/another-period-less')
 })
 
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
+router.post('/prototype_v3/tobacco/cigars/current/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarsCurrentAnotherPeriodLess']
+  var changes = request.session.data['cigarsCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarsCurrentLessFrequency']
+    delete request.session.data['cigarsCurrentLessQuantityDaily']
+    delete request.session.data['cigarsCurrentLessDurationDaily']
+    delete request.session.data['cigarsCurrentLessQuantityWeekly']
+    delete request.session.data['cigarsCurrentLessDurationWeekly']
+    delete request.session.data['cigarsCurrentLessQuantityMonthly']
+    delete request.session.data['cigarsCurrentLessDurationMonthly']
+    
+    // Loop back to less-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
+  } else {
+    // Check if they also selected 'stopped'
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
 
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsCurrentCigarilloDecreasedFrequency', '/prototype_v3/tobacco/cigars/current/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentCigarilloChanges', '/prototype_v3/tobacco/cigars/current/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/cigarillo/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Current')
-})
-
-// Small - Current
-router.post('/prototype_v3/tobacco/cigars/current/small/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsCurrentSmallChanges', 'cigarsCurrentSmallIncreasedFrequency', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsCurrentSmallDecreasedFrequency', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentSmallChanges', '/prototype_v3/tobacco/cigars/current/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/small/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Current')
-})
-
-// Medium - Current
-router.post('/prototype_v3/tobacco/cigars/current/medium/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsCurrentMediumChanges', 'cigarsCurrentMediumIncreasedFrequency', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsCurrentMediumDecreasedFrequency', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentMediumChanges', '/prototype_v3/tobacco/cigars/current/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/medium/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Current')
-})
-
-// Large - Current
-router.post('/prototype_v3/tobacco/cigars/current/large/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsCurrentLargeChanges', 'cigarsCurrentLargeIncreasedFrequency', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsCurrentLargeDecreasedFrequency', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsCurrentLargeChanges', '/prototype_v3/tobacco/cigars/current/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/large/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Current')
+router.post('/prototype_v3/tobacco/cigars/current/stopped-years-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
 })
 
 // ============================================
@@ -1446,909 +2200,912 @@ router.post('/prototype_v3/tobacco/cigars/former/years-smoked-answer', function(
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/cigars/former/size')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/size-answer', function(request, response) {
-  var selectedSizes = request.session.data['cigarsFormerSize']
   var frequency = request.session.data['cigarsFormerFrequency']
   
-  if (!Array.isArray(selectedSizes)) {
-    selectedSizes = selectedSizes ? [selectedSizes] : []
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigars/former/frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/quantity-daily-answer', function(request, response) {
+  var changes = request.session.data['cigarsFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
   }
   
-  var sizeQueue = []
-  var sizeOrder = ['cigarillo', 'small', 'medium', 'large']
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/quantity-weekly-answer', function(request, response) {
+  var changes = request.session.data['cigarsFormerChanges']
   
-  sizeOrder.forEach(function(size) {
-    if (selectedSizes.includes(size)) {
-      sizeQueue.push(size)
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/quantity-monthly-answer', function(request, response) {
+  var changes = request.session.data['cigarsFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+// MORE (formerly increased) routing - FORMER
+router.post('/prototype_v3/tobacco/cigars/former/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarsFormerMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/another-period-more')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/another-period-more')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/another-period-more')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarsFormerAnotherPeriodMore']
+  var changes = request.session.data['cigarsFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarsFormerMoreFrequency']
+    delete request.session.data['cigarsFormerMoreQuantityDaily']
+    delete request.session.data['cigarsFormerMoreDurationDaily']
+    delete request.session.data['cigarsFormerMoreQuantityWeekly']
+    delete request.session.data['cigarsFormerMoreDurationWeekly']
+    delete request.session.data['cigarsFormerMoreQuantityMonthly']
+    delete request.session.data['cigarsFormerMoreDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/cigars/former/more-frequency')
+  } else {
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
     }
-  })
+  }
+})
+
+// LESS (formerly decreased) routing - FORMER
+router.post('/prototype_v3/tobacco/cigars/former/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarsFormerLessFrequency']
   
-  request.session.data['cigarSizeQueue'] = sizeQueue
-  request.session.data['cigarSizeIndex'] = 0
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/another-period-less')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarsFormerAnotherPeriodLess']
+  var changes = request.session.data['cigarsFormerChanges']
   
-  if (sizeQueue.length > 0) {
-    var firstSize = sizeQueue[0]
-    var frequencyPath = frequency === 'Daily' ? 'daily' : frequency === 'Weekly' ? 'weekly' : 'monthly'
-    response.redirect('/prototype_v3/tobacco/cigars/former/' + firstSize + '/quantity-' + frequencyPath)
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarsFormerLessFrequency']
+    delete request.session.data['cigarsFormerLessQuantityDaily']
+    delete request.session.data['cigarsFormerLessDurationDaily']
+    delete request.session.data['cigarsFormerLessQuantityWeekly']
+    delete request.session.data['cigarsFormerLessDurationWeekly']
+    delete request.session.data['cigarsFormerLessQuantityMonthly']
+    delete request.session.data['cigarsFormerLessDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
+  } else {
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/stopped-years-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+
+// ============================================
+// "DO YOU CURRENTLY SMOKE" ROUTING - CIGARILLOS
+// ============================================
+
+router.post('/prototype_v3/tobacco/cigarillos/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesCigarillos = request.session.data['currentlySmokesCigarillos']
+  
+  if (currentlySmokesCigarillos === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/years-smoked')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/years-smoked')
+  }
+})
+
+// ============================================
+// CIGARILLOS ROUTING - CURRENT
+// ============================================
+
+router.post('/prototype_v3/tobacco/cigarillos/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/frequency')
+})
+
+router.post('/prototype_v3/tobacco/cigarillos/current/frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarillosCurrentFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/cigarillos/current/quantity-daily-answer', function(request, response) {
+  var changes = request.session.data['cigarillosCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-// Cigarillo - Former
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsFormerCigarilloChanges', 'cigarsFormerCigarilloIncreasedFrequency', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsFormerCigarilloDecreasedFrequency', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerCigarilloChanges', '/prototype_v3/tobacco/cigars/former/cigarillo')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/cigarillo/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Former')
-})
-
-// Small - Former
-router.post('/prototype_v3/tobacco/cigars/former/small/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsFormerSmallChanges', 'cigarsFormerSmallIncreasedFrequency', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsFormerSmallDecreasedFrequency', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerSmallChanges', '/prototype_v3/tobacco/cigars/former/small')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/small/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Former')
-})
-
-// Medium - Former
-router.post('/prototype_v3/tobacco/cigars/former/medium/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsFormerMediumChanges', 'cigarsFormerMediumIncreasedFrequency', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsFormerMediumDecreasedFrequency', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerMediumChanges', '/prototype_v3/tobacco/cigars/former/medium')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/medium/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Former')
-})
-
-// Large - Former
-router.post('/prototype_v3/tobacco/cigars/former/large/quantity-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/quantity-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/quantity-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/increased-frequency-answer', function(request, response) {
-  handleIncreasedRouting(request, response, 'cigarsFormerLargeChanges', 'cigarsFormerLargeIncreasedFrequency', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/increased-quantity-daily-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/increased-quantity-weekly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/increased-quantity-monthly-answer', function(request, response) {
-  handleAfterIncreasedQuantity(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/decreased-frequency-answer', function(request, response) {
-  handleDecreasedRouting(request, response, 'cigarsFormerLargeDecreasedFrequency', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/decreased-quantity-daily-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/decreased-quantity-weekly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/decreased-quantity-monthly-answer', function(request, response) {
-  handleAfterDecreasedQuantity(request, response, 'cigarsFormerLargeChanges', '/prototype_v3/tobacco/cigars/former/large')
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/large/stopped-years-answer', function(request, response) {
-  moveToNextCigarSize(request, response, 'Former')
-})
-
-// ============================================
-// HOOKAH ROUTING - CURRENT
-// ============================================
-
-router.post('/prototype_v3/tobacco/hookah/current/years-smoked-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/current/session-type')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/session-type-answer', function(request, response) {
-  var sessionTypes = request.session.data['hookahCurrentSessionType']
+router.post('/prototype_v3/tobacco/cigarillos/current/quantity-weekly-answer', function(request, response) {
+  var changes = request.session.data['cigarillosCurrentChanges']
   
-  if (!Array.isArray(sessionTypes)) {
-    sessionTypes = sessionTypes ? [sessionTypes] : []
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
   }
   
-  // Create queue for session types: group first, then solo
-  var sessionQueue = []
-  if (sessionTypes.includes('group')) {
-    sessionQueue.push('group')
-  }
-  if (sessionTypes.includes('solo')) {
-    sessionQueue.push('solo')
-  }
-  
-  request.session.data['hookahSessionQueue'] = sessionQueue
-  request.session.data['hookahSessionIndex'] = 0
-  
-  if (sessionQueue.length > 0) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/' + sessionQueue[0] + '-frequency')
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-// Helper function for moving to next hookah session type or tobacco type
-function moveToNextHookahSession(request, response, statusType) {
-  var sessionQueue = request.session.data['hookahSessionQueue'] || []
-  var sessionIndex = request.session.data['hookahSessionIndex'] || 0
-  
-  sessionIndex++
-  request.session.data['hookahSessionIndex'] = sessionIndex
-  
-  if (sessionIndex < sessionQueue.length) {
-    var nextSession = sessionQueue[sessionIndex]
-    response.redirect('/prototype_v3/tobacco/hookah/' + statusType.toLowerCase() + '/' + nextSession + '-frequency')
-  } else {
-    moveToNextTobaccoType(request, response)
-  }
-}
-
-// Group - Current
-router.post('/prototype_v3/tobacco/hookah/current/group-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahCurrentGroupFrequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-duration-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-duration-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-duration-monthly')
-  } else {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-frequency')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-duration-daily-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/current/group-changes-daily')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-duration-weekly-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/current/group-changes-weekly')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-duration-monthly-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/current/group-changes-monthly')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-changes-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahCurrentGroupChangesDaily', '/prototype_v3/tobacco/hookah/current/group')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-changes-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahCurrentGroupChangesWeekly', '/prototype_v3/tobacco/hookah/current/group')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-changes-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahCurrentGroupChangesMonthly', '/prototype_v3/tobacco/hookah/current/group')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-increased-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahCurrentGroupIncreasedFrequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-increased-duration-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-increased-duration-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-increased-duration-monthly')
-  } else {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-increased-frequency')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-increased-duration-daily-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentGroupChangesDaily']
+router.post('/prototype_v3/tobacco/cigarillos/current/quantity-monthly-answer', function(request, response) {
+  var changes = request.session.data['cigarillosCurrentChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
   }
   
-  if (changes.includes('decreased')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-decreased-frequency')
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-increased-duration-weekly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentGroupChangesWeekly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('decreased')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-decreased-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-increased-duration-monthly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentGroupChangesMonthly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('decreased')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-decreased-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-decreased-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahCurrentGroupDecreasedFrequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-decreased-duration-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-decreased-duration-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-decreased-duration-monthly')
-  } else {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-decreased-frequency')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-decreased-duration-daily-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentGroupChangesDaily']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-decreased-duration-weekly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentGroupChangesWeekly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-decreased-duration-monthly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentGroupChangesMonthly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/group-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/group-stopped-years-answer', function(request, response) {
-  moveToNextHookahSession(request, response, 'Current')
-})
-
-// Solo - Current
-router.post('/prototype_v3/tobacco/hookah/current/solo-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahCurrentSoloFrequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-duration-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-duration-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-duration-monthly')
-  } else {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-frequency')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-duration-daily-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/current/solo-changes-daily')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-duration-weekly-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/current/solo-changes-weekly')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-duration-monthly-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/current/solo-changes-monthly')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-changes-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahCurrentSoloChangesDaily', '/prototype_v3/tobacco/hookah/current/solo')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-changes-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahCurrentSoloChangesWeekly', '/prototype_v3/tobacco/hookah/current/solo')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-changes-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahCurrentSoloChangesMonthly', '/prototype_v3/tobacco/hookah/current/solo')
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-increased-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahCurrentSoloIncreasedFrequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-increased-duration-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-increased-duration-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-increased-duration-monthly')
-  } else {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-increased-frequency')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-increased-duration-daily-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentSoloChangesDaily']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('decreased')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-decreased-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-increased-duration-weekly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentSoloChangesWeekly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('decreased')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-decreased-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-increased-duration-monthly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentSoloChangesMonthly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('decreased')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-decreased-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-decreased-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahCurrentSoloDecreasedFrequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-decreased-duration-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-decreased-duration-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-decreased-duration-monthly')
-  } else {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-decreased-frequency')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-decreased-duration-daily-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentSoloChangesDaily']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-decreased-duration-weekly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentSoloChangesWeekly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-decreased-duration-monthly-answer', function(request, response) {
-  var changes = request.session.data['hookahCurrentSoloChangesMonthly']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/hookah/current/solo-stopped-years')
-  } else {
-    moveToNextHookahSession(request, response, 'Current')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/current/solo-stopped-years-answer', function(request, response) {
-  moveToNextHookahSession(request, response, 'Current')
-})
-
-// ============================================
-// HOOKAH ROUTING - FORMER
-// ============================================
-
-router.post('/prototype_v3/tobacco/hookah/former/years-smoked-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/former/session-type')
-})
-
-router.post('/prototype_v3/tobacco/hookah/former/session-type-answer', function(request, response) {
-  var sessionTypes = request.session.data['hookahFormerSessionType']
-  
-  if (!Array.isArray(sessionTypes)) {
-    sessionTypes = sessionTypes ? [sessionTypes] : []
-  }
-  
-  var sessionQueue = []
-  if (sessionTypes.includes('group')) {
-    sessionQueue.push('group')
-  }
-  if (sessionTypes.includes('solo')) {
-    sessionQueue.push('solo')
-  }
-  
-  request.session.data['hookahSessionQueue'] = sessionQueue
-  request.session.data['hookahSessionIndex'] = 0
-  
-  if (sessionQueue.length > 0) {
-    response.redirect('/prototype_v3/tobacco/hookah/former/' + sessionQueue[0] + '-frequency')
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-// Group - Former
-router.post('/prototype_v3/tobacco/hookah/former/group-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahFormerGroupFrequency']
+// MORE (formerly increased) routing
+router.post('/prototype_v3/tobacco/cigarillos/current/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarillosCurrentMoreFrequency']
   
   if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-duration-daily')
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-quantity-daily')
   } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-duration-weekly')
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-quantity-weekly')
   } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-duration-monthly')
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-quantity-monthly')
   } else {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-frequency')
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-frequency')
   }
 })
 
-router.post('/prototype_v3/tobacco/hookah/former/group-duration-daily-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/former/group-changes-daily')
+router.post('/prototype_v3/tobacco/cigarillos/current/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/hookah/former/group-duration-weekly-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/former/group-changes-weekly')
+router.post('/prototype_v3/tobacco/cigarillos/current/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/hookah/former/group-duration-monthly-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/hookah/former/group-changes-monthly')
+router.post('/prototype_v3/tobacco/cigarillos/current/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/another-period-more')
 })
 
-router.post('/prototype_v3/tobacco/hookah/former/group-changes-daily-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahFormerGroupChangesDaily', '/prototype_v3/tobacco/hookah/former/group')
-})
-
-router.post('/prototype_v3/tobacco/hookah/former/group-changes-weekly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahFormerGroupChangesWeekly', '/prototype_v3/tobacco/hookah/former/group')
-})
-
-router.post('/prototype_v3/tobacco/hookah/former/group-changes-monthly-answer', function(request, response) {
-  handleChangesRouting(request, response, 'hookahFormerGroupChangesMonthly', '/prototype_v3/tobacco/hookah/former/group')
-})
-
-router.post('/prototype_v3/tobacco/hookah/former/group-increased-frequency-answer', function(request, response) {
-  var frequency = request.session.data['hookahFormerGroupIncreasedFrequency']
-  
-  if (frequency === 'Daily') {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-increased-duration-daily')
-  } else if (frequency === 'Weekly') {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-increased-duration-weekly')
-  } else if (frequency === 'Monthly') {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-increased-duration-monthly')
-  } else {
-    response.redirect('/prototype_v3/tobacco/hookah/former/group-increased-frequency')
-  }
-})
-
-router.post('/prototype_v3/tobacco/hookah/former/group-increased-duration-daily-answer', function(request, response) {
-  var changes = request.session.data['hookahFormerGroupChangesDaily']
+router.post('/prototype_v3/tobacco/cigarillos/current/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarillosCurrentAnotherPeriodMore']
+  var changes = request.session.data['cigarillosCurrentChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
   }
   
-  if (changes.includes('decrease')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-decreased-frequency')
-} else if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarillosCurrentMoreFrequency']
+    delete request.session.data['cigarillosCurrentMoreQuantityDaily']
+    delete request.session.data['cigarillosCurrentMoreDurationDaily']
+    delete request.session.data['cigarillosCurrentMoreQuantityWeekly']
+    delete request.session.data['cigarillosCurrentMoreDurationWeekly']
+    delete request.session.data['cigarillosCurrentMoreQuantityMonthly']
+    delete request.session.data['cigarillosCurrentMoreDurationMonthly']
+    
+    // Loop back to more-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/more-frequency')
+  } else {
+    // Check if they also selected 'less'
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/group-increased-duration-weekly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerGroupChangesWeekly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('decreased')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-decreased-frequency')
-} else if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+// LESS (formerly decreased) routing
+router.post('/prototype_v3/tobacco/cigarillos/current/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarillosCurrentLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/group-increased-duration-monthly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerGroupChangesMonthly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('decreased')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-decreased-frequency')
-} else if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/current/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/another-period-less')
 })
-router.post('/prototype_v3/tobacco/hookah/former/group-decreased-frequency-answer', function(request, response) {
-var frequency = request.session.data['hookahFormerGroupDecreasedFrequency']
-if (frequency === 'Daily') {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-decreased-duration-daily')
-} else if (frequency === 'Weekly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-decreased-duration-weekly')
-} else if (frequency === 'Monthly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-decreased-duration-monthly')
-} else {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-decreased-frequency')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/current/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/another-period-less')
 })
-router.post('/prototype_v3/tobacco/hookah/former/group-decreased-duration-daily-answer', function(request, response) {
-var changes = request.session.data['hookahFormerGroupChangesDaily']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/current/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/another-period-less')
 })
-router.post('/prototype_v3/tobacco/hookah/former/group-decreased-duration-weekly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerGroupChangesWeekly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/current/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarillosCurrentAnotherPeriodLess']
+  var changes = request.session.data['cigarillosCurrentChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarillosCurrentLessFrequency']
+    delete request.session.data['cigarillosCurrentLessQuantityDaily']
+    delete request.session.data['cigarillosCurrentLessDurationDaily']
+    delete request.session.data['cigarillosCurrentLessQuantityWeekly']
+    delete request.session.data['cigarillosCurrentLessDurationWeekly']
+    delete request.session.data['cigarillosCurrentLessQuantityMonthly']
+    delete request.session.data['cigarillosCurrentLessDurationMonthly']
+    
+    // Loop back to less-frequency to capture another period
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
+  } else {
+    // Check if they also selected 'stopped'
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/group-decreased-duration-monthly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerGroupChangesMonthly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/group-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/current/stopped-years-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
 })
-router.post('/prototype_v3/tobacco/hookah/former/group-stopped-years-answer', function(request, response) {
-moveToNextHookahSession(request, response, 'Former')
+
+// ============================================
+// CIGARILLOS ROUTING - FORMER
+// ============================================
+
+router.post('/prototype_v3/tobacco/cigarillos/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/frequency')
 })
-// Solo - Former
-router.post('/prototype_v3/tobacco/hookah/former/solo-frequency-answer', function(request, response) {
-var frequency = request.session.data['hookahFormerSoloFrequency']
-if (frequency === 'Daily') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-duration-daily')
-} else if (frequency === 'Weekly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-duration-weekly')
-} else if (frequency === 'Monthly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-duration-monthly')
-} else {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-frequency')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarillosFormerFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/frequency')
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-duration-daily-answer', function(request, response) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-changes-daily')
+
+router.post('/prototype_v3/tobacco/cigarillos/former/quantity-daily-answer', function(request, response) {
+  var changes = request.session.data['cigarillosFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-duration-weekly-answer', function(request, response) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-changes-weekly')
+
+router.post('/prototype_v3/tobacco/cigarillos/former/quantity-weekly-answer', function(request, response) {
+  var changes = request.session.data['cigarillosFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-duration-monthly-answer', function(request, response) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-changes-monthly')
+
+router.post('/prototype_v3/tobacco/cigarillos/former/quantity-monthly-answer', function(request, response) {
+  var changes = request.session.data['cigarillosFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (changes.includes('more')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-frequency')
+  } else if (changes.includes('less')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
+  } else if (changes.includes('stopped')) {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-changes-daily-answer', function(request, response) {
-handleChangesRouting(request, response, 'hookahFormerSoloChangesDaily', '/prototype_v3/tobacco/hookah/former/solo')
+
+// MORE (formerly increased) routing - FORMER
+router.post('/prototype_v3/tobacco/cigarillos/former/more-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarillosFormerMoreFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-frequency')
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-changes-weekly-answer', function(request, response) {
-handleChangesRouting(request, response, 'hookahFormerSoloChangesWeekly', '/prototype_v3/tobacco/hookah/former/solo')
+
+router.post('/prototype_v3/tobacco/cigarillos/former/more-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/another-period-more')
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-changes-monthly-answer', function(request, response) {
-handleChangesRouting(request, response, 'hookahFormerSoloChangesMonthly', '/prototype_v3/tobacco/hookah/former/solo')
+
+router.post('/prototype_v3/tobacco/cigarillos/former/more-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/another-period-more')
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-increased-frequency-answer', function(request, response) {
-var frequency = request.session.data['hookahFormerSoloIncreasedFrequency']
-if (frequency === 'Daily') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-increased-duration-daily')
-} else if (frequency === 'Weekly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-increased-duration-weekly')
-} else if (frequency === 'Monthly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-increased-duration-monthly')
-} else {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-increased-frequency')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/more-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/another-period-more')
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-increased-duration-daily-answer', function(request, response) {
-var changes = request.session.data['hookahFormerSoloChangesDaily']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('decreased')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-decreased-frequency')
-} else if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/another-period-more-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarillosFormerAnotherPeriodMore']
+  var changes = request.session.data['cigarillosFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarillosFormerMoreFrequency']
+    delete request.session.data['cigarillosFormerMoreQuantityDaily']
+    delete request.session.data['cigarillosFormerMoreDurationDaily']
+    delete request.session.data['cigarillosFormerMoreQuantityWeekly']
+    delete request.session.data['cigarillosFormerMoreDurationWeekly']
+    delete request.session.data['cigarillosFormerMoreQuantityMonthly']
+    delete request.session.data['cigarillosFormerMoreDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/more-frequency')
+  } else {
+    if (changes.includes('less')) {
+      response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
+    } else if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-increased-duration-weekly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerSoloChangesWeekly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('decreased')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-decreased-frequency')
-} else if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+// LESS (formerly decreased) routing - FORMER
+router.post('/prototype_v3/tobacco/cigarillos/former/less-frequency-answer', function(request, response) {
+  var frequency = request.session.data['cigarillosFormerLessFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-quantity-monthly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-increased-duration-monthly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerSoloChangesMonthly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('decreased')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-decreased-frequency')
-} else if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/less-quantity-daily-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/another-period-less')
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-decreased-frequency-answer', function(request, response) {
-var frequency = request.session.data['hookahFormerSoloDecreasedFrequency']
-if (frequency === 'Daily') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-decreased-duration-daily')
-} else if (frequency === 'Weekly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-decreased-duration-weekly')
-} else if (frequency === 'Monthly') {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-decreased-duration-monthly')
-} else {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-decreased-frequency')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/less-quantity-weekly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/another-period-less')
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-decreased-duration-daily-answer', function(request, response) {
-var changes = request.session.data['hookahFormerSoloChangesDaily']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/less-quantity-monthly-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/another-period-less')
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-decreased-duration-weekly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerSoloChangesWeekly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/another-period-less-answer', function(request, response) {
+  var anotherPeriod = request.session.data['cigarillosFormerAnotherPeriodLess']
+  var changes = request.session.data['cigarillosFormerChanges']
+  
+  if (!Array.isArray(changes)) {
+    changes = changes ? [changes] : []
+  }
+  
+  if (anotherPeriod === 'Yes') {
+    // Clear the previous period data before starting a new one
+    delete request.session.data['cigarillosFormerLessFrequency']
+    delete request.session.data['cigarillosFormerLessQuantityDaily']
+    delete request.session.data['cigarillosFormerLessDurationDaily']
+    delete request.session.data['cigarillosFormerLessQuantityWeekly']
+    delete request.session.data['cigarillosFormerLessDurationWeekly']
+    delete request.session.data['cigarillosFormerLessQuantityMonthly']
+    delete request.session.data['cigarillosFormerLessDurationMonthly']
+    
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
+  } else {
+    if (changes.includes('stopped')) {
+      response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+    } else {
+      moveToNextTobaccoType(request, response)
+    }
+  }
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-decreased-duration-monthly-answer', function(request, response) {
-var changes = request.session.data['hookahFormerSoloChangesMonthly']
-if (!Array.isArray(changes)) {
-changes = changes ? [changes] : []
-}
-if (changes.includes('stopped')) {
-response.redirect('/prototype_v3/tobacco/hookah/former/solo-stopped-years')
-} else {
-moveToNextHookahSession(request, response, 'Former')
-}
+
+router.post('/prototype_v3/tobacco/cigarillos/former/stopped-years-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
 })
-router.post('/prototype_v3/tobacco/hookah/former/solo-stopped-years-answer', function(request, response) {
-moveToNextHookahSession(request, response, 'Former')
+
+// ============================================
+// "DO YOU CURRENTLY SMOKE" ROUTING - SHISHA
+// ============================================
+
+router.post('/prototype_v3/tobacco/shisha/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesShisha = request.session.data['currentlySmokesShisha']
+  
+  if (currentlySmokesShisha === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/years-smoked')
+  } else {
+    response.redirect('/prototype_v3/tobacco/shisha/former/years-smoked')
+  }
 })
-module.exports = router
+
+// ============================================
+// SHISHA ROUTING - CURRENT
+// ============================================
+
+router.post('/prototype_v3/tobacco/shisha/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/shisha/current/group-or-alone')
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/group-or-alone-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaCurrentGroupOrAlone']
+  
+  // Convert to array if not already
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  // Check which options were selected
+  if (groupOrAlone.includes('group')) {
+    response.redirect('/prototype_v3/tobacco/shisha/current/group-frequency')
+  } else if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-frequency')
+  } else {
+    response.redirect('/prototype_v3/tobacco/shisha/current/group-or-alone')
+  }
+})
+
+// GROUP routing
+router.post('/prototype_v3/tobacco/shisha/current/group-frequency-answer', function(request, response) {
+  var frequency = request.session.data['shishaCurrentGroupFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/group-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/group-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/group-quantity-monthly')
+  } else if (frequency === 'Yearly') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/group-quantity-yearly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/shisha/current/group-frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/group-quantity-daily-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaCurrentGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  // If they also selected 'alone', go to alone-frequency next
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-frequency')
+  } else {
+    // Otherwise, move to next tobacco type
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/group-quantity-weekly-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaCurrentGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-frequency')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/group-quantity-monthly-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaCurrentGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-frequency')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/group-quantity-yearly-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaCurrentGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-frequency')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+// ALONE routing
+router.post('/prototype_v3/tobacco/shisha/current/alone-frequency-answer', function(request, response) {
+  var frequency = request.session.data['shishaCurrentAloneFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-quantity-monthly')
+  } else if (frequency === 'Yearly') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-quantity-yearly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/shisha/current/alone-frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/alone-quantity-daily-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/alone-quantity-weekly-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/alone-quantity-monthly-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+router.post('/prototype_v3/tobacco/shisha/current/alone-quantity-yearly-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+// ============================================
+// SHISHA ROUTING - FORMER
+// ============================================
+
+router.post('/prototype_v3/tobacco/shisha/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/shisha/former/group-or-alone')
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/group-or-alone-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaFormerGroupOrAlone']
+  
+  // Convert to array if not already
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  // Check which options were selected
+  if (groupOrAlone.includes('group')) {
+    response.redirect('/prototype_v3/tobacco/shisha/former/group-frequency')
+  } else if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-frequency')
+  } else {
+    response.redirect('/prototype_v3/tobacco/shisha/former/group-or-alone')
+  }
+})
+
+// GROUP routing - FORMER
+router.post('/prototype_v3/tobacco/shisha/former/group-frequency-answer', function(request, response) {
+  var frequency = request.session.data['shishaFormerGroupFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/group-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/group-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/group-quantity-monthly')
+  } else if (frequency === 'Yearly') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/group-quantity-yearly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/shisha/former/group-frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/group-quantity-daily-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaFormerGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  // If they also selected 'alone', go to alone-frequency next
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-frequency')
+  } else {
+    // Otherwise, move to next tobacco type
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/group-quantity-weekly-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaFormerGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-frequency')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/group-quantity-monthly-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaFormerGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-frequency')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/group-quantity-yearly-answer', function(request, response) {
+  var groupOrAlone = request.session.data['shishaFormerGroupOrAlone']
+  
+  if (!Array.isArray(groupOrAlone)) {
+    groupOrAlone = groupOrAlone ? [groupOrAlone] : []
+  }
+  
+  if (groupOrAlone.includes('alone')) {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-frequency')
+  } else {
+    moveToNextTobaccoType(request, response)
+  }
+})
+
+// ALONE routing - FORMER
+router.post('/prototype_v3/tobacco/shisha/former/alone-frequency-answer', function(request, response) {
+  var frequency = request.session.data['shishaFormerAloneFrequency']
+  
+  if (frequency === 'Daily') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-quantity-daily')
+  } else if (frequency === 'Weekly') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-quantity-weekly')
+  } else if (frequency === 'Monthly') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-quantity-monthly')
+  } else if (frequency === 'Yearly') {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-quantity-yearly')
+  } else {
+    response.redirect('/prototype_v3/tobacco/shisha/former/alone-frequency')
+  }
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/alone-quantity-daily-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/alone-quantity-weekly-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/alone-quantity-monthly-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+router.post('/prototype_v3/tobacco/shisha/former/alone-quantity-yearly-answer', function(request, response) {
+  moveToNextTobaccoType(request, response)
+})
+
+// ============================================
+// SKIP TO TOBACCO SECTION (FOR TESTING)
+// ============================================
+
+router.get('/prototype_v3/skip-to-tobacco', function(request, response) {
+  // Pre-fill all the data up to the smoking habits section
+  
+  // Eligibility
+  request.session.data['smokedRegularly'] = "Yes-currently"
+  request.session.data['dateOfBirth'] = {
+    day: "19",
+    month: "06",
+    year: "1965"
+  }
+  
+  // About you section
+  request.session.data['height'] = {
+    feet: "5",
+    inches: "10"
+  }
+  request.session.data['weight'] = {
+    kilograms: "80"
+  }
+  request.session.data['whatIsYourSex'] = "Male"
+  request.session.data['bestDescribe'] = "Male"
+  request.session.data['ethnicBackground'] = "White"
+  request.session.data['educationCompleted'] = "Bachelors degree"
+  
+  // Your health section
+  request.session.data['EverDiagnosedWith'] = ["Pneumonia"]
+  request.session.data['exposedAsbestos'] = "No"
+  request.session.data['livedWithAsbestosWorker'] = "No"
+  request.session.data['diagnosedCancer'] = "No"
+  
+  // Family history
+  request.session.data['relativesHaveCancer'] = "Yes"
+  request.session.data['relativeAge'] = "Yes"
+  
+  // Redirect to how old when started smoking (start of smoking habits section)
+  response.redirect("/prototype_v3/how-old-when-started-smoking")
+})

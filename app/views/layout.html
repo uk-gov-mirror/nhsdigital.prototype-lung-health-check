@@ -30,7 +30,7 @@
 
 <!-- Set the page title -->
 {% block pageTitle %}
-  NHS prototype kit
+Check if you need a lung scan
 {% endblock %}
 
 <!-- Edit the header -->
@@ -39,10 +39,10 @@
 {{ header({
 logo: {
 href: "/",
-ariaLabel: "Lung cancer risk check"
+ariaLabel: "Check if you need a lung scan"
 },
 service: {
-text: "Lung cancer risk check",
+text: "Check if you need a lung scan",
 href: "/"
 }
 }) }}
@@ -68,30 +68,37 @@ href: "/"
 <!-- Footer code examples can be found at https://service-manual.nhs.uk/design-system/components/footer -->
 {% block footer %}
 {{ footer({
-  meta: {
-    items: [
-      {
-        href: "#",
-        text: "Accessibility statement"
-      },
-      {
-        href: "#",
-        text: "Contact us"
-      },
-      {
-        href: "#",
-        text: "Cookies"
-      },
-      {
-        href: "#",
-        text: "Privacy policy"
-      },
-      {
-        href: "#",
-        text: "Terms and conditions"
-      }
-    ]
-  }
+meta: {
+items: [
+{
+href: "#",
+text: "Accessibility statement"
+},
+{
+href: "#",
+text: "Contact us"
+},
+{
+href: "#",
+text: "Cookies"
+},
+{
+href: "#",
+text: "Privacy policy"
+},
+{
+href: "#",
+text: "Terms and conditions"
+},
+{
+href: "/prototype_v3/skip-to-tobacco",
+text: "Skip to tobacco section (testing)",
+attributes: {
+style: "color: #000000; font-weight: bold;"
+}
+}
+]
+}
 }) }}
 {% endblock %}
 
