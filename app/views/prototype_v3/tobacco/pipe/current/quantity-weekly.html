@@ -1,85 +1,79 @@
 {% extends 'layout.html' %}
-
 {% block pageTitle %}
   Pipe smoking - NHS
 {% endblock %}
-
 {% block beforeContent %}
   {{ backLink({
     text: "Back",
     href: "javascript:history.back();"
   }) }}
 {% endblock %}
-
 {% block content %}
 <div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="/prototype_v3/tobacco/pipe/current/quantity-weekly-answer" method="post">
-      
-      <h1 class="nhsuk-heading-xl">Pipe smoking</h1>
-      
-      <p>Telling us the number of full pipe loads you smoke a week helps us check if you need a lung scan.</p>
+<div class="nhsuk-grid-column-two-thirds">
 
-      {{ input({
-        label: {
-          text: "Roughly how many full pipe loads do you normally smoke a week now?",
-          classes: "nhsuk-label--m"
-        },
-        hint: {
-          text: "Give an estimate if you are not sure"
-        },
-        id: "pipeCurrentQuantityWeekly",
-        name: "pipeCurrentQuantityWeekly",
-        classes: "nhsuk-input--width-2",
-        suffix: {
-          text: "full pipe loads"
-        },
-        value: data.pipeCurrentQuantityWeekly
-      }) }}
+<h1>Pipe smoking</h1>
 
-      {{ checkboxes({
-        idPrefix: "pipeCurrentChanges",
-        name: "pipeCurrentChanges",
-        fieldset: {
-          legend: {
-            text: "Has the number of full pipe loads you smoke changed over time?",
-            classes: "nhsuk-fieldset__legend--m"
-          }
-        },
-        hint: {
-          text: "Select all that apply"
-        },
-        items: [
-          {
-            value: "more",
-            text: "Yes, I used to smoke more than I do now",
-            checked: checked("pipeCurrentChanges", "more")
-          },
-          {
-            value: "less",
-            text: "Yes, I used to smoke less than I do now",
-            checked: checked("pipeCurrentChanges", "less")
-          },
-          {
-            value: "stopped",
-            text: "Yes, I stopped smoking for a period of 1 year or longer",
-            checked: checked("pipeCurrentChanges", "stopped")
-          },
-          {
-            divider: "or"
-          },
-          {
-            value: "no-change",
-            text: "No, it has not changed",
-            checked: checked("pipeCurrentChanges", "no-change")
-          }
-        ]
-      }) }}
+<p>Telling us the number of times you smoke a pipe a day helps us check if you need a lung scan.</p>
 
-      {{ button({
-        text: "Continue"
-      }) }}
-    </form>
-  </div>
+<form action="quantity-weekly-answer" method="post">
+  {{ input({
+    label: {
+      text: "Roughly how many times do you currently smoke a pipe on a normal week?",
+      classes: "nhsuk-label--m"
+    },
+    hint: {
+      text: "Give an estimate if you are not sure"
+    },
+    id: "pipeCurrentQuantityWeekly",
+    name: "pipeCurrentQuantityWeekly",
+    classes: "nhsuk-input--width-4",
+    suffix: {
+      text: "times"
+    },
+    value: data.pipeCurrentQuantityWeekly
+  }) }}
+
+  {{ checkboxes({
+    idPrefix: "pipeCurrentChanges",
+    name: "pipeCurrentChanges",
+    fieldset: {
+      legend: {
+        text: "Has the number of times you smoke a pipe changed over time?",
+        classes: "nhsuk-fieldset__legend--m"
+      }
+    },
+    hint: {
+      text: "Select all that apply"
+    },
+    items: [
+      {
+        value: "more",
+        text: "Yes, I used to smoke more than I do now"
+      },
+      {
+        value: "less",
+        text: "Yes, I used to smoke less than I do now"
+      },
+      {
+        value: "stopped",
+        text: "Yes, I stopped smoking for a period of 1 year or longer"
+      },
+      {
+        divider: "or"
+      },
+      {
+        value: "no-change",
+        text: "No, it has not changed"
+      }
+    ]
+  }) }}
+
+  {{ button({
+    text: "Continue"
+  }) }}
+</form>
+
+</div>
 </div>
 {% endblock %}

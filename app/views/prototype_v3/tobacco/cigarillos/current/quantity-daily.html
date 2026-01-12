@@ -1,85 +1,79 @@
 {% extends 'layout.html' %}
-
 {% block pageTitle %}
   Cigarillo smoking - NHS
 {% endblock %}
-
 {% block beforeContent %}
   {{ backLink({
     text: "Back",
     href: "javascript:history.back();"
   }) }}
 {% endblock %}
-
 {% block content %}
 <div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="/prototype_v3/tobacco/cigarillos/current/quantity-daily-answer" method="post">
-      
-      <h1 class="nhsuk-heading-xl">Cigarillo smoking</h1>
-      
-      <p>Telling us the number of cigarillos you smoke a day helps us check if you need a lung scan.</p>
+<div class="nhsuk-grid-column-two-thirds">
 
-      {{ input({
-        label: {
-          text: "Roughly how many cigarillos do you normally smoke a day now?",
-          classes: "nhsuk-label--m"
-        },
-        hint: {
-          text: "Give an estimate if you are not sure"
-        },
-        id: "cigarillosCurrentQuantityDaily",
-        name: "cigarillosCurrentQuantityDaily",
-        classes: "nhsuk-input--width-2",
-        suffix: {
-          text: "cigarillos"
-        },
-        value: data.cigarillosCurrentQuantityDaily
-      }) }}
+<h1>Cigarillo smoking</h1>
 
-      {{ checkboxes({
-        idPrefix: "cigarillosCurrentChanges",
-        name: "cigarillosCurrentChanges",
-        fieldset: {
-          legend: {
-            text: "Has the number of cigarillos you smoke changed over time?",
-            classes: "nhsuk-fieldset__legend--m"
-          }
-        },
-        hint: {
-          text: "Select all that apply"
-        },
-        items: [
-          {
-            value: "more",
-            text: "Yes, I used to smoke more than I do now",
-            checked: checked("cigarillosCurrentChanges", "more")
-          },
-          {
-            value: "less",
-            text: "Yes, I used to smoke less than I do now",
-            checked: checked("cigarillosCurrentChanges", "less")
-          },
-          {
-            value: "stopped",
-            text: "Yes, I stopped smoking for a period of 1 year or longer",
-            checked: checked("cigarillosCurrentChanges", "stopped")
-          },
-          {
-            divider: "or"
-          },
-          {
-            value: "no-change",
-            text: "No, it has not changed",
-            checked: checked("cigarillosCurrentChanges", "no-change")
-          }
-        ]
-      }) }}
+<p>Telling us the number of cigarillos you smoke a day helps us check if you need a lung scan.</p>
 
-      {{ button({
-        text: "Continue"
-      }) }}
-    </form>
-  </div>
+<form action="quantity-daily-answer" method="post">
+  {{ input({
+    label: {
+      text: "Roughly how many cigarillos do you currently smoke on a normal day?",
+      classes: "nhsuk-label--m"
+    },
+    hint: {
+      text: "Give an estimate if you are not sure"
+    },
+    id: "cigarillosCurrentQuantityDaily",
+    name: "cigarillosCurrentQuantityDaily",
+    classes: "nhsuk-input--width-4",
+    suffix: {
+      text: "cigarillos"
+    },
+    value: data.cigarillosCurrentQuantityDaily
+  }) }}
+
+  {{ checkboxes({
+    idPrefix: "cigarillosCurrentChanges",
+    name: "cigarillosCurrentChanges",
+    fieldset: {
+      legend: {
+        text: "Has the number of cigarillos you smoke changed over time?",
+        classes: "nhsuk-fieldset__legend--m"
+      }
+    },
+    hint: {
+      text: "Select all that apply"
+    },
+    items: [
+      {
+        value: "more",
+        text: "Yes, I used to smoke more than I do now"
+      },
+      {
+        value: "less",
+        text: "Yes, I used to smoke less than I do now"
+      },
+      {
+        value: "stopped",
+        text: "Yes, I stopped smoking for a period of 1 year or longer"
+      },
+      {
+        divider: "or"
+      },
+      {
+        value: "no-change",
+        text: "No, it has not changed"
+      }
+    ]
+  }) }}
+
+  {{ button({
+    text: "Continue"
+  }) }}
+</form>
+
+</div>
 </div>
 {% endblock %}
