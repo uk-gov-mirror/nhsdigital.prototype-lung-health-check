@@ -706,7 +706,7 @@ function moveToNextTobaccoType(request, response) {
 }
 
 // ============================================
-// TOBACCO TYPE SELECTION - UPDATED FOR SINGLE LIST
+// TOBACCO TYPE SELECTION
 // ============================================
 
 router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, response) {
@@ -744,11 +744,21 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
           tobaccoQueue.push(tobaccoRoutes[type] + '/do-you-currently-smoke')
         } else {
           // Single type and they're a current smoker - go straight to current pages
-          tobaccoQueue.push(tobaccoRoutes[type] + '/current/quantity-daily')
+          // Shisha uses years-smoked, others use quantity-daily
+          if (type === 'Shisha') {
+            tobaccoQueue.push(tobaccoRoutes[type] + '/current/years-smoked')
+          } else {
+            tobaccoQueue.push(tobaccoRoutes[type] + '/current/quantity-daily')
+          }
         }
       } else if (smokedRegularly === "Yes-usedToRegularly") {
         // Former smoker - go straight to former pages
-        tobaccoQueue.push(tobaccoRoutes[type] + '/former/quantity-daily')
+        // Shisha uses years-smoked, others use quantity-daily
+        if (type === 'Shisha') {
+          tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
+        } else {
+          tobaccoQueue.push(tobaccoRoutes[type] + '/former/quantity-daily')
+        }
       }
     }
   })

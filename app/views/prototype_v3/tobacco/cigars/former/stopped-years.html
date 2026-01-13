@@ -1,20 +1,18 @@
 {% extends 'layout.html' %}
-
+{% from 'input/macro.njk' import input %}
 {% block pageTitle %}
   How long did you stop smoking for - NHS
 {% endblock %}
-
 {% block beforeContent %}
   {{ backLink({
     text: "Back",
     href: "javascript:history.back();"
   }) }}
 {% endblock %}
-
 {% block content %}
 <div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="/prototype_v3/tobacco/cigars/former/stopped-years-answer" method="post">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/cigars/former/stopped-years-answer" method="post">
       
       {{ input({
         label: {
@@ -33,11 +31,11 @@
         },
         value: data.cigarsFormerStoppedYears
       }) }}
-
+      
       {{ button({
         text: "Continue"
       }) }}
-    </form>
-  </div>
+</form>
+</div>
 </div>
 {% endblock %}
