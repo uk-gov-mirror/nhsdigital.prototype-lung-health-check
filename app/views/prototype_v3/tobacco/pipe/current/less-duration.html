@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  When you smoked less pipe tobacco - NHS
+  Pipe smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -13,10 +13,17 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/pipe/current/less-duration-answer" method="post">
-        
+
+        {% set frequencyText = "a day" %}
+        {% if data.pipeCurrentLessFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.pipeCurrentLessFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+
         {{ input({
           label: {
-            text: "Roughly how many years did you smoke " + data.pipeCurrentLessQuantity + " bowls a day?",
+            text: "Roughly how many years did you smoke " + data.pipeCurrentLessQuantity + " bowls " + frequencyText + "?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },

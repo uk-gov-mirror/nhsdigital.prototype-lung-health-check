@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  When you smoked fewer cigarillos - NHS
+  Pipe smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,24 +12,31 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigarillos/former/less-duration-answer" method="post">
-        
+<form action="/prototype_v3/tobacco/pipe/former/less-duration-answer" method="post">
+
+        {% set frequencyText = "a day" %}
+        {% if data.pipeFormerLessFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.pipeFormerLessFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+
         {{ input({
           label: {
-            text: "Roughly how many years did you smoke " + data.cigarillosFormerLessQuantity + " cigarillos a day?",
+            text: "Roughly how many years did you smoke " + data.pipeFormerLessQuantity + " bowls " + frequencyText + "?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "cigarillosFormerLessDuration",
-          name: "cigarillosFormerLessDuration",
+          id: "pipeFormerLessDuration",
+          name: "pipeFormerLessDuration",
           classes: "nhsuk-input--width-2",
           suffix: {
             text: "years"
           },
-          value: data.cigarillosFormerLessDuration
+          value: data.pipeFormerLessDuration
         }) }}
         
         {{ button({
