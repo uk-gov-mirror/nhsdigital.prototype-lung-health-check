@@ -321,12 +321,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- CIGARETTES - CURRENT -->
       <!-- ============================================ -->
+      {% if data["cigarettesCurrentYearsSmoked"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarettes - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarettesCurrentYearsSmoked"] }} years</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarettes/current/years-smoked">Change<span class="nhsuk-u-visually-hidden"> cigarettes years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarettesCurrentFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarettes - how often you smoke</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarettesCurrentFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarettes/current/frequency">Change<span class="nhsuk-u-visually-hidden"> cigarettes frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
       {% if data["cigarettesCurrentQuantity"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Cigarettes per day</dt>
+        <dt class="nhsuk-summary-list__key">Cigarettes per 
+          {% if data["cigarettesCurrentFrequency"] == "Daily" %}day{% elif data["cigarettesCurrentFrequency"] == "Weekly" %}week{% elif data["cigarettesCurrentFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
         <dd class="nhsuk-summary-list__value">{{ data["cigarettesCurrentQuantity"] }} cigarettes</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/cigarettes/current/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> cigarettes daily</span></a>
+          <a href="tobacco/cigarettes/current/quantity">Change<span class="nhsuk-u-visually-hidden"> cigarettes quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -372,12 +394,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- CIGARETTES - FORMER -->
       <!-- ============================================ -->
-      {% if data["cigarettesFormerQuantityDaily"] %}
+      {% if data["cigarettesFormerYearsSmoked"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Cigarettes per day</dt>
-        <dd class="nhsuk-summary-list__value">{{ data["cigarettesFormerQuantityDaily"] }} cigarettes</dd>
+        <dt class="nhsuk-summary-list__key">Cigarettes - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarettesFormerYearsSmoked"] }} years</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/cigarettes/former/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> cigarettes daily</span></a>
+          <a href="tobacco/cigarettes/former/years-smoked">Change<span class="nhsuk-u-visually-hidden"> cigarettes years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarettesFormerFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarettes - how often you smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarettesFormerFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarettes/former/frequency">Change<span class="nhsuk-u-visually-hidden"> cigarettes frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarettesFormerQuantity"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarettes per 
+          {% if data["cigarettesFormerFrequency"] == "Daily" %}day{% elif data["cigarettesFormerFrequency"] == "Weekly" %}week{% elif data["cigarettesFormerFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarettesFormerQuantity"] }} cigarettes</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarettes/former/quantity">Change<span class="nhsuk-u-visually-hidden"> cigarettes quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -423,12 +467,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- ROLLED CIGARETTES - CURRENT -->
       <!-- ============================================ -->
+      {% if data["rolledCigarettesCurrentYearsSmoked"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Rolled cigarettes - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["rolledCigarettesCurrentYearsSmoked"] }} years</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/rolled-cigarettes/current/years-smoked">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["rolledCigarettesCurrentFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Rolled cigarettes - how often you smoke</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["rolledCigarettesCurrentFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/rolled-cigarettes/current/frequency">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
       {% if data["rolledCigarettesCurrentQuantity"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Rolled cigarettes per day</dt>
+        <dt class="nhsuk-summary-list__key">Rolled cigarettes per 
+          {% if data["rolledCigarettesCurrentFrequency"] == "Daily" %}day{% elif data["rolledCigarettesCurrentFrequency"] == "Weekly" %}week{% elif data["rolledCigarettesCurrentFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
         <dd class="nhsuk-summary-list__value">{{ data["rolledCigarettesCurrentQuantity"] }} rolled cigarettes</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/rolled-cigarettes/current/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes daily</span></a>
+          <a href="tobacco/rolled-cigarettes/current/quantity">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -474,12 +540,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- ROLLED CIGARETTES - FORMER -->
       <!-- ============================================ -->
-      {% if data["rolledCigarettesFormerQuantityDaily"] %}
+      {% if data["rolledCigarettesFormerYearsSmoked"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Rolled cigarettes per day</dt>
-        <dd class="nhsuk-summary-list__value">{{ data["rolledCigarettesFormerQuantityDaily"] }} rolled cigarettes</dd>
+        <dt class="nhsuk-summary-list__key">Rolled cigarettes - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["rolledCigarettesFormerYearsSmoked"] }} years</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/rolled-cigarettes/former/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes daily</span></a>
+          <a href="tobacco/rolled-cigarettes/former/years-smoked">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["rolledCigarettesFormerFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Rolled cigarettes - how often you smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["rolledCigarettesFormerFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/rolled-cigarettes/former/frequency">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["rolledCigarettesFormerQuantity"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Rolled cigarettes per 
+          {% if data["rolledCigarettesFormerFrequency"] == "Daily" %}day{% elif data["rolledCigarettesFormerFrequency"] == "Weekly" %}week{% elif data["rolledCigarettesFormerFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
+        <dd class="nhsuk-summary-list__value">{{ data["rolledCigarettesFormerQuantity"] }} rolled cigarettes</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/rolled-cigarettes/former/quantity">Change<span class="nhsuk-u-visually-hidden"> rolled cigarettes quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -525,12 +613,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- PIPE - CURRENT -->
       <!-- ============================================ -->
+      {% if data["pipeCurrentYearsSmoked"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Pipe - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["pipeCurrentYearsSmoked"] }} years</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/pipe/current/years-smoked">Change<span class="nhsuk-u-visually-hidden"> pipe years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["pipeCurrentFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Pipe - how often you smoke</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["pipeCurrentFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/pipe/current/frequency">Change<span class="nhsuk-u-visually-hidden"> pipe frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
       {% if data["pipeCurrentQuantity"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Pipe - bowls per day</dt>
+        <dt class="nhsuk-summary-list__key">Pipe - bowls per 
+          {% if data["pipeCurrentFrequency"] == "Daily" %}day{% elif data["pipeCurrentFrequency"] == "Weekly" %}week{% elif data["pipeCurrentFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
         <dd class="nhsuk-summary-list__value">{{ data["pipeCurrentQuantity"] }} bowls</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/pipe/current/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> pipe daily</span></a>
+          <a href="tobacco/pipe/current/quantity">Change<span class="nhsuk-u-visually-hidden"> pipe quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -576,12 +686,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- PIPE - FORMER -->
       <!-- ============================================ -->
-      {% if data["pipeFormerQuantityDaily"] %}
+      {% if data["pipeFormerYearsSmoked"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Pipe - bowls per day</dt>
-        <dd class="nhsuk-summary-list__value">{{ data["pipeFormerQuantityDaily"] }} bowls</dd>
+        <dt class="nhsuk-summary-list__key">Pipe - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["pipeFormerYearsSmoked"] }} years</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/pipe/former/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> pipe daily</span></a>
+          <a href="tobacco/pipe/former/years-smoked">Change<span class="nhsuk-u-visually-hidden"> pipe years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["pipeFormerFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Pipe - how often you smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["pipeFormerFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/pipe/former/frequency">Change<span class="nhsuk-u-visually-hidden"> pipe frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["pipeFormerQuantity"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Pipe - bowls per 
+          {% if data["pipeFormerFrequency"] == "Daily" %}day{% elif data["pipeFormerFrequency"] == "Weekly" %}week{% elif data["pipeFormerFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
+        <dd class="nhsuk-summary-list__value">{{ data["pipeFormerQuantity"] }} bowls</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/pipe/former/quantity">Change<span class="nhsuk-u-visually-hidden"> pipe quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -627,12 +759,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- CIGARS - CURRENT -->
       <!-- ============================================ -->
+      {% if data["cigarsCurrentYearsSmoked"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigars - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarsCurrentYearsSmoked"] }} years</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigars/current/years-smoked">Change<span class="nhsuk-u-visually-hidden"> cigars years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarsCurrentFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigars - how often you smoke</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarsCurrentFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigars/current/frequency">Change<span class="nhsuk-u-visually-hidden"> cigars frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
       {% if data["cigarsCurrentQuantity"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Cigars per day</dt>
+        <dt class="nhsuk-summary-list__key">Cigars per 
+          {% if data["cigarsCurrentFrequency"] == "Daily" %}day{% elif data["cigarsCurrentFrequency"] == "Weekly" %}week{% elif data["cigarsCurrentFrequency"] == "Monthly" %}month{% elif data["cigarsCurrentFrequency"] == "Yearly" %}year{% else %}day{% endif %}
+        </dt>
         <dd class="nhsuk-summary-list__value">{{ data["cigarsCurrentQuantity"] }} cigars</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/cigars/current/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> cigars daily</span></a>
+          <a href="tobacco/cigars/current/quantity">Change<span class="nhsuk-u-visually-hidden"> cigars quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -642,7 +796,7 @@ text: "Go back"
         <dt class="nhsuk-summary-list__key">Cigars - period of more smoking</dt>
         <dd class="nhsuk-summary-list__value">
           {{ data["cigarsCurrentMoreQuantity"] }} cigars 
-          {% if data["cigarsCurrentMoreFrequency"] == "Daily" %}a day{% elif data["cigarsCurrentMoreFrequency"] == "Weekly" %}a week{% elif data["cigarsCurrentMoreFrequency"] == "Monthly" %}a month{% endif %} 
+          {% if data["cigarsCurrentMoreFrequency"] == "Daily" %}a day{% elif data["cigarsCurrentMoreFrequency"] == "Weekly" %}a week{% elif data["cigarsCurrentMoreFrequency"] == "Monthly" %}a month{% elif data["cigarsCurrentMoreFrequency"] == "Yearly" %}a year{% endif %} 
           for {{ data["cigarsCurrentMoreDuration"] }} years
         </dd>
         <dd class="nhsuk-summary-list__actions">
@@ -656,7 +810,7 @@ text: "Go back"
         <dt class="nhsuk-summary-list__key">Cigars - period of less smoking</dt>
         <dd class="nhsuk-summary-list__value">
           {{ data["cigarsCurrentLessQuantity"] }} cigars 
-          {% if data["cigarsCurrentLessFrequency"] == "Daily" %}a day{% elif data["cigarsCurrentLessFrequency"] == "Weekly" %}a week{% elif data["cigarsCurrentLessFrequency"] == "Monthly" %}a month{% endif %} 
+          {% if data["cigarsCurrentLessFrequency"] == "Daily" %}a day{% elif data["cigarsCurrentLessFrequency"] == "Weekly" %}a week{% elif data["cigarsCurrentLessFrequency"] == "Monthly" %}a month{% elif data["cigarsCurrentLessFrequency"] == "Yearly" %}a year{% endif %} 
           for {{ data["cigarsCurrentLessDuration"] }} years
         </dd>
         <dd class="nhsuk-summary-list__actions">
@@ -678,12 +832,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- CIGARS - FORMER -->
       <!-- ============================================ -->
-      {% if data["cigarsFormerQuantityDaily"] %}
+      {% if data["cigarsFormerYearsSmoked"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Cigars per day</dt>
-        <dd class="nhsuk-summary-list__value">{{ data["cigarsFormerQuantityDaily"] }} cigars</dd>
+        <dt class="nhsuk-summary-list__key">Cigars - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarsFormerYearsSmoked"] }} years</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/cigars/former/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> cigars daily</span></a>
+          <a href="tobacco/cigars/former/years-smoked">Change<span class="nhsuk-u-visually-hidden"> cigars years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarsFormerFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigars - how often you smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarsFormerFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigars/former/frequency">Change<span class="nhsuk-u-visually-hidden"> cigars frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarsFormerQuantity"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigars per 
+          {% if data["cigarsFormerFrequency"] == "Daily" %}day{% elif data["cigarsFormerFrequency"] == "Weekly" %}week{% elif data["cigarsFormerFrequency"] == "Monthly" %}month{% elif data["cigarsFormerFrequency"] == "Yearly" %}year{% else %}day{% endif %}
+        </dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarsFormerQuantity"] }} cigars</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigars/former/quantity">Change<span class="nhsuk-u-visually-hidden"> cigars quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -693,7 +869,7 @@ text: "Go back"
         <dt class="nhsuk-summary-list__key">Cigars - period of more smoking</dt>
         <dd class="nhsuk-summary-list__value">
           {{ data["cigarsFormerMoreQuantity"] }} cigars 
-          {% if data["cigarsFormerMoreFrequency"] == "Daily" %}a day{% elif data["cigarsFormerMoreFrequency"] == "Weekly" %}a week{% elif data["cigarsFormerMoreFrequency"] == "Monthly" %}a month{% endif %} 
+          {% if data["cigarsFormerMoreFrequency"] == "Daily" %}a day{% elif data["cigarsFormerMoreFrequency"] == "Weekly" %}a week{% elif data["cigarsFormerMoreFrequency"] == "Monthly" %}a month{% elif data["cigarsFormerMoreFrequency"] == "Yearly" %}a year{% endif %} 
           for {{ data["cigarsFormerMoreDuration"] }} years
         </dd>
         <dd class="nhsuk-summary-list__actions">
@@ -707,7 +883,7 @@ text: "Go back"
         <dt class="nhsuk-summary-list__key">Cigars - period of less smoking</dt>
         <dd class="nhsuk-summary-list__value">
           {{ data["cigarsFormerLessQuantity"] }} cigars 
-          {% if data["cigarsFormerLessFrequency"] == "Daily" %}a day{% elif data["cigarsFormerLessFrequency"] == "Weekly" %}a week{% elif data["cigarsFormerLessFrequency"] == "Monthly" %}a month{% endif %} 
+          {% if data["cigarsFormerLessFrequency"] == "Daily" %}a day{% elif data["cigarsFormerLessFrequency"] == "Weekly" %}a week{% elif data["cigarsFormerLessFrequency"] == "Monthly" %}a month{% elif data["cigarsFormerLessFrequency"] == "Yearly" %}a year{% endif %} 
           for {{ data["cigarsFormerLessDuration"] }} years
         </dd>
         <dd class="nhsuk-summary-list__actions">
@@ -729,12 +905,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- CIGARILLOS - CURRENT -->
       <!-- ============================================ -->
+      {% if data["cigarillosCurrentYearsSmoked"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarillos - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarillosCurrentYearsSmoked"] }} years</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarillos/current/years-smoked">Change<span class="nhsuk-u-visually-hidden"> cigarillos years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarillosCurrentFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarillos - how often you smoke</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarillosCurrentFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarillos/current/frequency">Change<span class="nhsuk-u-visually-hidden"> cigarillos frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
       {% if data["cigarillosCurrentQuantity"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Cigarillos per day</dt>
+        <dt class="nhsuk-summary-list__key">Cigarillos per 
+          {% if data["cigarillosCurrentFrequency"] == "Daily" %}day{% elif data["cigarillosCurrentFrequency"] == "Weekly" %}week{% elif data["cigarillosCurrentFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
         <dd class="nhsuk-summary-list__value">{{ data["cigarillosCurrentQuantity"] }} cigarillos</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/cigarillos/current/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> cigarillos daily</span></a>
+          <a href="tobacco/cigarillos/current/quantity">Change<span class="nhsuk-u-visually-hidden"> cigarillos quantity</span></a>
         </dd>
       </div>
       {% endif %}
@@ -780,12 +978,34 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- CIGARILLOS - FORMER -->
       <!-- ============================================ -->
-      {% if data["cigarillosFormerQuantityDaily"] %}
+      {% if data["cigarillosFormerYearsSmoked"] %}
       <div class="nhsuk-summary-list__row">
-        <dt class="nhsuk-summary-list__key">Cigarillos per day</dt>
-        <dd class="nhsuk-summary-list__value">{{ data["cigarillosFormerQuantityDaily"] }} cigarillos</dd>
+        <dt class="nhsuk-summary-list__key">Cigarillos - years smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarillosFormerYearsSmoked"] }} years</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="tobacco/cigarillos/former/quantity-daily">Change<span class="nhsuk-u-visually-hidden"> cigarillos daily</span></a>
+          <a href="tobacco/cigarillos/former/years-smoked">Change<span class="nhsuk-u-visually-hidden"> cigarillos years</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarillosFormerFrequency"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarillos - how often you smoked</dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarillosFormerFrequency"] }}</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarillos/former/frequency">Change<span class="nhsuk-u-visually-hidden"> cigarillos frequency</span></a>
+        </dd>
+      </div>
+      {% endif %}
+
+      {% if data["cigarillosFormerQuantity"] %}
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">Cigarillos per 
+          {% if data["cigarillosFormerFrequency"] == "Daily" %}day{% elif data["cigarillosFormerFrequency"] == "Weekly" %}week{% elif data["cigarillosFormerFrequency"] == "Monthly" %}month{% else %}day{% endif %}
+        </dt>
+        <dd class="nhsuk-summary-list__value">{{ data["cigarillosFormerQuantity"] }} cigarillos</dd>
+        <dd class="nhsuk-summary-list__actions">
+          <a href="tobacco/cigarillos/former/quantity">Change<span class="nhsuk-u-visually-hidden"> cigarillos quantity</span></a>
         </dd>
       </div>
       {% endif %}
