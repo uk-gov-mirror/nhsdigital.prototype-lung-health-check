@@ -1,19 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
-
-{% if data.cigarsFormerMoreFrequency == "Daily" %}
-  {% set frequencyText = "a day" %}
-  {% set suffixText = "cigars" %}
-{% elif data.cigarsFormerMoreFrequency == "Weekly" %}
-  {% set frequencyText = "a week" %}
-  {% set suffixText = "cigars" %}
-{% elif data.cigarsFormerMoreFrequency == "Monthly" %}
-  {% set frequencyText = "a month" %}
-  {% set suffixText = "cigars" %}
-{% endif %}
-
 {% block pageTitle %}
-  When you smoked more cigars - NHS
+  Cigar smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -25,10 +13,19 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigars/former/more-quantity-answer" method="post">
-        
+
+        {% set frequencyText = "a day" %}
+        {% if data.cigarsFormerMoreFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.cigarsFormerMoreFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% elif data.cigarsFormerMoreFrequency == "Yearly" %}
+          {% set frequencyText = "a year" %}
+        {% endif %}
+
         {{ input({
           label: {
-            text: "When you smoked more than " + data.cigarsFormerQuantityDaily + " cigars a day, roughly how many cigars did you normally smoke " + frequencyText + "?",
+            text: "Roughly how many cigars did you normally smoke " + frequencyText + "?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },
@@ -39,7 +36,7 @@
           name: "cigarsFormerMoreQuantity",
           classes: "nhsuk-input--width-3",
           suffix: {
-            text: suffixText
+            text: "cigars"
           },
           value: data.cigarsFormerMoreQuantity
         }) }}

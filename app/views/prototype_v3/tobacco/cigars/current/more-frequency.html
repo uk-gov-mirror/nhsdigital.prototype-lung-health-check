@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'radios/macro.njk' import radios %}
 {% block pageTitle %}
-  When you smoked more cigars - NHS
+  Cigar smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -13,32 +13,44 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigars/current/more-frequency-answer" method="post">
-        
+
+        {% set frequencyText = "a day" %}
+        {% if data.cigarsCurrentFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.cigarsCurrentFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% elif data.cigarsCurrentFrequency == "Yearly" %}
+          {% set frequencyText = "a year" %}
+        {% endif %}
+
+        <h1>When you smoked more than {{ data.cigarsCurrentQuantity }} cigars {{ frequencyText }}, how often did you smoke cigars?</h1>
+
         {{ radios({
           idPrefix: "cigarsCurrentMoreFrequency",
           name: "cigarsCurrentMoreFrequency",
-          fieldset: {
-            legend: {
-              text: "When you smoked more than " + data.cigarsCurrentQuantity + " cigars a day, how often did you smoke cigars?",
-              classes: "nhsuk-fieldset__legend--l",
-              isPageHeading: true
-            }
-          },
           items: [
             {
               value: "Daily",
-              text: "Daily"
+              text: "Daily",
+              checked: checked("cigarsCurrentMoreFrequency", "Daily")
             },
             {
               value: "Weekly",
               text: "Weekly",
               hint: {
-                text: "For example, on the weekend"
-              }
+                text: "For example on the weekend"
+              },
+              checked: checked("cigarsCurrentMoreFrequency", "Weekly")
             },
             {
               value: "Monthly",
-              text: "Monthly"
+              text: "Monthly",
+              checked: checked("cigarsCurrentMoreFrequency", "Monthly")
+            },
+            {
+              value: "Yearly",
+              text: "Yearly",
+              checked: checked("cigarsCurrentMoreFrequency", "Yearly")
             }
           ]
         }) }}

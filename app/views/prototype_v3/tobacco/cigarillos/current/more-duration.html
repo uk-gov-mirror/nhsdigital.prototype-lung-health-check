@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  When you smoked more cigarillos - NHS
+  Cigarillo smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -13,10 +13,17 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigarillos/current/more-duration-answer" method="post">
-        
+
+        {% set frequencyText = "a day" %}
+        {% if data.cigarillosCurrentMoreFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.cigarillosCurrentMoreFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+
         {{ input({
           label: {
-            text: "Roughly how many years did you smoke " + data.cigarillosCurrentMoreQuantity + " cigarillos a day?",
+            text: "Roughly how many years did you smoke " + data.cigarillosCurrentMoreQuantity + " cigarillos " + frequencyText + "?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },

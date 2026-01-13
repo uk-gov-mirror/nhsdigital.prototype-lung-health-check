@@ -1,19 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
-
-{% if data.rolledCigarettesCurrentMoreFrequency == "Daily" %}
-  {% set frequencyText = "a day" %}
-  {% set suffixText = "rolled cigarettes" %}
-{% elif data.rolledCigarettesCurrentMoreFrequency == "Weekly" %}
-  {% set frequencyText = "a week" %}
-  {% set suffixText = "rolled cigarettes" %}
-{% elif data.rolledCigarettesCurrentMoreFrequency == "Monthly" %}
-  {% set frequencyText = "a month" %}
-  {% set suffixText = "rolled cigarettes" %}
-{% endif %}
-
 {% block pageTitle %}
-  When you smoked more rolled cigarettes - NHS
+  Rolled cigarette smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -25,10 +13,17 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-answer" method="post">
-        
+
+        {% set frequencyText = "a day" %}
+        {% if data.rolledCigarettesCurrentMoreFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.rolledCigarettesCurrentMoreFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+
         {{ input({
           label: {
-            text: "When you smoked more than " + data.rolledCigarettesCurrentQuantity + " rolled cigarettes a day, roughly how many rolled cigarettes did you normally smoke " + frequencyText + "?",
+            text: "Roughly how many rolled cigarettes did you normally smoke " + frequencyText + "?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },
@@ -39,7 +34,7 @@
           name: "rolledCigarettesCurrentMoreQuantity",
           classes: "nhsuk-input--width-3",
           suffix: {
-            text: suffixText
+            text: "rolled cigarettes"
           },
           value: data.rolledCigarettesCurrentMoreQuantity
         }) }}
