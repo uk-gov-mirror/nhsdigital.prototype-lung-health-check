@@ -12,28 +12,34 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigarillos/former/quantity-daily-answer" method="post">
+<form action="/prototype_v3/tobacco/cigarillos/current/quantity-answer" method="post">
+
 <h1>Cigarillo smoking</h1>
 
-<p>Telling us the number of cigarillos you smoked a day helps us check if you need a lung scan.</p>
+<p>The question on the next page will ask if the number of cigarillos you smoke has changed over time.</p>
 
-<p>The question on the next page will ask if the number of cigarillos you smoked changed over time.</p>
+        {% set frequencyText = "a day" %}
+        {% if data.cigarillosCurrentFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.cigarillosCurrentFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
 
         {{ input({
           label: {
-            text: "Roughly how many cigarillos did you normally smoke a day?",
+            text: "Roughly how many cigarillos do you normally smoke " + frequencyText + "?",
             classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "cigarillosFormerQuantityDaily",
-          name: "cigarillosFormerQuantityDaily",
+          id: "cigarillosCurrentQuantity",
+          name: "cigarillosCurrentQuantity",
           classes: "nhsuk-input--width-3",
           suffix: {
             text: "cigarillos"
           },
-          value: data.cigarillosFormerQuantityDaily
+          value: data.cigarillosCurrentQuantity
         }) }}
         
         {{ button({

@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+{% from 'input/macro.njk' import input %}
+{% block pageTitle %}
+  Cigarette smoking - NHS
+{% endblock %}
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/cigarettes/current/quantity-answer" method="post">
+
+<h1>Cigarette smoking</h1>
+
+<p>The question on the next page will ask if the number of cigarettes you smoke has changed over time.</p>
+
+        {% set frequencyText = "a day" %}
+        {% if data.cigarettesCurrentFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.cigarettesCurrentFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+
+        {{ input({
+          label: {
+            text: "Roughly how many cigarettes do you normally smoke " + frequencyText + "?",
+            classes: "nhsuk-label--m"
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "cigarettesCurrentQuantity",
+          name: "cigarettesCurrentQuantity",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: "cigarettes"
+          },
+          value: data.cigarettesCurrentQuantity
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  Pipe smoking - NHS
+  Rolled cigarette smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,28 +12,27 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/pipe/current/quantity-daily-answer" method="post">
-<h1>Pipe smoking</h1>
+<form action="/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked-answer" method="post">
 
-<p>Telling us the number of bowls of pipe tobacco you smoke a day helps us check if you need a lung scan.</p>
+<h1>Rolled cigarette smoking</h1>
 
-<p>The question on the next page will ask if the number of bowls you smoke has changed over time.</p>
+<p>Telling us how long you smoked rolled cigarettes and how many you smoked helps us check if you need a lung scan.</p>
 
         {{ input({
           label: {
-            text: "Roughly how many bowls of pipe tobacco do you currently smoke on a normal day?",
+            text: "Roughly how many years did you smoke rolled cigarettes?",
             classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "pipeCurrentQuantityDaily",
-          name: "pipeCurrentQuantityDaily",
-          classes: "nhsuk-input--width-3",
+          id: "rolledCigarettesFormerYearsSmoked",
+          name: "rolledCigarettesFormerYearsSmoked",
+          classes: "nhsuk-input--width-2",
           suffix: {
-            text: "bowls"
+            text: "years"
           },
-          value: data.pipeCurrentQuantityDaily
+          value: data.rolledCigarettesFormerYearsSmoked
         }) }}
         
         {{ button({

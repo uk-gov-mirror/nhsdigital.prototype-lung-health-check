@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  Pipe smoking - NHS
+  Cigar smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,28 +12,27 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/pipe/former/quantity-daily-answer" method="post">
-<h1>Pipe smoking</h1>
+<form action="/prototype_v3/tobacco/cigars/current/years-smoked-answer" method="post">
 
-<p>Telling us the number of bowls of pipe tobacco you smoked a day helps us check if you need a lung scan.</p>
+<h1>Cigar smoking</h1>
 
-<p>The question on the next page will ask if the number of bowls you smoked changed over time.</p>
+<p>Telling us how long you have smoked cigars and how many you smoke helps us check if you need a lung scan.</p>
 
         {{ input({
           label: {
-            text: "Roughly how many bowls of pipe tobacco did you normally smoke a day?",
+            text: "Roughly how many years have you smoked cigars?",
             classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "pipeFormerQuantityDaily",
-          name: "pipeFormerQuantityDaily",
-          classes: "nhsuk-input--width-3",
+          id: "cigarsCurrentYearsSmoked",
+          name: "cigarsCurrentYearsSmoked",
+          classes: "nhsuk-input--width-2",
           suffix: {
-            text: "bowls"
+            text: "years"
           },
-          value: data.pipeFormerQuantityDaily
+          value: data.cigarsCurrentYearsSmoked
         }) }}
         
         {{ button({

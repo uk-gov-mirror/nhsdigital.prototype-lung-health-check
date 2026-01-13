@@ -14,6 +14,13 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/pipe/current/has-quantity-changed-answer" method="post">
         
+        {% set frequencyText = "a day" %}
+        {% if data.pipeCurrentFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.pipeCurrentFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+        
         {{ checkboxes({
           idPrefix: "pipeCurrentChanges",
           name: "pipeCurrentChanges",
@@ -30,11 +37,11 @@
           items: [
             {
               value: "more",
-              text: "Yes, I used to smoke more than " + data.pipeCurrentQuantityDaily + " bowls a day"
+              text: "Yes, I used to smoke more than " + data.pipeCurrentQuantity + " bowls " + frequencyText
             },
             {
               value: "less",
-              text: "Yes, I used to smoke less than " + data.pipeCurrentQuantityDaily + " bowls a day"
+              text: "Yes, I used to smoke less than " + data.pipeCurrentQuantity + " bowls " + frequencyText
             },
             {
               value: "stopped",

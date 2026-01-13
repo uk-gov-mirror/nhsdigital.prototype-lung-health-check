@@ -12,28 +12,27 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigarillos/current/quantity-daily-answer" method="post">
+<form action="/prototype_v3/tobacco/cigarillos/current/years-smoked-answer" method="post">
+
 <h1>Cigarillo smoking</h1>
 
-<p>Telling us the number of cigarillos you smoke a day helps us check if you need a lung scan.</p>
-
-<p>The question on the next page will ask if the number of cigarillos you smoke has changed over time.</p>
+<p>Telling us how long you have smoked cigarillos and how many you smoke helps us check if you need a lung scan.</p>
 
         {{ input({
           label: {
-            text: "Roughly how many cigarillos do you currently smoke on a normal day?",
+            text: "Roughly how many years have you smoked cigarillos?",
             classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "cigarillosCurrentQuantityDaily",
-          name: "cigarillosCurrentQuantityDaily",
-          classes: "nhsuk-input--width-3",
+          id: "cigarillosCurrentYearsSmoked",
+          name: "cigarillosCurrentYearsSmoked",
+          classes: "nhsuk-input--width-2",
           suffix: {
-            text: "cigarillos"
+            text: "years"
           },
-          value: data.cigarillosCurrentQuantityDaily
+          value: data.cigarillosCurrentYearsSmoked
         }) }}
         
         {{ button({

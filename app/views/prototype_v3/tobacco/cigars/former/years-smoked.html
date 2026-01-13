@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  Cigarette smoking - NHS
+  Cigar smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,28 +12,27 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigarettes/former/quantity-daily-answer" method="post">
-<h1>Cigarette smoking</h1>
+<form action="/prototype_v3/tobacco/cigars/former/years-smoked-answer" method="post">
 
-<p>Telling us the number of cigarettes you smoked a day helps us check if you need a lung scan.</p>
+<h1>Cigar smoking</h1>
 
-<p>The question on the next page will ask if the number of cigarettes you smoked changed over time.</p>
+<p>Telling us how long you smoked cigars and how many you smoked helps us check if you need a lung scan.</p>
 
         {{ input({
           label: {
-            text: "Roughly how many cigarettes did you normally smoke a day?",
+            text: "Roughly how many years did you smoke cigars?",
             classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "cigarettesFormerQuantityDaily",
-          name: "cigarettesFormerQuantityDaily",
-          classes: "nhsuk-input--width-3",
+          id: "cigarsFormerYearsSmoked",
+          name: "cigarsFormerYearsSmoked",
+          classes: "nhsuk-input--width-2",
           suffix: {
-            text: "cigarettes"
+            text: "years"
           },
-          value: data.cigarettesFormerQuantityDaily
+          value: data.cigarsFormerYearsSmoked
         }) }}
         
         {{ button({

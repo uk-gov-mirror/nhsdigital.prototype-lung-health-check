@@ -744,21 +744,13 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
           tobaccoQueue.push(tobaccoRoutes[type] + '/do-you-currently-smoke')
         } else {
           // Single type and they're a current smoker - go straight to current pages
-          // Shisha uses years-smoked, others use quantity-daily
-          if (type === 'Shisha') {
-            tobaccoQueue.push(tobaccoRoutes[type] + '/current/years-smoked')
-          } else {
-            tobaccoQueue.push(tobaccoRoutes[type] + '/current/quantity-daily')
-          }
+          // All types now start with years-smoked
+          tobaccoQueue.push(tobaccoRoutes[type] + '/current/years-smoked')
         }
       } else if (smokedRegularly === "Yes-usedToRegularly") {
         // Former smoker - go straight to former pages
-        // Shisha uses years-smoked, others use quantity-daily
-        if (type === 'Shisha') {
-          tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
-        } else {
-          tobaccoQueue.push(tobaccoRoutes[type] + '/former/quantity-daily')
-        }
+        // All types now start with years-smoked
+        tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
       }
     }
   })
@@ -781,9 +773,9 @@ router.post('/prototype_v3/tobacco/cigarettes/do-you-currently-smoke-answer', fu
   var currentlySmokesCigarettes = request.session.data['currentlySmokesCigarettes']
   
   if (currentlySmokesCigarettes === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/cigarettes/current/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/cigarettes/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/cigarettes/former/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/cigarettes/former/years-smoked')
   }
 })
 
@@ -791,7 +783,15 @@ router.post('/prototype_v3/tobacco/cigarettes/do-you-currently-smoke-answer', fu
 // CIGARETTES ROUTING - CURRENT
 // ============================================
 
-router.post('/prototype_v3/tobacco/cigarettes/current/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/cigarettes/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/frequency')
+})
+
+router.post('/prototype_v3/tobacco/cigarettes/current/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/current/quantity')
+})
+
+router.post('/prototype_v3/tobacco/cigarettes/current/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/cigarettes/current/has-quantity-changed')
 })
 
@@ -871,7 +871,15 @@ router.post('/prototype_v3/tobacco/cigarettes/current/stopped-years-answer', fun
 // CIGARETTES ROUTING - FORMER
 // ============================================
 
-router.post('/prototype_v3/tobacco/cigarettes/former/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/cigarettes/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/frequency')
+})
+
+router.post('/prototype_v3/tobacco/cigarettes/former/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarettes/former/quantity')
+})
+
+router.post('/prototype_v3/tobacco/cigarettes/former/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/cigarettes/former/has-quantity-changed')
 })
 
@@ -953,9 +961,9 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/do-you-currently-smoke-answ
   var currentlySmokesRolledCigarettes = request.session.data['currentlySmokesRolledCigarettes']
   
   if (currentlySmokesRolledCigarettes === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked')
   }
 })
 
@@ -963,7 +971,15 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/do-you-currently-smoke-answ
 // ROLLED CIGARETTES ROUTING - CURRENT
 // ============================================
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/frequency')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/quantity')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/has-quantity-changed')
 })
 
@@ -1043,7 +1059,15 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years-answe
 // ROLLED CIGARETTES ROUTING - FORMER
 // ============================================
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/frequency')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/quantity')
+})
+
+router.post('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/has-quantity-changed')
 })
 
@@ -1125,9 +1149,9 @@ router.post('/prototype_v3/tobacco/pipe/do-you-currently-smoke-answer', function
   var currentlySmokesPipe = request.session.data['currentlySmokesPipe']
   
   if (currentlySmokesPipe === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/pipe/current/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/pipe/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/pipe/former/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/pipe/former/years-smoked')
   }
 })
 
@@ -1135,7 +1159,15 @@ router.post('/prototype_v3/tobacco/pipe/do-you-currently-smoke-answer', function
 // PIPE ROUTING - CURRENT
 // ============================================
 
-router.post('/prototype_v3/tobacco/pipe/current/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/pipe/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/frequency')
+})
+
+router.post('/prototype_v3/tobacco/pipe/current/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/current/quantity')
+})
+
+router.post('/prototype_v3/tobacco/pipe/current/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/pipe/current/has-quantity-changed')
 })
 
@@ -1215,7 +1247,15 @@ router.post('/prototype_v3/tobacco/pipe/current/stopped-years-answer', function(
 // PIPE ROUTING - FORMER
 // ============================================
 
-router.post('/prototype_v3/tobacco/pipe/former/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/pipe/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/frequency')
+})
+
+router.post('/prototype_v3/tobacco/pipe/former/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/pipe/former/quantity')
+})
+
+router.post('/prototype_v3/tobacco/pipe/former/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/pipe/former/has-quantity-changed')
 })
 
@@ -1297,9 +1337,9 @@ router.post('/prototype_v3/tobacco/cigars/do-you-currently-smoke-answer', functi
   var currentlySmokesCigars = request.session.data['currentlySmokesCigars']
   
   if (currentlySmokesCigars === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/cigars/current/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/cigars/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/cigars/former/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/cigars/former/years-smoked')
   }
 })
 
@@ -1307,7 +1347,15 @@ router.post('/prototype_v3/tobacco/cigars/do-you-currently-smoke-answer', functi
 // CIGARS ROUTING - CURRENT
 // ============================================
 
-router.post('/prototype_v3/tobacco/cigars/current/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/cigars/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/frequency')
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/current/quantity')
+})
+
+router.post('/prototype_v3/tobacco/cigars/current/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/cigars/current/has-quantity-changed')
 })
 
@@ -1387,7 +1435,15 @@ router.post('/prototype_v3/tobacco/cigars/current/stopped-years-answer', functio
 // CIGARS ROUTING - FORMER
 // ============================================
 
-router.post('/prototype_v3/tobacco/cigars/former/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/cigars/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/frequency')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigars/former/quantity')
+})
+
+router.post('/prototype_v3/tobacco/cigars/former/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/cigars/former/has-quantity-changed')
 })
 
@@ -1461,7 +1517,6 @@ router.post('/prototype_v3/tobacco/cigars/former/stopped-years-answer', function
   moveToNextTobaccoType(request, response)
 })
 
-
 // ============================================
 // "DO YOU CURRENTLY SMOKE" ROUTING - CIGARILLOS
 // ============================================
@@ -1470,9 +1525,9 @@ router.post('/prototype_v3/tobacco/cigarillos/do-you-currently-smoke-answer', fu
   var currentlySmokesCigarillos = request.session.data['currentlySmokesCigarillos']
   
   if (currentlySmokesCigarillos === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/cigarillos/current/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/cigarillos/former/quantity-daily')
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/years-smoked')
   }
 })
 
@@ -1480,7 +1535,15 @@ router.post('/prototype_v3/tobacco/cigarillos/do-you-currently-smoke-answer', fu
 // CIGARILLOS ROUTING - CURRENT
 // ============================================
 
-router.post('/prototype_v3/tobacco/cigarillos/current/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/cigarillos/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/frequency')
+})
+
+router.post('/prototype_v3/tobacco/cigarillos/current/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/current/quantity')
+})
+
+router.post('/prototype_v3/tobacco/cigarillos/current/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/cigarillos/current/has-quantity-changed')
 })
 
@@ -1560,7 +1623,15 @@ router.post('/prototype_v3/tobacco/cigarillos/current/stopped-years-answer', fun
 // CIGARILLOS ROUTING - FORMER
 // ============================================
 
-router.post('/prototype_v3/tobacco/cigarillos/former/quantity-daily-answer', function(request, response) {
+router.post('/prototype_v3/tobacco/cigarillos/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/frequency')
+})
+
+router.post('/prototype_v3/tobacco/cigarillos/former/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/cigarillos/former/quantity')
+})
+
+router.post('/prototype_v3/tobacco/cigarillos/former/quantity-answer', function(request, response) {
   response.redirect('/prototype_v3/tobacco/cigarillos/former/has-quantity-changed')
 })
 

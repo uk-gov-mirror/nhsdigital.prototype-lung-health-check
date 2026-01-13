@@ -14,6 +14,13 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigarillos/current/has-quantity-changed-answer" method="post">
         
+        {% set frequencyText = "a day" %}
+        {% if data.cigarillosCurrentFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.cigarillosCurrentFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+        
         {{ checkboxes({
           idPrefix: "cigarillosCurrentChanges",
           name: "cigarillosCurrentChanges",
@@ -30,11 +37,11 @@
           items: [
             {
               value: "more",
-              text: "Yes, I used to smoke more than " + data.cigarillosCurrentQuantityDaily + " cigarillos a day"
+              text: "Yes, I used to smoke more than " + data.cigarillosCurrentQuantity + " cigarillos " + frequencyText
             },
             {
               value: "less",
-              text: "Yes, I used to smoke less than " + data.cigarillosCurrentQuantityDaily + " cigarillos a day"
+              text: "Yes, I used to smoke less than " + data.cigarillosCurrentQuantity + " cigarillos " + frequencyText
             },
             {
               value: "stopped",

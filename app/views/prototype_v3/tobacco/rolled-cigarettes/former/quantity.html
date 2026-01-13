@@ -12,28 +12,34 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/former/quantity-daily-answer" method="post">
-<h1>Rolled cigarette smoking</h1>
+<form action="/prototype_v3/tobacco/rolled-cigarettes/former/quantity-answer" method="post">
 
-<p>Telling us the number of rolled cigarettes you smoked a day helps us check if you need a lung scan.</p>
+<h1>Rolled cigarette smoking</h1>
 
 <p>The question on the next page will ask if the number of rolled cigarettes you smoked changed over time.</p>
 
+        {% set frequencyText = "a day" %}
+        {% if data.rolledCigarettesFormerFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.rolledCigarettesFormerFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+
         {{ input({
           label: {
-            text: "Roughly how many rolled cigarettes did you normally smoke a day?",
+            text: "Roughly how many rolled cigarettes did you normally smoke " + frequencyText + "?",
             classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "rolledCigarettesFormerQuantityDaily",
-          name: "rolledCigarettesFormerQuantityDaily",
+          id: "rolledCigarettesFormerQuantity",
+          name: "rolledCigarettesFormerQuantity",
           classes: "nhsuk-input--width-3",
           suffix: {
             text: "rolled cigarettes"
           },
-          value: data.rolledCigarettesFormerQuantityDaily
+          value: data.rolledCigarettesFormerQuantity
         }) }}
         
         {{ button({
