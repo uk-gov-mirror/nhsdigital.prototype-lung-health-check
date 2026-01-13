@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% from 'input/macro.njk' import input %}
+
+{% if data.pipeFormerLessFrequency == "Daily" %}
+  {% set frequencyText = "a day" %}
+  {% set suffixText = "bowls" %}
+{% elif data.pipeFormerLessFrequency == "Weekly" %}
+  {% set frequencyText = "a week" %}
+  {% set suffixText = "bowls" %}
+{% elif data.pipeFormerLessFrequency == "Monthly" %}
+  {% set frequencyText = "a month" %}
+  {% set suffixText = "bowls" %}
+{% endif %}
+
+{% block pageTitle %}
+  When you smoked less pipe tobacco - NHS
+{% endblock %}
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/pipe/former/less-quantity-answer" method="post">
+        
+        {{ input({
+          label: {
+            text: "When you smoked less than " + data.pipeFormerQuantityDaily + " bowls a day, roughly how many bowls did you normally smoke " + frequencyText + "?",
+            classes: "nhsuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "pipeFormerLessQuantity",
+          name: "pipeFormerLessQuantity",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: suffixText
+          },
+          value: data.pipeFormerLessQuantity
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
+</div>
+{% endblock %}

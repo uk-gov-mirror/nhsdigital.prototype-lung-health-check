@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% from 'input/macro.njk' import input %}
+{% block pageTitle %}
+  When you smoked more cigarillos - NHS
+{% endblock %}
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/cigarillos/current/more-duration-answer" method="post">
+        
+        {{ input({
+          label: {
+            text: "Roughly how many years did you smoke " + data.cigarillosCurrentMoreQuantity + " cigarillos a day?",
+            classes: "nhsuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "cigarillosCurrentMoreDuration",
+          name: "cigarillosCurrentMoreDuration",
+          classes: "nhsuk-input--width-2",
+          suffix: {
+            text: "years"
+          },
+          value: data.cigarillosCurrentMoreDuration
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
+</div>
+{% endblock %}

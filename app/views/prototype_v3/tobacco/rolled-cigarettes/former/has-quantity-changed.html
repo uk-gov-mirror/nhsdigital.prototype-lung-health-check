@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% from 'checkboxes/macro.njk' import checkboxes %}
+{% block pageTitle %}
+  Did the number of rolled cigarettes you normally smoke change over time? - NHS
+{% endblock %}
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/rolled-cigarettes/former/has-quantity-changed-answer" method="post">
+        
+        {{ checkboxes({
+          idPrefix: "rolledCigarettesFormerChanges",
+          name: "rolledCigarettesFormerChanges",
+          fieldset: {
+            legend: {
+              text: "Did the number of rolled cigarettes you normally smoke change over time?",
+              classes: "nhsuk-fieldset__legend--l",
+              isPageHeading: true
+            }
+          },
+          hint: {
+            text: "Select all that apply"
+          },
+          items: [
+            {
+              value: "more",
+              text: "Yes, I smoked more than " + data.rolledCigarettesFormerQuantityDaily + " rolled cigarettes a day"
+            },
+            {
+              value: "less",
+              text: "Yes, I smoked fewer than " + data.rolledCigarettesFormerQuantityDaily + " rolled cigarettes a day"
+            },
+            {
+              value: "stopped",
+              text: "Yes, I stopped smoking for a period of 1 year or longer"
+            },
+            {
+              divider: "or"
+            },
+            {
+              value: "no-change",
+              text: "No, it has not changed",
+              behaviour: "exclusive"
+            }
+          ]
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
+</div>
+{% endblock %}

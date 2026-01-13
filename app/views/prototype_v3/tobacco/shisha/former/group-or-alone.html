@@ -1,57 +1,49 @@
 {% extends 'layout.html' %}
-
+{% from 'radios/macro.njk' import radios %}
 {% block pageTitle %}
-  Smoking shisha in a group or by yourself - NHS
+  Shisha smoking - NHS
 {% endblock %}
-
 {% block beforeContent %}
   {{ backLink({
     text: "Back",
     href: "javascript:history.back();"
   }) }}
 {% endblock %}
-
 {% block content %}
 <div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="/prototype_v3/tobacco/shisha/former/group-or-alone-answer" method="post">
-      
-      <h1 class="nhsuk-heading-xl">Smoking shisha in a group or by yourself</h1>
-      
-      <p>Telling us how you smoked shisha helps us check if you need a lung scan.</p>
-      
-      <p>If you smoked by yourself you are likely to have smoked more tobacco than if you shared a pipe in a group session.</p>
-
-      {{ checkboxes({
-        idPrefix: "shishaFormerGroupOrAlone",
-        name: "shishaFormerGroupOrAlone",
-        fieldset: {
-          legend: {
-            text: "Did you smoke shisha with other people in a group or by yourself?",
-            classes: "nhsuk-fieldset__legend--m"
-          }
-        },
-        hint: {
-          text: "Select all that apply"
-        },
-        items: [
-          {
-            value: "group",
-            text: "In a group session",
-            checked: checked("shishaFormerGroupOrAlone", "group")
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/shisha/former/group-or-alone-answer" method="post">
+        
+        {{ radios({
+          idPrefix: "shishaFormerGroupOrAlone",
+          name: "shishaFormerGroupOrAlone",
+          fieldset: {
+            legend: {
+              text: "Did you smoke shisha in a group, alone, or both?",
+              classes: "nhsuk-fieldset__legend--l",
+              isPageHeading: true
+            }
           },
-          {
-            value: "alone",
-            text: "By myself",
-            checked: checked("shishaFormerGroupOrAlone", "alone")
-          }
-        ]
-      }) }}
-
-      {{ button({
-        text: "Continue"
-      }) }}
-    </form>
-  </div>
+          items: [
+            {
+              value: "Group",
+              text: "In a group"
+            },
+            {
+              value: "Alone",
+              text: "Alone"
+            },
+            {
+              value: "Both",
+              text: "Both"
+            }
+          ]
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
 </div>
 {% endblock %}

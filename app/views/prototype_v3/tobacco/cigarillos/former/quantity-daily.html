@@ -1,4 +1,5 @@
 {% extends 'layout.html' %}
+{% from 'input/macro.njk' import input %}
 {% block pageTitle %}
   Cigarillo smoking - NHS
 {% endblock %}
@@ -11,69 +12,34 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-
+<form action="/prototype_v3/tobacco/cigarillos/former/quantity-daily-answer" method="post">
 <h1>Cigarillo smoking</h1>
 
 <p>Telling us the number of cigarillos you smoked a day helps us check if you need a lung scan.</p>
 
-<form action="quantity-daily-answer" method="post">
-  {{ input({
-    label: {
-      text: "Roughly how many cigarillos did you normally smoke a day?",
-      classes: "nhsuk-label--m"
-    },
-    hint: {
-      text: "Give an estimate if you are not sure"
-    },
-    id: "cigarillosFormerQuantityDaily",
-    name: "cigarillosFormerQuantityDaily",
-    classes: "nhsuk-input--width-4",
-    suffix: {
-      text: "cigarillos"
-    },
-    value: data.cigarillosFormerQuantityDaily
-  }) }}
+<p>The question on the next page will ask if the number of cigarillos you smoked changed over time.</p>
 
-  {{ checkboxes({
-    idPrefix: "cigarillosFormerChanges",
-    name: "cigarillosFormerChanges",
-    fieldset: {
-      legend: {
-        text: "Did the number of cigarillos you smoke change over time?",
-        classes: "nhsuk-fieldset__legend--m"
-      }
-    },
-    hint: {
-      text: "Select all that apply"
-    },
-    items: [
-      {
-        value: "more",
-        text: "Yes, I smoked more cigarillos than my normal amount for a period of 1 year or longer"
-      },
-      {
-        value: "less",
-        text: "Yes, I smoked fewer cigarillos than my normal amount for a period of 1 year or longer"
-      },
-      {
-        value: "stopped",
-        text: "Yes, I stopped smoking for a period of 1 year or longer"
-      },
-      {
-        divider: "or"
-      },
-      {
-        value: "no-change",
-        text: "No, it has not changed"
-      }
-    ]
-  }) }}
-
-  {{ button({
-    text: "Continue"
-  }) }}
+        {{ input({
+          label: {
+            text: "Roughly how many cigarillos did you normally smoke a day?",
+            classes: "nhsuk-label--m"
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "cigarillosFormerQuantityDaily",
+          name: "cigarillosFormerQuantityDaily",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: "cigarillos"
+          },
+          value: data.cigarillosFormerQuantityDaily
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
 </form>
-
 </div>
 </div>
 {% endblock %}

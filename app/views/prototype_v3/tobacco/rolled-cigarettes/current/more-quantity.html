@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% from 'input/macro.njk' import input %}
+
+{% if data.rolledCigarettesCurrentMoreFrequency == "Daily" %}
+  {% set frequencyText = "a day" %}
+  {% set suffixText = "rolled cigarettes" %}
+{% elif data.rolledCigarettesCurrentMoreFrequency == "Weekly" %}
+  {% set frequencyText = "a week" %}
+  {% set suffixText = "rolled cigarettes" %}
+{% elif data.rolledCigarettesCurrentMoreFrequency == "Monthly" %}
+  {% set frequencyText = "a month" %}
+  {% set suffixText = "rolled cigarettes" %}
+{% endif %}
+
+{% block pageTitle %}
+  When you smoked more rolled cigarettes - NHS
+{% endblock %}
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-answer" method="post">
+        
+        {{ input({
+          label: {
+            text: "When you smoked more than " + data.rolledCigarettesCurrentQuantityDaily + " rolled cigarettes a day, roughly how many rolled cigarettes did you normally smoke " + frequencyText + "?",
+            classes: "nhsuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "rolledCigarettesCurrentMoreQuantity",
+          name: "rolledCigarettesCurrentMoreQuantity",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: suffixText
+          },
+          value: data.rolledCigarettesCurrentMoreQuantity
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
+</div>
+{% endblock %}

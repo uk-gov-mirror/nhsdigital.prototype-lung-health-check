@@ -14,7 +14,7 @@
 {% block content %}
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-two-thirds">
-    <form action="/prototype_v3/tobacco/cigarillos/former/stopped-years-answer" method="post">
+    <form action="/prototype_v3/tobacco/cigarillos/current/stopped-years-answer" method="post">
       
       {{ input({
         label: {
@@ -25,13 +25,13 @@
         hint: {
           text: "Give an estimate if you are not sure"
         },
-        id: "cigarillosFormerStoppedYears",
-        name: "cigarillosFormerStoppedYears",
+        id: "cigarillosCurrentStoppedYears",
+        name: "cigarillosCurrentStoppedYears",
         classes: "nhsuk-input--width-2",
         suffix: {
           text: "years"
         },
-        value: data.cigarillosFormerStoppedYears
+        value: data.cigarillosCurrentStoppedYears
       }) }}
 
       {{ button({

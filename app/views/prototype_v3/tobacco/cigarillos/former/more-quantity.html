@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% from 'input/macro.njk' import input %}
+
+{% if data.cigarillosFormerMoreFrequency == "Daily" %}
+  {% set frequencyText = "a day" %}
+  {% set suffixText = "cigarillos" %}
+{% elif data.cigarillosFormerMoreFrequency == "Weekly" %}
+  {% set frequencyText = "a week" %}
+  {% set suffixText = "cigarillos" %}
+{% elif data.cigarillosFormerMoreFrequency == "Monthly" %}
+  {% set frequencyText = "a month" %}
+  {% set suffixText = "cigarillos" %}
+{% endif %}
+
+{% block pageTitle %}
+  When you smoked more cigarillos - NHS
+{% endblock %}
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/cigarillos/former/more-quantity-answer" method="post">
+        
+        {{ input({
+          label: {
+            text: "When you smoked more than " + data.cigarillosFormerQuantityDaily + " cigarillos a day, roughly how many cigarillos did you normally smoke " + frequencyText + "?",
+            classes: "nhsuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "cigarillosFormerMoreQuantity",
+          name: "cigarillosFormerMoreQuantity",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: suffixText
+          },
+          value: data.cigarillosFormerMoreQuantity
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
+</div>
+{% endblock %}

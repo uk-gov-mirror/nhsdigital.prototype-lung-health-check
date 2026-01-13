@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% from 'input/macro.njk' import input %}
+
+{% if data.cigarettesCurrentLessFrequency == "Daily" %}
+  {% set frequencyText = "a day" %}
+  {% set suffixText = "cigarettes" %}
+{% elif data.cigarettesCurrentLessFrequency == "Weekly" %}
+  {% set frequencyText = "a week" %}
+  {% set suffixText = "cigarettes" %}
+{% elif data.cigarettesCurrentLessFrequency == "Monthly" %}
+  {% set frequencyText = "a month" %}
+  {% set suffixText = "cigarettes" %}
+{% endif %}
+
+{% block pageTitle %}
+  When you smoked fewer cigarettes - NHS
+{% endblock %}
+{% block beforeContent %}
+  {{ backLink({
+    text: "Back",
+    href: "javascript:history.back();"
+  }) }}
+{% endblock %}
+{% block content %}
+<div class="nhsuk-grid-row">
+<div class="nhsuk-grid-column-two-thirds">
+<form action="/prototype_v3/tobacco/cigarettes/current/less-quantity-answer" method="post">
+        
+        {{ input({
+          label: {
+            text: "When you smoked less than " + data.cigarettesCurrentQuantityDaily + " cigarettes a day, roughly how many cigarettes did you normally smoke " + frequencyText + "?",
+            classes: "nhsuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "cigarettesCurrentLessQuantity",
+          name: "cigarettesCurrentLessQuantity",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: suffixText
+          },
+          value: data.cigarettesCurrentLessQuantity
+        }) }}
+        
+        {{ button({
+          text: "Continue"
+        }) }}
+</form>
+</div>
+</div>
+{% endblock %}

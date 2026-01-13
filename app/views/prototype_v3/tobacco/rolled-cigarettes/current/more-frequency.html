@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'radios/macro.njk' import radios %}
 {% block pageTitle %}
-  When your rolled cigarette smoking increased, how often did you smoke? - NHS
+  When you smoked more rolled cigarettes - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,18 +12,18 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/current/increased-frequency-answer" method="post">
+<form action="/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency-answer" method="post">
+        
         {{ radios({
-          idPrefix: "rolledCigarettesCurrentIncreasedFrequency",
-          name: "rolledCigarettesCurrentIncreasedFrequency",
+          idPrefix: "rolledCigarettesCurrentMoreFrequency",
+          name: "rolledCigarettesCurrentMoreFrequency",
           fieldset: {
             legend: {
-              text: "When your rolled cigarette smoking increased, how often did you smoke?",
+              text: "When you smoked more than " + data.rolledCigarettesCurrentQuantityDaily + " rolled cigarettes a day, how often did you smoke rolled cigarettes?",
               classes: "nhsuk-fieldset__legend--l",
               isPageHeading: true
             }
           },
-          value: data.rolledCigarettesCurrentIncreasedFrequency,
           items: [
             {
               value: "Daily",
@@ -42,6 +42,7 @@
             }
           ]
         }) }}
+        
         {{ button({
           text: "Continue"
         }) }}
