@@ -744,11 +744,11 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
           tobaccoQueue.push(tobaccoRoutes[type] + '/do-you-currently-smoke')
         } else {
           // Single type and they're a current smoker - go straight to current pages
-          tobaccoQueue.push(tobaccoRoutes[type] + '/current/years-smoked')
+          tobaccoQueue.push(tobaccoRoutes[type] + '/current/quantity-daily')
         }
       } else if (smokedRegularly === "Yes-usedToRegularly") {
         // Former smoker - go straight to former pages
-        tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
+        tobaccoQueue.push(tobaccoRoutes[type] + '/former/quantity-daily')
       }
     }
   })
