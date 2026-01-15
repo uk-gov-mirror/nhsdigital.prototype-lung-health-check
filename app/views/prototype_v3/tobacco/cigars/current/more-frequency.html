@@ -23,7 +23,7 @@
           {% set frequencyText = "a year" %}
         {% endif %}
 
-        <h1>When you smoked more than {{ data.cigarsCurrentQuantity }} cigars {{ frequencyText }}, how often did you smoke cigars?</h1>
+        <h2 class="nhsuk-heading-l">When you smoked more than {{ data.cigarsCurrentQuantity }} cigars {{ frequencyText }}, how often did you smoke cigars?</h2>
 
         {{ radios({
           idPrefix: "cigarsCurrentMoreFrequency",

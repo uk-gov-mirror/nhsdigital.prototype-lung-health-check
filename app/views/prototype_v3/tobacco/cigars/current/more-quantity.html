@@ -14,23 +14,32 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigars/current/more-quantity-answer" method="post">
 
-        {% set frequencyText = "a day" %}
-        {% if data.cigarsCurrentMoreFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
-        {% elif data.cigarsCurrentMoreFrequency == "Monthly" %}
-          {% set frequencyText = "a month" %}
-        {% elif data.cigarsCurrentMoreFrequency == "Yearly" %}
-          {% set frequencyText = "a year" %}
+        {% set baseFrequencyText = "a day" %}
+        {% if data.cigarsCurrentFrequency == "Weekly" %}
+          {% set baseFrequencyText = "a week" %}
+        {% elif data.cigarsCurrentFrequency == "Monthly" %}
+          {% set baseFrequencyText = "a month" %}
+        {% elif data.cigarsCurrentFrequency == "Yearly" %}
+          {% set baseFrequencyText = "a year" %}
         {% endif %}
+
+        {% set moreFrequencyText = "a day" %}
+        {% if data.cigarsCurrentMoreFrequency == "Weekly" %}
+          {% set moreFrequencyText = "a week" %}
+        {% elif data.cigarsCurrentMoreFrequency == "Monthly" %}
+          {% set moreFrequencyText = "a month" %}
+        {% elif data.cigarsCurrentMoreFrequency == "Yearly" %}
+          {% set moreFrequencyText = "a year" %}
+        {% endif %}
+
+        <h2 class="nhsuk-heading-l">When you smoked more than {{ data.cigarsCurrentQuantity }} cigars {{ baseFrequencyText }}, roughly how many cigars did you smoke {{ moreFrequencyText }}?</h2>
+
+        <p class="nhsuk-hint">Give an estimate if you are not sure</p>
 
         {{ input({
           label: {
-            text: "Roughly how many cigars did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--l",
-            isPageHeading: true
-          },
-          hint: {
-            text: "Give an estimate if you are not sure"
+            text: "Cigars",
+            classes: "nhsuk-u-visually-hidden"
           },
           id: "cigarsCurrentMoreQuantity",
           name: "cigarsCurrentMoreQuantity",
