@@ -14,23 +14,32 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigars/former/less-quantity-answer" method="post">
 
-        {% set frequencyText = "a day" %}
-        {% if data.cigarsFormerLessFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
-        {% elif data.cigarsFormerLessFrequency == "Monthly" %}
-          {% set frequencyText = "a month" %}
-        {% elif data.cigarsFormerLessFrequency == "Yearly" %}
-          {% set frequencyText = "a year" %}
+        {% set baseFrequencyText = "a day" %}
+        {% if data.cigarsFormerFrequency == "Weekly" %}
+          {% set baseFrequencyText = "a week" %}
+        {% elif data.cigarsFormerFrequency == "Monthly" %}
+          {% set baseFrequencyText = "a month" %}
+        {% elif data.cigarsFormerFrequency == "Yearly" %}
+          {% set baseFrequencyText = "a year" %}
         {% endif %}
+
+        {% set lessFrequencyText = "a day" %}
+        {% if data.cigarsFormerLessFrequency == "Weekly" %}
+          {% set lessFrequencyText = "a week" %}
+        {% elif data.cigarsFormerLessFrequency == "Monthly" %}
+          {% set lessFrequencyText = "a month" %}
+        {% elif data.cigarsFormerLessFrequency == "Yearly" %}
+          {% set lessFrequencyText = "a year" %}
+        {% endif %}
+
+        <h2 class="nhsuk-heading-l">When you smoked fewer than {{ data.cigarsFormerQuantity }} cigars {{ baseFrequencyText }}, roughly how many cigars did you smoke {{ lessFrequencyText }}?</h2>
+
+        <p class="nhsuk-hint">Give an estimate if you are not sure</p>
 
         {{ input({
           label: {
-            text: "Roughly how many cigars did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--l",
-            isPageHeading: true
-          },
-          hint: {
-            text: "Give an estimate if you are not sure"
+            text: "Cigars",
+            classes: "nhsuk-u-visually-hidden"
           },
           id: "cigarsFormerLessQuantity",
           name: "cigarsFormerLessQuantity",

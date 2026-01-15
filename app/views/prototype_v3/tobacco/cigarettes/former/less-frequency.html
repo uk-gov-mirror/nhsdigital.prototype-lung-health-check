@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'input/macro.njk' import input %}
+{% from 'radios/macro.njk' import radios %}
 {% block pageTitle %}
   Cigarette smoking - NHS
 {% endblock %}
@@ -12,31 +12,40 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigarettes/former/less-duration-answer" method="post">
+<form action="/prototype_v3/tobacco/cigarettes/former/less-frequency-answer" method="post">
 
         {% set frequencyText = "a day" %}
-        {% if data.cigarettesFormerLessFrequency == "Weekly" %}
+        {% if data.cigarettesFormerFrequency == "Weekly" %}
           {% set frequencyText = "a week" %}
-        {% elif data.cigarettesFormerLessFrequency == "Monthly" %}
+        {% elif data.cigarettesFormerFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
         {% endif %}
 
-        {{ input({
-          label: {
-            text: "Roughly how many years did you smoke " + data.cigarettesFormerLessQuantity + " cigarettes " + frequencyText + "?",
-            classes: "nhsuk-label--l",
-            isPageHeading: true
-          },
-          hint: {
-            text: "Give an estimate if you are not sure"
-          },
-          id: "cigarettesFormerLessDuration",
-          name: "cigarettesFormerLessDuration",
-          classes: "nhsuk-input--width-2",
-          suffix: {
-            text: "years"
-          },
-          value: data.cigarettesFormerLessDuration
+        <h2 class="nhsuk-heading-l">When you smoked fewer than {{ data.cigarettesFormerQuantity }} cigarettes {{ frequencyText }}, how often did you smoke cigarettes?</h2>
+
+        {{ radios({
+          idPrefix: "cigarettesFormerLessFrequency",
+          name: "cigarettesFormerLessFrequency",
+          items: [
+            {
+              value: "Daily",
+              text: "Daily",
+              checked: checked("cigarettesFormerLessFrequency", "Daily")
+            },
+            {
+              value: "Weekly",
+              text: "Weekly",
+              hint: {
+                text: "For example on the weekend"
+              },
+              checked: checked("cigarettesFormerLessFrequency", "Weekly")
+            },
+            {
+              value: "Monthly",
+              text: "Monthly",
+              checked: checked("cigarettesFormerLessFrequency", "Monthly")
+            }
+          ]
         }) }}
         
         {{ button({

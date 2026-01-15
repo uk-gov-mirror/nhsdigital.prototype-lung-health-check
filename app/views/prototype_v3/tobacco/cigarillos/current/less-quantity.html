@@ -14,21 +14,28 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigarillos/current/less-quantity-answer" method="post">
 
-        {% set frequencyText = "a day" %}
-        {% if data.cigarillosCurrentLessFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
-        {% elif data.cigarillosCurrentLessFrequency == "Monthly" %}
-          {% set frequencyText = "a month" %}
+        {% set baseFrequencyText = "a day" %}
+        {% if data.cigarillosCurrentFrequency == "Weekly" %}
+          {% set baseFrequencyText = "a week" %}
+        {% elif data.cigarillosCurrentFrequency == "Monthly" %}
+          {% set baseFrequencyText = "a month" %}
         {% endif %}
+
+        {% set lessFrequencyText = "a day" %}
+        {% if data.cigarillosCurrentLessFrequency == "Weekly" %}
+          {% set lessFrequencyText = "a week" %}
+        {% elif data.cigarillosCurrentLessFrequency == "Monthly" %}
+          {% set lessFrequencyText = "a month" %}
+        {% endif %}
+
+        <h2 class="nhsuk-heading-l">When you smoked less than {{ data.cigarillosCurrentQuantity }} cigarillos {{ baseFrequencyText }}, roughly how many cigarillos did you smoke {{ lessFrequencyText }}?</h2>
+
+        <p class="nhsuk-hint">Give an estimate if you are not sure</p>
 
         {{ input({
           label: {
-            text: "Roughly how many cigarillos did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--l",
-            isPageHeading: true
-          },
-          hint: {
-            text: "Give an estimate if you are not sure"
+            text: "Cigarillos",
+            classes: "nhsuk-u-visually-hidden"
           },
           id: "cigarillosCurrentLessQuantity",
           name: "cigarillosCurrentLessQuantity",

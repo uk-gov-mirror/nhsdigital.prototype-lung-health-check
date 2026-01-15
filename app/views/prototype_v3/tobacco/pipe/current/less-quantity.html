@@ -14,21 +14,28 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/pipe/current/less-quantity-answer" method="post">
 
-        {% set frequencyText = "a day" %}
-        {% if data.pipeCurrentLessFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
-        {% elif data.pipeCurrentLessFrequency == "Monthly" %}
-          {% set frequencyText = "a month" %}
+        {% set baseFrequencyText = "a day" %}
+        {% if data.pipeCurrentFrequency == "Weekly" %}
+          {% set baseFrequencyText = "a week" %}
+        {% elif data.pipeCurrentFrequency == "Monthly" %}
+          {% set baseFrequencyText = "a month" %}
         {% endif %}
+
+        {% set lessFrequencyText = "a day" %}
+        {% if data.pipeCurrentLessFrequency == "Weekly" %}
+          {% set lessFrequencyText = "a week" %}
+        {% elif data.pipeCurrentLessFrequency == "Monthly" %}
+          {% set lessFrequencyText = "a month" %}
+        {% endif %}
+
+        <h2 class="nhsuk-heading-l">When you smoked less than {{ data.pipeCurrentQuantity }} bowls {{ baseFrequencyText }}, roughly how many bowls did you smoke {{ lessFrequencyText }}?</h2>
+
+        <p class="nhsuk-hint">Give an estimate if you are not sure</p>
 
         {{ input({
           label: {
-            text: "Roughly how many bowls of pipe tobacco did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--l",
-            isPageHeading: true
-          },
-          hint: {
-            text: "Give an estimate if you are not sure"
+            text: "Bowls",
+            classes: "nhsuk-u-visually-hidden"
           },
           id: "pipeCurrentLessQuantity",
           name: "pipeCurrentLessQuantity",
