@@ -16,19 +16,22 @@
 
 <h1>Pipe smoking</h1>
 
+<p>Telling us the number of bowls you smoked a day helps us check if you needed a lung scan.</p>
+
 <p>The question on the next page will ask if the number of bowls you smoked changed over time.</p>
 
-        {% set frequencyText = "a day" %}
+        {% set frequencyText = "on a normal day" %}
         {% if data.pipeFormerFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
+          {% set frequencyText = "in a normal week" %}
         {% elif data.pipeFormerFrequency == "Monthly" %}
-          {% set frequencyText = "a month" %}
+          {% set frequencyText = "in a normal month" %}
         {% endif %}
 
         {{ input({
           label: {
-            text: "Roughly how many bowls of pipe tobacco did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--m"
+            text: "Roughly how many bowls did you normally smoke " + frequencyText + "?",
+            classes: "nhsuk-label--l",
+            isPageHeading: true
           },
           hint: {
             text: "Give an estimate if you are not sure"
@@ -41,7 +44,7 @@
           },
           value: data.pipeFormerQuantity
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

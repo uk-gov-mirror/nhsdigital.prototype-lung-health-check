@@ -14,14 +14,11 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigarettes/current/years-smoked-answer" method="post">
 
-<h1>Cigarette smoking</h1>
-
-<p>Telling us how long you have smoked cigarettes and how many you smoke helps us check if you need a lung scan.</p>
-
         {{ input({
           label: {
             text: "Roughly how many years have you smoked cigarettes?",
-            classes: "nhsuk-label--m"
+            classes: "nhsuk-label--l",
+            isPageHeading: true
           },
           hint: {
             text: "Give an estimate if you are not sure"
@@ -34,7 +31,7 @@
           },
           value: data.cigarettesCurrentYearsSmoked
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

@@ -16,19 +16,22 @@
 
 <h1>Rolled cigarette smoking</h1>
 
+<p>Telling us the number of rolled cigarettes you smoked a day helps us check if you needed a lung scan.</p>
+
 <p>The question on the next page will ask if the number of rolled cigarettes you smoked changed over time.</p>
 
-        {% set frequencyText = "a day" %}
+        {% set frequencyText = "on a normal day" %}
         {% if data.rolledCigarettesFormerFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
+          {% set frequencyText = "in a normal week" %}
         {% elif data.rolledCigarettesFormerFrequency == "Monthly" %}
-          {% set frequencyText = "a month" %}
+          {% set frequencyText = "in a normal month" %}
         {% endif %}
 
         {{ input({
           label: {
             text: "Roughly how many rolled cigarettes did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--m"
+            classes: "nhsuk-label--l",
+            isPageHeading: true
           },
           hint: {
             text: "Give an estimate if you are not sure"
@@ -41,7 +44,7 @@
           },
           value: data.rolledCigarettesFormerQuantity
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

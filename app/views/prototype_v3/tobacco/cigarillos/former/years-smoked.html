@@ -14,14 +14,11 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigarillos/former/years-smoked-answer" method="post">
 
-<h1>Cigarillo smoking</h1>
-
-<p>Telling us how long you smoked cigarillos and how many you smoked helps us check if you need a lung scan.</p>
-
         {{ input({
           label: {
             text: "Roughly how many years did you smoke cigarillos?",
-            classes: "nhsuk-label--m"
+            classes: "nhsuk-label--l",
+            isPageHeading: true
           },
           hint: {
             text: "Give an estimate if you are not sure"
@@ -34,7 +31,7 @@
           },
           value: data.cigarillosFormerYearsSmoked
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}
