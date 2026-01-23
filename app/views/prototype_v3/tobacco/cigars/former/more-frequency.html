@@ -1,64 +1,94 @@
 {% extends 'layout.html' %}
-{% from 'radios/macro.njk' import radios %}
-{% block pageTitle %}
-  Cigar smoking - NHS
-{% endblock %}
+
+{# Get the current size being processed #}
+{% set currentSize = data["currentCigarSize"] or "small" %}
+{% set sizeLower = currentSize | lower %}
+
+{# Set size-specific text #}
+{% if sizeLower == "small" %}
+  {% set sizePlural = "small cigars" %}
+{% elif sizeLower == "medium" %}
+  {% set sizePlural = "medium cigars" %}
+{% elif sizeLower == "large" %}
+  {% set sizePlural = "large cigars" %}
+{% endif %}
+
+{# Get baseline quantity and frequency #}
+{% set baselineQuantity = data["cigar" + currentSize + "Quantity"] %}
+{% set frequency = data["cigar" + currentSize + "Frequency"] %}
+
+{# Set frequency-based time period #}
+{% if frequency == "Daily" %}
+  {% set timePeriod = "a day" %}
+{% elif frequency == "Weekly" %}
+  {% set timePeriod = "a week" %}
+{% elif frequency == "Monthly" %}
+  {% set timePeriod = "a month" %}
+{% elif frequency == "Yearly" %}
+  {% set timePeriod = "a year" %}
+{% else %}
+  {% set timePeriod = "a week" %}
+{% endif %}
+
+{# Create the baseline text #}
+{% set baselineText = baselineQuantity + " " + (sizePlural if baselineQuantity != "1" else sizePlural | replace("cigars", "cigar")) + " " + timePeriod %}
+
+{% if data["smokedRegularly"] == "Yes-currently" %}
+  {% set questionText = "When you smoked more than " + baselineText + ", how often did you smoke " + sizePlural + "?" %}
+{% else %}
+  {% set questionText = "When you smoked more than " + baselineText + ", how often did you smoke " + sizePlural + "?" %}
+{% endif %}
+
 {% block beforeContent %}
-  {{ backLink({
-    text: "Back",
-    href: "javascript:history.back();"
-  }) }}
+{{ backLink({
+  href: "javascript:history.back();",
+  text: "Back"
+}) }}
 {% endblock %}
+
 {% block content %}
 <div class="nhsuk-grid-row">
-<div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigars/former/more-frequency-answer" method="post">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="more-frequency-answer" method="post" novalidate>
 
-        {% set frequencyText = "a day" %}
-        {% if data.cigarsFormerFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
-        {% elif data.cigarsFormerFrequency == "Monthly" %}
-          {% set frequencyText = "a month" %}
-        {% elif data.cigarsFormerFrequency == "Yearly" %}
-          {% set frequencyText = "a year" %}
-        {% endif %}
-
-        <h2 class="nhsuk-heading-l">When you smoked more than {{ data.cigarsFormerQuantity }} cigars {{ frequencyText }}, how often did you smoke cigars?</h2>
-
-        {{ radios({
-          idPrefix: "cigarsFormerMoreFrequency",
-          name: "cigarsFormerMoreFrequency",
-          items: [
-            {
-              value: "Daily",
-              text: "Daily",
-              checked: checked("cigarsFormerMoreFrequency", "Daily")
-            },
-            {
-              value: "Weekly",
-              text: "Weekly",
-              hint: {
-                text: "For example on the weekend"
-              },
-              checked: checked("cigarsFormerMoreFrequency", "Weekly")
-            },
-            {
-              value: "Monthly",
-              text: "Monthly",
-              checked: checked("cigarsFormerMoreFrequency", "Monthly")
-            },
-            {
-              value: "Yearly",
-              text: "Yearly",
-              checked: checked("cigarsFormerMoreFrequency", "Yearly")
+      {{ radios({
+        "idPrefix": "cigar" + currentSize + "MoreFrequency",
+        "name": "cigar" + currentSize + "MoreFrequency",
+        "fieldset": {
+          "legend": {
+            "text": questionText,
+            "classes": "nhsuk-fieldset__legend--l",
+            "isPageHeading": true
+          }
+        },
+        "items": [
+          {
+            "value": "Daily",
+            "text": "Daily"
+          },
+          {
+            "value": "Weekly",
+            "text": "Weekly",
+            "hint": {
+              "text": "For example, on the weekend"
             }
-          ]
-        }) }}
-        
-        {{ button({
-          text: "Continue"
-        }) }}
-</form>
-</div>
+          },
+          {
+            "value": "Monthly",
+            "text": "Monthly"
+          },
+          {
+            "value": "Yearly",
+            "text": "Yearly"
+          }
+        ]
+      }) }}
+
+      {{ button({
+        "text": "Continue"
+      }) }}
+
+    </form>
+  </div>
 </div>
 {% endblock %}

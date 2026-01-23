@@ -1,59 +1,93 @@
 {% extends 'layout.html' %}
-{% from 'input/macro.njk' import input %}
-{% block pageTitle %}
-  Cigar smoking - NHS
-{% endblock %}
+
+{# Get the current size being processed #}
+{% set currentSize = data["currentCigarSize"] or "small" %}
+{% set sizeLower = currentSize | lower %}
+
+{# Set size-specific text #}
+{% if sizeLower == "small" %}
+  {% set sizePlural = "small cigars" %}
+{% elif sizeLower == "medium" %}
+  {% set sizePlural = "medium cigars" %}
+{% elif sizeLower == "large" %}
+  {% set sizePlural = "large cigars" %}
+{% endif %}
+
+{# Get baseline quantity and frequency #}
+{% set baselineQuantity = data["cigar" + currentSize + "Quantity"] %}
+{% set frequency = data["cigar" + currentSize + "Frequency"] %}
+
+{# Set frequency-based time period for baseline #}
+{% if frequency == "Daily" %}
+  {% set baselineTimePeriod = "a day" %}
+{% elif frequency == "Weekly" %}
+  {% set baselineTimePeriod = "a week" %}
+{% elif frequency == "Monthly" %}
+  {% set baselineTimePeriod = "a month" %}
+{% elif frequency == "Yearly" %}
+  {% set baselineTimePeriod = "a year" %}
+{% else %}
+  {% set baselineTimePeriod = "a week" %}
+{% endif %}
+
+{# Create the baseline text #}
+{% set baselineText = baselineQuantity + " " + (sizePlural if baselineQuantity != "1" else sizePlural | replace("cigars", "cigar")) + " " + baselineTimePeriod %}
+
+{# Get fewer frequency and set time period for question #}
+{% set fewerFrequency = data["cigar" + currentSize + "FewerFrequency"] %}
+{% if fewerFrequency == "Daily" %}
+  {% set timePeriod = "day" %}
+{% elif fewerFrequency == "Weekly" %}
+  {% set timePeriod = "week" %}
+{% elif fewerFrequency == "Monthly" %}
+  {% set timePeriod = "month" %}
+{% elif fewerFrequency == "Yearly" %}
+  {% set timePeriod = "year" %}
+{% else %}
+  {% set timePeriod = "day" %}
+{% endif %}
+
+{% if data["smokedRegularly"] == "Yes-currently" %}
+  {% set questionText = "When you smoked fewer than " + baselineText + ", roughly how many " + sizePlural + " did you normally smoke a " + timePeriod + "?" %}
+{% else %}
+  {% set questionText = "When you smoked fewer than " + baselineText + ", roughly how many " + sizePlural + " did you normally smoke a " + timePeriod + "?" %}
+{% endif %}
+
 {% block beforeContent %}
-  {{ backLink({
-    text: "Back",
-    href: "javascript:history.back();"
-  }) }}
+{{ backLink({
+  href: "javascript:history.back();",
+  text: "Back"
+}) }}
 {% endblock %}
+
 {% block content %}
 <div class="nhsuk-grid-row">
-<div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigars/former/less-quantity-answer" method="post">
+  <div class="nhsuk-grid-column-two-thirds">
+    <form action="less-quantity-answer" method="post" novalidate>
 
-        {% set baseFrequencyText = "a day" %}
-        {% if data.cigarsFormerFrequency == "Weekly" %}
-          {% set baseFrequencyText = "a week" %}
-        {% elif data.cigarsFormerFrequency == "Monthly" %}
-          {% set baseFrequencyText = "a month" %}
-        {% elif data.cigarsFormerFrequency == "Yearly" %}
-          {% set baseFrequencyText = "a year" %}
-        {% endif %}
+      {{ input({
+        "label": {
+          "text": questionText,
+          "classes": "nhsuk-label--l",
+          "isPageHeading": true
+        },
+        "hint": {
+          "text": "Give an estimate if you are not sure"
+        },
+        "id": "cigar" + currentSize + "FewerQuantity",
+        "name": "cigar" + currentSize + "FewerQuantity",
+        "classes": "nhsuk-input--width-3",
+        "suffix": {
+          "text": sizePlural
+        },
+        "value": data["cigar" + currentSize + "FewerQuantity"]
+      }) }}
 
-        {% set lessFrequencyText = "a day" %}
-        {% if data.cigarsFormerLessFrequency == "Weekly" %}
-          {% set lessFrequencyText = "a week" %}
-        {% elif data.cigarsFormerLessFrequency == "Monthly" %}
-          {% set lessFrequencyText = "a month" %}
-        {% elif data.cigarsFormerLessFrequency == "Yearly" %}
-          {% set lessFrequencyText = "a year" %}
-        {% endif %}
+      {{ button({
+        "text": "Continue"
+      }) }}
 
-        <h2 class="nhsuk-heading-l">When you smoked fewer than {{ data.cigarsFormerQuantity }} cigars {{ baseFrequencyText }}, roughly how many cigars did you smoke {{ lessFrequencyText }}?</h2>
-
-        <p class="nhsuk-hint">Give an estimate if you are not sure</p>
-
-        {{ input({
-          label: {
-            text: "Cigars",
-            classes: "nhsuk-u-visually-hidden"
-          },
-          id: "cigarsFormerLessQuantity",
-          name: "cigarsFormerLessQuantity",
-          classes: "nhsuk-input--width-3",
-          suffix: {
-            text: "cigars"
-          },
-          value: data.cigarsFormerLessQuantity
-        }) }}
-        
-        {{ button({
-          text: "Continue"
-        }) }}
-</form>
-</div>
+    </form>
+  </div>
 </div>
 {% endblock %}

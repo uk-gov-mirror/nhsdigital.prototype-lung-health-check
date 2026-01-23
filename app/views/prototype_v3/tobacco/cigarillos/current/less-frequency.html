@@ -21,7 +21,7 @@
           {% set frequencyText = "a month" %}
         {% endif %}
 
-        <h2 class="nhsuk-heading-l">When you smoked less than {{ data.cigarillosCurrentQuantity }} cigarillos {{ frequencyText }}, how often did you smoke cigarillos?</h2>
+        <h2 class="nhsuk-heading-l">When you smoked fewer than {{ data.cigarillosCurrentQuantity }} cigarillos {{ frequencyText }}, how often did you smoke cigarillos?</h2>
 
         {{ radios({
           idPrefix: "cigarillosCurrentLessFrequency",

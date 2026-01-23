@@ -16,22 +16,21 @@
 
 <h1>Cigarette smoking</h1>
 
-<p>Telling us the number of cigarettes you smoked a day helps us check if you need a lung scan.</p>
+        {% set frequencyText = "a day" %}
+        {% if data.cigarettesFormerFrequency == "Weekly" %}
+          {% set frequencyText = "a week" %}
+        {% elif data.cigarettesFormerFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% endif %}
+
+<p>Telling us the number of cigarettes you smoked {{ frequencyText }} helps us check if you need a lung scan.</p>
 
 <p>The question on the next page will ask if the number of cigarettes you smoked changed over time.</p>
-
-        {% set frequencyText = "on a normal day" %}
-        {% if data.cigarettesFormerFrequency == "Weekly" %}
-          {% set frequencyText = "in a normal week" %}
-        {% elif data.cigarettesFormerFrequency == "Monthly" %}
-          {% set frequencyText = "in a normal month" %}
-        {% endif %}
 
         {{ input({
           label: {
             text: "Roughly how many cigarettes did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--l",
-            isPageHeading: true
+            classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
@@ -44,7 +43,7 @@
           },
           value: data.cigarettesFormerQuantity
         }) }}
-
+        
         {{ button({
           text: "Continue"
         }) }}

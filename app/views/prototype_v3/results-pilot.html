@@ -3,31 +3,60 @@
 {% from 'button/macro.njk' import button %}
 {% from 'do-dont-list/macro.njk' import list as doDontList %}
 {% from 'card/macro.njk' import card %}
-{% set pageHeading = "Your answers have been submitted" %}
+{% set pageHeading = "Thank you for testing the online service" %}
 
 {% block content %}
 
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-two-thirds">
 
-    <div class="nhsuk-panel nhsuk-panel--confirmation">
+    <div class="nhsuk-panel nhsuk-panel--confirmation nhsuk-u-margin-top-0 nhsuk-u-margin-bottom-4">
       <h1 class="nhsuk-panel__title">
         {{ pageHeading }}
       </h1>
     </div>
 
-    <p>Thank you for using the NHS lung scan online.</p>
-
     <h2>What happens next</h2>
 
-    <p>Call us on <a href="tel:02012341234">020 1234 1234</a> to book an appointment to complete your NHS lung scan and receive your result.</p>
+    <p>The online service cannot currently recommend if you need a lung scan.</p>
+
+    <p>You will need to complete your questionnaire for NHS lung cancer screening by phone.</p>
+
+    <p>Call us on <a href="tel:02012341234">020 1234 1234</a></p>
 
     <p><strong>Opening times:</strong><br>
-    Monday to Saturday, 8am to 8pm</p>
+    Monday to Friday, 8am to 8pm<br>
+    Saturday 8am to 1pm</p>
 
-    <p>If we do not hear from you in 2 days we will call you.</p>
-    
-    <p>Stopping smoking is a great way to stay healthy, protect the health of those around you, and enjoy a better quality of life.</p>
+    <p>If we do not hear from you in 14 days we will call you to complete the questionnaire by phone. If you are unable to answer the phone we will call you back.</p>
+
+    <p>As a thank you for testing the online service we will offer you a £10 voucher after you have completed your phone appointment.</p>
+
+    {{ card({
+      type: "non-urgent",
+      heading: "Speak to a GP if:",
+      descriptionHtml: "
+        <p>You have any of the following symptoms:</p>
+        <ul>
+          <li>a cough that does not go away after 3 weeks</li>
+          <li>a long-standing cough that gets worse</li>
+          <li><a href='https://www.nhs.uk/conditions/chest-infection/'>chest infections</a> that keep coming back</li>
+          <li><a href='https://www.nhs.uk/conditions/coughing-up-blood/'>coughing up blood</a></li>
+          <li>an ache or pain when breathing or coughing</li>
+          <li>persistent <a href='https://www.nhs.uk/conditions/shortness-of-breath/'>breathlessness</a></li>
+          <li>persistent tiredness or lack of energy</li>
+          <li>loss of appetite or unexplained weight loss</li>
+        </ul>
+        <p>They could be <a href='https://www.nhs.uk/conditions/lung-cancer/symptoms/'>symptoms of lung cancer</a>. Your GP will ask about your general health and your symptoms.</p>
+        <p>You may be asked to have a <a href='https://www.nhs.uk/conditions/blood-tests/'>blood test</a> to rule out some of the possible causes of your symptoms, such as a <a href='https://www.nhs.uk/conditions/chest-infection/'>chest infection</a>.</p>
+      "
+    }) }}
+
+    <h2>Find your local Stop Smoking Service</h2>
+    <p>Stopping smoking is the single biggest change you can make for your health. <a href="https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/" target="_blank" rel="noopener noreferrer">Find local services to help you stop smoking</a>.</p>
+
+    <h2>Benefits of stopping smoking</h2>
+    <p>When you stop smoking, you lower your risk of cancer, protect the health of those around you, and enjoy a better quality of life.</p>
 
     {{ doDontList({
       title: "When you quit, you:",
@@ -96,53 +125,36 @@
       html: "<p>Quitting smoking can lift your mood, and ease stress, anxiety and depression.</p><p>Smokers often think that smoking helps them relax. But in reality, nicotine cravings increase anxiety and tension.</p><p>To manage cravings, try to:</p><ul><li>keep busy with hobbies and activities</li><li>relax with breathing techniques or meditation</li><li>seek support from friends, family, or support groups</li><li>use nicotine replacement therapy or medications</li></ul><p>The following links open in a new tab.</p><p>Read <a href='https://www.nhs.uk/live-well/quit-smoking/stopping-smoking-mental-health-benefits/' target='_blank' rel='noopener noreferrer'>NHS guidance on smoking and mental health</a></p><p>Get your <a href='https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/your-mind-plan-quiz/' target='_blank' rel='noopener noreferrer'>free Mind Plan</a></p>"
     }) }}
 
-    <h3>For free help and support:</h3>
     <p>The following links open in a new tab:</p>
 
-    {{ doDontList({
-      title: "Find help",
-      type: "tick",
-      items: [
-        {
-          item: "find your nearest local <a href='https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/' target='_blank' rel='noopener noreferrer'>Stop Smoking Service</a>"
-        },
-        {
-          item: "get a <a href='https://www.nhs.uk/better-health/quit-smoking/personal-quit-plan/' target='_blank' rel='noopener noreferrer'>free personal quit plan</a>"
-        },
-        {
-          item: "join the <a href='https://www.facebook.com/groups/quitsmoking/' target='_blank' rel='noopener noreferrer'>Quit Smoking Group on Facebook</a>"
-        },
-        {
-          item: "read <a href='https://www.nhs.uk/better-health/quit-smoking/' target='_blank' rel='noopener noreferrer'>NHS guidance on smoking</a>"
-        },
-        {
-          item: "call the free National Smokefree Helpline on <a href='tel:03001231044'>0300 123 1044</a> (England only)"
-        },
-        {
-          item: "download the NHS Quit Smoking app from the <a href='https://apps.apple.com/gb/app/nhs-quit-smoking/id1452316449' target='_blank' rel='noopener noreferrer'>Apple App Store</a> or <a href='https://play.google.com/store/apps/details?id=uk.nhs.nhsapp.quitsmoking' target='_blank' rel='noopener noreferrer'>Google Play Store</a>"
-        }
-      ]
-    }) }}
+<p>The following links open in a new tab:</p>
 
-    {{ card({
-      type: "non-urgent",
-      heading: "See a GP if:",
-      descriptionHtml: "
-        <p>You have any <a href='https://www.nhs.uk/conditions/lung-cancer/symptoms/'>symptoms of lung cancer</a>, such as:</p>
-        <ul>
-          <li>a cough that does not go away after 3 weeks</li>
-          <li>an existing cough that changes or gets worse</li>
-          <li>chest infections that keep coming back</li>
-          <li>coughing up blood</li>
-          <li>being short of breath a lot</li>
-          <li>unexplained tiredness</li>
-          <li>an ache or pain when breathing or coughing</li>
-          <li>loss of appetite or unexplained weight loss</li>
-        </ul>
-      "
-    }) }}
+{{ doDontList({
+  title: "For free help and support:",
+  type: "tick",
+  items: [
+    {
+      html: "find your nearest local <a href='https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/' target='_blank' rel='noopener noreferrer'>Stop Smoking Service</a>"
+    },
+    {
+      html: "get a <a href='https://www.nhs.uk/better-health/quit-smoking/personal-quit-plan/' target='_blank' rel='noopener noreferrer'>free personal quit plan</a>"
+    },
+    {
+      html: "join the <a href='https://www.facebook.com/groups/quitsmoking/' target='_blank' rel='noopener noreferrer'>Quit Smoking Group on Facebook</a>"
+    },
+    {
+      html: "read <a href='https://www.nhs.uk/better-health/quit-smoking/' target='_blank' rel='noopener noreferrer'>NHS guidance on smoking</a>"
+    },
+    {
+      html: "call the free National Smokefree Helpline on <a href='tel:03001231044'>0300 123 1044</a> (England only)"
+    },
+    {
+      html: "download the NHS Quit Smoking app from the <a href='https://apps.apple.com/gb/app/nhs-quit-smoking/id1452316449' target='_blank' rel='noopener noreferrer'>Apple App Store</a> or <a href='https://play.google.com/store/apps/details?id=uk.nhs.nhsapp.quitsmoking' target='_blank' rel='noopener noreferrer'>Google Play Store</a>"
+    }
+  ]
+}) }}
 
-    <h3>Help us improve this service</h3>
+    <h2>Help us improve this service</h2>
     <p>Tell us about your experience using this service today.</p>
     {{ button({
       text: "Give feedback",

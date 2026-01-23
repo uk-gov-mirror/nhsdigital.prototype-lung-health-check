@@ -705,6 +705,35 @@ function moveToNextTobaccoType(request, response) {
   }
 }
 
+// Helper function to move to next cigar size or next tobacco type
+function moveToNextCigarSize(request, response, smokerType) {
+  var sizeQueue = request.session.data['cigarSizeQueue'] || []
+  var currentIndex = request.session.data['cigarSizeQueueIndex'] || 0
+  
+  // Clear the changes for this size (so next size starts fresh)
+  if (smokerType === 'current') {
+    delete request.session.data['cigarsCurrentChanges']
+  } else {
+    delete request.session.data['cigarsFormerChanges']
+  }
+  
+  // Move to next size
+  currentIndex++
+  request.session.data['cigarSizeQueueIndex'] = currentIndex
+  
+  if (currentIndex < sizeQueue.length) {
+    // Set the next size as current and go back to quantity
+    request.session.data['currentCigarSize'] = sizeQueue[currentIndex]
+    response.redirect('/prototype_v3/tobacco/cigars/' + smokerType + '/quantity')
+  } else {
+    // All sizes complete - clean up and move to next tobacco type
+    delete request.session.data['cigarSizeQueue']
+    delete request.session.data['cigarSizeQueueIndex']
+    delete request.session.data['currentCigarSize']
+    moveToNextTobaccoType(request, response)
+  }
+}
+
 // ============================================
 // TOBACCO TYPE SELECTION
 // ============================================
@@ -733,9 +762,6 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
   // Check if user selected multiple tobacco types
   var multipleTypes = selectedTobacco.length > 1
   
-  // For CURRENT smokers with MULTIPLE types, add "do you currently smoke X" pages
-  // For CURRENT smokers with ONE type, go straight to current pages (we already know they currently smoke)
-  // For FORMER smokers, skip directly to former tobacco pages
   tobaccoOrder.forEach(function(type) {
     if (selectedTobacco.includes(type)) {
       if (smokedRegularly === "Yes-currently") {
@@ -743,14 +769,17 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
           // Multiple types - need to ask which ones they currently smoke
           tobaccoQueue.push(tobaccoRoutes[type] + '/do-you-currently-smoke')
         } else {
-          // Single type and they're a current smoker - go straight to current pages
-          // All types now start with years-smoked
-          tobaccoQueue.push(tobaccoRoutes[type] + '/current/years-smoked')
+          // Single type and they're a current smoker - go straight to frequency (skip years-smoked)
+          tobaccoQueue.push(tobaccoRoutes[type] + '/current/frequency')
         }
       } else if (smokedRegularly === "Yes-usedToRegularly") {
-        // Former smoker - go straight to former pages
-        // All types now start with years-smoked
-        tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
+        if (multipleTypes) {
+          // Multiple types - go to years-smoked first
+          tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
+        } else {
+          // Single type and they're a former smoker - go straight to frequency (skip years-smoked)
+          tobaccoQueue.push(tobaccoRoutes[type] + '/former/frequency')
+        }
       }
     }
   })
@@ -1352,7 +1381,30 @@ router.post('/prototype_v3/tobacco/cigars/current/years-smoked-answer', function
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/cigars/current/quantity')
+  response.redirect('/prototype_v3/tobacco/cigars/current/cigar-size')
+})
+
+// NEW: Handle cigar size selection and initialize size queue
+router.post('/prototype_v3/tobacco/cigars/current/cigar-size-answer', function(request, response) {
+  var selectedSizes = request.session.data['cigarSize']
+  
+  // Ensure it's an array
+  if (!Array.isArray(selectedSizes)) {
+    selectedSizes = selectedSizes ? [selectedSizes] : []
+  }
+  
+  // Store the size queue and initialize index
+  request.session.data['cigarSizeQueue'] = selectedSizes
+  request.session.data['cigarSizeQueueIndex'] = 0
+  
+  // Set the first size as current
+  if (selectedSizes.length > 0) {
+    request.session.data['currentCigarSize'] = selectedSizes[0]
+    response.redirect('/prototype_v3/tobacco/cigars/current/quantity')
+  } else {
+    // No sizes selected, move to next tobacco type
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/quantity-answer', function(request, response) {
@@ -1370,10 +1422,9 @@ router.post('/prototype_v3/tobacco/cigars/current/has-quantity-changed-answer', 
     response.redirect('/prototype_v3/tobacco/cigars/current/more-frequency')
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
   } else {
-    moveToNextTobaccoType(request, response)
+    // No changes or only "stopped" - move to next size or next tobacco type
+    moveToNextCigarSize(request, response, 'current')
   }
 })
 
@@ -1396,10 +1447,9 @@ router.post('/prototype_v3/tobacco/cigars/current/more-duration-answer', functio
   // Check if they also selected 'less'
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
   } else {
-    moveToNextTobaccoType(request, response)
+    // Move to next size or next tobacco type
+    moveToNextCigarSize(request, response, 'current')
   }
 })
 
@@ -1413,22 +1463,8 @@ router.post('/prototype_v3/tobacco/cigars/current/less-quantity-answer', functio
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/less-duration-answer', function(request, response) {
-  var changes = request.session.data['cigarsCurrentChanges']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  // Check if they also selected 'stopped'
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigars/current/stopped-years')
-  } else {
-    moveToNextTobaccoType(request, response)
-  }
-})
-
-router.post('/prototype_v3/tobacco/cigars/current/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
+  // After less-duration, move to next size or next tobacco type
+  moveToNextCigarSize(request, response, 'current')
 })
 
 // ============================================
@@ -1440,7 +1476,30 @@ router.post('/prototype_v3/tobacco/cigars/former/years-smoked-answer', function(
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/cigars/former/quantity')
+  response.redirect('/prototype_v3/tobacco/cigars/former/cigar-size')
+})
+
+// NEW: Handle cigar size selection and initialize size queue
+router.post('/prototype_v3/tobacco/cigars/former/cigar-size-answer', function(request, response) {
+  var selectedSizes = request.session.data['cigarSize']
+  
+  // Ensure it's an array
+  if (!Array.isArray(selectedSizes)) {
+    selectedSizes = selectedSizes ? [selectedSizes] : []
+  }
+  
+  // Store the size queue and initialize index
+  request.session.data['cigarSizeQueue'] = selectedSizes
+  request.session.data['cigarSizeQueueIndex'] = 0
+  
+  // Set the first size as current
+  if (selectedSizes.length > 0) {
+    request.session.data['currentCigarSize'] = selectedSizes[0]
+    response.redirect('/prototype_v3/tobacco/cigars/former/quantity')
+  } else {
+    // No sizes selected, move to next tobacco type
+    moveToNextTobaccoType(request, response)
+  }
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/quantity-answer', function(request, response) {
@@ -1458,10 +1517,9 @@ router.post('/prototype_v3/tobacco/cigars/former/has-quantity-changed-answer', f
     response.redirect('/prototype_v3/tobacco/cigars/former/more-frequency')
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
   } else {
-    moveToNextTobaccoType(request, response)
+    // No changes or only "stopped" - move to next size or next tobacco type
+    moveToNextCigarSize(request, response, 'former')
   }
 })
 
@@ -1483,10 +1541,9 @@ router.post('/prototype_v3/tobacco/cigars/former/more-duration-answer', function
   
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
-  } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
   } else {
-    moveToNextTobaccoType(request, response)
+    // Move to next size or next tobacco type
+    moveToNextCigarSize(request, response, 'former')
   }
 })
 
@@ -1500,21 +1557,8 @@ router.post('/prototype_v3/tobacco/cigars/former/less-quantity-answer', function
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/less-duration-answer', function(request, response) {
-  var changes = request.session.data['cigarsFormerChanges']
-  
-  if (!Array.isArray(changes)) {
-    changes = changes ? [changes] : []
-  }
-  
-  if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigars/former/stopped-years')
-  } else {
-    moveToNextTobaccoType(request, response)
-  }
-})
-
-router.post('/prototype_v3/tobacco/cigars/former/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
+  // After less-duration, move to next size or next tobacco type
+  moveToNextCigarSize(request, response, 'former')
 })
 
 // ============================================
@@ -1709,13 +1753,13 @@ router.post('/prototype_v3/tobacco/cigarillos/former/stopped-years-answer', func
 // "DO YOU CURRENTLY SMOKE" ROUTING - SHISHA
 // ============================================
 
-router.post('/prototype_v3/tobacco/shisha/do-you-currently-smoke-answer', function(request, response) {
-  var currentlySmokesShisha = request.session.data['currentlySmokesShisha']
+router.post('/prototype_v3/tobacco/cigarillos/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesCigarillos = request.session.data['currentlySmokesCigarillos']
   
-  if (currentlySmokesShisha === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/shisha/current/years-smoked')
+  if (currentlySmokesCigarillos === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/cigarillos/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/shisha/former/years-smoked')
+    response.redirect('/prototype_v3/tobacco/cigarillos/former/years-smoked')
   }
 })
 
@@ -1810,7 +1854,7 @@ router.post('/prototype_v3/tobacco/shisha/former/alone-quantity-answer', functio
 })
 
 // ============================================
-// SKIP TO HOW-OLD-WHEN-STARTED-SMOKING (FOR TESTING)
+// SKIP TO TOBACCO SECTION - CURRENT (FOR TESTING)
 // ============================================
 
 router.get('/prototype_v3/skip-to-tobacco', function(request, response) {
@@ -1921,6 +1965,42 @@ router.get('/prototype_v3/skip-to-tobacco', function(request, response) {
   delete request.session.data['cigarsCurrentAnotherPeriodLess']
   delete request.session.data['cigarsCurrentStoppedYears']
   
+  // Clear cigar size-specific data
+  delete request.session.data['cigarSize']
+  delete request.session.data['currentCigarSize']
+  delete request.session.data['cigarSizeQueue']
+  delete request.session.data['cigarSizeQueueIndex']
+  
+  // Clear Small cigar data
+  delete request.session.data['cigarSmallQuantity']
+  delete request.session.data['cigarSmallMoreFrequency']
+  delete request.session.data['cigarSmallMoreQuantity']
+  delete request.session.data['cigarSmallMoreDuration']
+  delete request.session.data['cigarSmallLessFrequency']
+  delete request.session.data['cigarSmallLessQuantity']
+  delete request.session.data['cigarSmallLessDuration']
+  delete request.session.data['cigarSmallStoppedYears']
+  
+  // Clear Medium cigar data
+  delete request.session.data['cigarMediumQuantity']
+  delete request.session.data['cigarMediumMoreFrequency']
+  delete request.session.data['cigarMediumMoreQuantity']
+  delete request.session.data['cigarMediumMoreDuration']
+  delete request.session.data['cigarMediumLessFrequency']
+  delete request.session.data['cigarMediumLessQuantity']
+  delete request.session.data['cigarMediumLessDuration']
+  delete request.session.data['cigarMediumStoppedYears']
+  
+  // Clear Large cigar data
+  delete request.session.data['cigarLargeQuantity']
+  delete request.session.data['cigarLargeMoreFrequency']
+  delete request.session.data['cigarLargeMoreQuantity']
+  delete request.session.data['cigarLargeMoreDuration']
+  delete request.session.data['cigarLargeLessFrequency']
+  delete request.session.data['cigarLargeLessQuantity']
+  delete request.session.data['cigarLargeLessDuration']
+  delete request.session.data['cigarLargeStoppedYears']
+  
   delete request.session.data['cigarillosCurrentYearsSmoked']
   delete request.session.data['cigarillosCurrentFrequency']
   delete request.session.data['cigarillosCurrentQuantityDaily']
@@ -1977,6 +2057,238 @@ router.get('/prototype_v3/skip-to-tobacco', function(request, response) {
   
   // NOW SET THE PRE-FILLED DATA
   request.session.data['smokedRegularly'] = "Yes-currently"
+  
+  // Date of birth
+  request.session.data['dateOfBirth'] = {
+    day: "19",
+    month: "06",
+    year: "1965"
+  }
+  
+  // About you section
+  request.session.data['height'] = {
+    feet: "5",
+    inches: "10"
+  }
+  request.session.data['weight'] = {
+    kilograms: "80"
+  }
+  request.session.data['whatIsYourSex'] = "Male"
+  request.session.data['bestDescribe'] = "Male"
+  request.session.data['ethnicBackground'] = "White"
+  request.session.data['educationCompleted'] = "Bachelors degree"
+  
+  // Your health section
+  request.session.data['EverDiagnosedWith'] = ["Pneumonia"]
+  request.session.data['exposedAsbestos'] = "No"
+  request.session.data['livedWithAsbestosWorker'] = "No"
+  request.session.data['diagnosedCancer'] = "No"
+  
+  // Family history
+  request.session.data['relativesHaveCancer'] = "Yes"
+  request.session.data['relativeAge'] = "Yes"
+  
+  // Redirect to how-old-when-started-smoking with clean slate
+  response.redirect("/prototype_v3/how-old-when-started-smoking")
+})
+
+// ============================================
+// SKIP TO TOBACCO SECTION (FORMER SMOKER)
+// ============================================
+
+router.get('/prototype_v3/skip-to-tobacco-former', function(request, response) {
+  // CLEAR ALL TOBACCO-RELATED DATA
+  delete request.session.data['ageStartedSmoking']
+  delete request.session.data['stoppedSmokingPeriods']
+  delete request.session.data['totalYearsStoppedSmoking']
+  delete request.session.data['formerSmokingQuitDate']
+  delete request.session.data['tobaccoTypes']
+  delete request.session.data['tobaccoQueue']
+  delete request.session.data['tobaccoQueueIndex']
+  
+  // Clear all tobacco type data (cigarettes, rolled, pipe, cigars, cigarillos, shisha)
+  // Current smoker data
+  delete request.session.data['cigarettesCurrentYearsSmoked']
+  delete request.session.data['cigarettesCurrentFrequency']
+  delete request.session.data['cigarettesCurrentQuantity']
+  delete request.session.data['cigarettesCurrentChanges']
+  delete request.session.data['cigarettesCurrentMoreFrequency']
+  delete request.session.data['cigarettesCurrentMoreQuantity']
+  delete request.session.data['cigarettesCurrentMoreDuration']
+  delete request.session.data['cigarettesCurrentLessFrequency']
+  delete request.session.data['cigarettesCurrentLessQuantity']
+  delete request.session.data['cigarettesCurrentLessDuration']
+  delete request.session.data['cigarettesCurrentStoppedYears']
+  
+  delete request.session.data['rolledCigarettesCurrentYearsSmoked']
+  delete request.session.data['rolledCigarettesCurrentFrequency']
+  delete request.session.data['rolledCigarettesCurrentQuantity']
+  delete request.session.data['rolledCigarettesCurrentChanges']
+  delete request.session.data['rolledCigarettesCurrentMoreFrequency']
+  delete request.session.data['rolledCigarettesCurrentMoreQuantity']
+  delete request.session.data['rolledCigarettesCurrentMoreDuration']
+  delete request.session.data['rolledCigarettesCurrentLessFrequency']
+  delete request.session.data['rolledCigarettesCurrentLessQuantity']
+  delete request.session.data['rolledCigarettesCurrentLessDuration']
+  delete request.session.data['rolledCigarettesCurrentStoppedYears']
+  
+  delete request.session.data['pipeCurrentYearsSmoked']
+  delete request.session.data['pipeCurrentFrequency']
+  delete request.session.data['pipeCurrentQuantity']
+  delete request.session.data['pipeCurrentChanges']
+  delete request.session.data['pipeCurrentMoreFrequency']
+  delete request.session.data['pipeCurrentMoreQuantity']
+  delete request.session.data['pipeCurrentMoreDuration']
+  delete request.session.data['pipeCurrentLessFrequency']
+  delete request.session.data['pipeCurrentLessQuantity']
+  delete request.session.data['pipeCurrentLessDuration']
+  delete request.session.data['pipeCurrentStoppedYears']
+  
+  delete request.session.data['cigarsCurrentYearsSmoked']
+  delete request.session.data['cigarsCurrentFrequency']
+  delete request.session.data['cigarsCurrentQuantity']
+  delete request.session.data['cigarsCurrentChanges']
+  delete request.session.data['cigarsCurrentMoreFrequency']
+  delete request.session.data['cigarsCurrentMoreQuantity']
+  delete request.session.data['cigarsCurrentMoreDuration']
+  delete request.session.data['cigarsCurrentLessFrequency']
+  delete request.session.data['cigarsCurrentLessQuantity']
+  delete request.session.data['cigarsCurrentLessDuration']
+  delete request.session.data['cigarsCurrentStoppedYears']
+  
+  delete request.session.data['cigarillosCurrentYearsSmoked']
+  delete request.session.data['cigarillosCurrentFrequency']
+  delete request.session.data['cigarillosCurrentQuantity']
+  delete request.session.data['cigarillosCurrentChanges']
+  delete request.session.data['cigarillosCurrentMoreFrequency']
+  delete request.session.data['cigarillosCurrentMoreQuantity']
+  delete request.session.data['cigarillosCurrentMoreDuration']
+  delete request.session.data['cigarillosCurrentLessFrequency']
+  delete request.session.data['cigarillosCurrentLessQuantity']
+  delete request.session.data['cigarillosCurrentLessDuration']
+  delete request.session.data['cigarillosCurrentStoppedYears']
+  
+  delete request.session.data['shishaCurrentYearsSmoked']
+  delete request.session.data['shishaCurrentGroupOrAlone']
+  delete request.session.data['shishaCurrentGroupFrequency']
+  delete request.session.data['shishaCurrentGroupQuantity']
+  delete request.session.data['shishaCurrentAloneFrequency']
+  delete request.session.data['shishaCurrentAloneQuantity']
+  
+  // Former smoker data
+  delete request.session.data['cigarettesFormerYearsSmoked']
+  delete request.session.data['cigarettesFormerFrequency']
+  delete request.session.data['cigarettesFormerQuantity']
+  delete request.session.data['cigarettesFormerChanges']
+  delete request.session.data['cigarettesFormerMoreFrequency']
+  delete request.session.data['cigarettesFormerMoreQuantity']
+  delete request.session.data['cigarettesFormerMoreDuration']
+  delete request.session.data['cigarettesFormerLessFrequency']
+  delete request.session.data['cigarettesFormerLessQuantity']
+  delete request.session.data['cigarettesFormerLessDuration']
+  delete request.session.data['cigarettesFormerStoppedYears']
+  
+  delete request.session.data['rolledCigarettesFormerYearsSmoked']
+  delete request.session.data['rolledCigarettesFormerFrequency']
+  delete request.session.data['rolledCigarettesFormerQuantity']
+  delete request.session.data['rolledCigarettesFormerChanges']
+  delete request.session.data['rolledCigarettesFormerMoreFrequency']
+  delete request.session.data['rolledCigarettesFormerMoreQuantity']
+  delete request.session.data['rolledCigarettesFormerMoreDuration']
+  delete request.session.data['rolledCigarettesFormerLessFrequency']
+  delete request.session.data['rolledCigarettesFormerLessQuantity']
+  delete request.session.data['rolledCigarettesFormerLessDuration']
+  delete request.session.data['rolledCigarettesFormerStoppedYears']
+  
+  delete request.session.data['pipeFormerYearsSmoked']
+  delete request.session.data['pipeFormerFrequency']
+  delete request.session.data['pipeFormerQuantity']
+  delete request.session.data['pipeFormerChanges']
+  delete request.session.data['pipeFormerMoreFrequency']
+  delete request.session.data['pipeFormerMoreQuantity']
+  delete request.session.data['pipeFormerMoreDuration']
+  delete request.session.data['pipeFormerLessFrequency']
+  delete request.session.data['pipeFormerLessQuantity']
+  delete request.session.data['pipeFormerLessDuration']
+  delete request.session.data['pipeFormerStoppedYears']
+  
+  delete request.session.data['cigarsFormerYearsSmoked']
+  delete request.session.data['cigarsFormerFrequency']
+  delete request.session.data['cigarsFormerQuantity']
+  delete request.session.data['cigarsFormerChanges']
+  delete request.session.data['cigarsFormerMoreFrequency']
+  delete request.session.data['cigarsFormerMoreQuantity']
+  delete request.session.data['cigarsFormerMoreDuration']
+  delete request.session.data['cigarsFormerLessFrequency']
+  delete request.session.data['cigarsFormerLessQuantity']
+  delete request.session.data['cigarsFormerLessDuration']
+  delete request.session.data['cigarsFormerStoppedYears']
+  
+  // Clear cigar size-specific data
+  delete request.session.data['cigarSize']
+  delete request.session.data['currentCigarSize']
+  delete request.session.data['cigarSizeQueue']
+  delete request.session.data['cigarSizeQueueIndex']
+  
+  // Clear Small cigar data
+  delete request.session.data['cigarSmallQuantity']
+  delete request.session.data['cigarSmallMoreFrequency']
+  delete request.session.data['cigarSmallMoreQuantity']
+  delete request.session.data['cigarSmallMoreDuration']
+  delete request.session.data['cigarSmallLessFrequency']
+  delete request.session.data['cigarSmallLessQuantity']
+  delete request.session.data['cigarSmallLessDuration']
+  delete request.session.data['cigarSmallStoppedYears']
+  
+  // Clear Medium cigar data
+  delete request.session.data['cigarMediumQuantity']
+  delete request.session.data['cigarMediumMoreFrequency']
+  delete request.session.data['cigarMediumMoreQuantity']
+  delete request.session.data['cigarMediumMoreDuration']
+  delete request.session.data['cigarMediumLessFrequency']
+  delete request.session.data['cigarMediumLessQuantity']
+  delete request.session.data['cigarMediumLessDuration']
+  delete request.session.data['cigarMediumStoppedYears']
+  
+  // Clear Large cigar data
+  delete request.session.data['cigarLargeQuantity']
+  delete request.session.data['cigarLargeMoreFrequency']
+  delete request.session.data['cigarLargeMoreQuantity']
+  delete request.session.data['cigarLargeMoreDuration']
+  delete request.session.data['cigarLargeLessFrequency']
+  delete request.session.data['cigarLargeLessQuantity']
+  delete request.session.data['cigarLargeLessDuration']
+  delete request.session.data['cigarLargeStoppedYears']
+  
+  delete request.session.data['cigarillosFormerYearsSmoked']
+  delete request.session.data['cigarillosFormerFrequency']
+  delete request.session.data['cigarillosFormerQuantity']
+  delete request.session.data['cigarillosFormerChanges']
+  delete request.session.data['cigarillosFormerMoreFrequency']
+  delete request.session.data['cigarillosFormerMoreQuantity']
+  delete request.session.data['cigarillosFormerMoreDuration']
+  delete request.session.data['cigarillosFormerLessFrequency']
+  delete request.session.data['cigarillosFormerLessQuantity']
+  delete request.session.data['cigarillosFormerLessDuration']
+  delete request.session.data['cigarillosFormerStoppedYears']
+  
+  delete request.session.data['shishaFormerYearsSmoked']
+  delete request.session.data['shishaFormerGroupOrAlone']
+  delete request.session.data['shishaFormerGroupFrequency']
+  delete request.session.data['shishaFormerGroupQuantity']
+  delete request.session.data['shishaFormerAloneFrequency']
+  delete request.session.data['shishaFormerAloneQuantity']
+  
+  // Do you currently smoke questions
+  delete request.session.data['currentlySmokesCigarettes']
+  delete request.session.data['currentlySmokesRolledCigarettes']
+  delete request.session.data['currentlySmokesPipe']
+  delete request.session.data['currentlySmokesCigars']
+  delete request.session.data['currentlySmokesCigarillos']
+  delete request.session.data['currentlySmokesShisha']
+  
+  // NOW SET THE PRE-FILLED DATA FOR FORMER SMOKER
+  request.session.data['smokedRegularly'] = "Yes-usedToRegularly"
   
   // Date of birth
   request.session.data['dateOfBirth'] = {
