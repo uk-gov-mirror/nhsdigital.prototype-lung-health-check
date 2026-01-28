@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block pageTitle %}
-  How old your relatives were when they were diagnosed - NHS
+  If your relatives were under 60 when they were diagnosed - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -11,16 +11,19 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="relatives-age-answer" method="post">
-<h2>How old your relatives were when they were diagnosed</h2>
-<p>We ask about their age when they were diagnosed with lung cancer because it may impact your risk score.</p>
+<h2>If your relatives were under 60 when they were diagnosed</h2>
+
+<p>We ask about their age when they were diagnosed with lung cancer because it may impact your chances of developing lung cancer.</p>
+
 <p>If you do not know or cannot remember, select 'I do not know'.</p>
+
+<form action="relatives-age-answer" method="post">
         {{ radios({
           idPrefix: "relativeAge",
           name: "relativeAge",
           fieldset: {
             legend: {
-              text: "Were your relatives younger than 60 years old when they were diagnosed with lung cancer?",
+              text: "Were any of your relatives younger than 60 years old when they were diagnosed with lung cancer?",
               classes: "nhsuk-fieldset__legend--m",
               isPageHeading: false
             }

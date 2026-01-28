@@ -12,13 +12,17 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
+
+<h1>Shisha smoking</h1>
+
+<p>We only need to know if you smoked shisha regularly. For example, if you smoked on a monthly basis for a year or longer.</p>
+
 <form action="/prototype_v3/tobacco/shisha/former/years-smoked-answer" method="post">
-        
+
         {{ input({
           label: {
             text: "Roughly how many years did you smoke shisha?",
-            classes: "nhsuk-label--l",
-            isPageHeading: true
+            classes: "nhsuk-label--m"
           },
           hint: {
             text: "Give an estimate if you are not sure"
@@ -31,7 +35,7 @@
           },
           value: data.shishaFormerYearsSmoked
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

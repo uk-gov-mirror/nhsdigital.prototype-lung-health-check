@@ -1,0 +1,1137 @@
+{% extends 'layout.html' %}
+
+{% set pageHeading = "Index of all prototype pages" %}
+
+{% block beforeContent %}
+{{ backLink({
+href: "javascript:history.back();",
+text: "Go back"
+}) }}
+{% endblock %}
+
+{% block content %}
+
+<style>
+  .nhsuk-summary-list__row {
+    border-bottom: 1px solid #d8dde0;
+  }
+
+  .nhsuk-summary-list__key,
+  .nhsuk-summary-list__value {
+    border-bottom: none;
+  }
+
+  .nhsuk-summary-list__key {
+    width: 100%;
+  }
+
+  .nhsuk-summary-list__value {
+    display: none;
+  }
+</style>
+
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-two-thirds">
+    <h1 class="nhsuk-heading-l">{{pageHeading}}</h1>
+    <p>Quick navigation to all pages in the prototype. Click any page name to jump directly to it.</p>
+  </div>
+</div>
+
+<div class="nhsuk-grid-row">
+  <div class="nhsuk-grid-column-full">
+
+    <!-- Start & Login Section -->
+    <h2 class="nhsuk-heading-m">Start & Login</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/start-page">Help us test a new online service</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/login">Log in to your NHS account</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/accept-terms">Accept terms of use</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/have-you-completed-by-phone">Confirm if you have completed a lung cancer risk questionnaire by phone</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/completed-by-phone-exit">Drop out - You do not need to test the online service</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Eligibility Section -->
+    <h2 class="nhsuk-heading-m">Eligibility</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/eligibility-have-you-ever-smoked">Have you ever smoked tobacco?</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/eligibility-what-is-your-date-of-birth">What is your date of birth?</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/drop-out-never-smoked">You are not eligible for lung cancer screening</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/drop-out-age">You are not eligible for an NHS lung scan</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/check-if-you-need-face-to-face-appointment">Check if you need a face-to-face appointment</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/drop-out-bmi">Drop out - Call us to book a face-to-face appointment</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- About You Section -->
+    <h2 class="nhsuk-heading-m">About you</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/what-is-your-height">Enter your height</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/what-is-your-weight">Enter your weight</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/what-is-your-sex">Your sex at birth</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/which-best-describes-you">Your gender identity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/what-is-your-ethnic-background">Help us give you an accurate result by telling us your ethnic background</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/highest-level-completed-education">Help us give you an accurate result by telling us about your education</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Your Health Section -->
+    <h2 class="nhsuk-heading-m">Your health</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/diagnosed-pneumonia-emphysema">Have you ever been diagnosed with any of the following respiratory conditions?</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/exposed-to-asbestos">Tell us if you might have been exposed to asbestos at work</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/lived-with-asbestos-worker">Tell us if you ever lived with anyone who worked with asbestos</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/diagnosed-cancer">If you have ever been diagnosed with cancer</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Family History Section -->
+    <h2 class="nhsuk-heading-m">Family history</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/relatives-with-cancer">If your parents, siblings or children have ever been diagnosed with lung cancer</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/relatives-age-when-diagnosed">How old your relatives were when they were diagnosed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Smoking Habits Section -->
+    <h2 class="nhsuk-heading-m">Smoking habits</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/how-old-when-started-smoking">How old were you when you started smoking?</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/former-smoker-when-quit-smoking">Former smoker - When you quit smoking</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/periods-when-you-stopped-smoking?smokedRegularly=Yes-currently">Current smoker - Periods when you stopped smoking</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/periods-when-you-stopped-smoking?smokedRegularly=Yes-usedToRegularly">Former smoker - Periods when you stopped smoking</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/what-do-or-did-smoke?smokedRegularly=Yes-currently">Current smoker - The type of tobacco you smoke or used to smoke</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/what-do-or-did-smoke?smokedRegularly=Yes-usedToRegularly">Former smoker - The type of tobacco you smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Tobacco Questionnaires - Cigarettes Section -->
+    <h2 class="nhsuk-heading-m">Tobacco - Cigarettes</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/do-you-currently-smoke">Do you currently smoke cigarettes</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/years-smoked">Cigarettes (current) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/frequency">Cigarettes (current) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/quantity">Cigarettes (current) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/has-quantity-changed">Cigarettes (current) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/more-frequency">Cigarettes (current) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/more-quantity">Cigarettes (current) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/more-duration">Cigarettes (current) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/another-period-more">Cigarettes (current) - another period more</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/less-frequency">Cigarettes (current) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/less-quantity">Cigarettes (current) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/less-duration">Cigarettes (current) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/another-period-less">Cigarettes (current) - another period less</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/current/stopped-years">Cigarettes (current) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/years-smoked">Cigarettes (former) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/frequency">Cigarettes (former) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/quantity">Cigarettes (former) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/has-quantity-changed">Cigarettes (former) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/more-frequency">Cigarettes (former) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/more-quantity">Cigarettes (former) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/more-duration">Cigarettes (former) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/less-frequency">Cigarettes (former) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/less-quantity">Cigarettes (former) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/less-duration">Cigarettes (former) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarettes/former/stopped-years">Cigarettes (former) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Tobacco Questionnaires - Rolled Cigarettes Section -->
+    <h2 class="nhsuk-heading-m">Tobacco - Rolled cigarettes</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/do-you-currently-smoke">Do you currently smoke rolled cigarettes</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked">Rolled cigarettes (current) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/frequency">Rolled cigarettes (current) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/quantity">Rolled cigarettes (current) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/has-quantity-changed">Rolled cigarettes (current) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency">Rolled cigarettes (current) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity">Rolled cigarettes (current) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/more-duration">Rolled cigarettes (current) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/another-period-more">Rolled cigarettes (current) - another period more</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency">Rolled cigarettes (current) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity">Rolled cigarettes (current) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/less-duration">Rolled cigarettes (current) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/another-period-less">Rolled cigarettes (current) - another period less</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years">Rolled cigarettes (current) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked">Rolled cigarettes (former) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/frequency">Rolled cigarettes (former) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/quantity">Rolled cigarettes (former) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/has-quantity-changed">Rolled cigarettes (former) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency">Rolled cigarettes (former) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity">Rolled cigarettes (former) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/more-duration">Rolled cigarettes (former) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency">Rolled cigarettes (former) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity">Rolled cigarettes (former) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/less-duration">Rolled cigarettes (former) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years">Rolled cigarettes (former) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Tobacco Questionnaires - Cigars Section -->
+    <h2 class="nhsuk-heading-m">Tobacco - Cigars</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/do-you-currently-smoke">Do you currently smoke cigars</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/years-smoked">Cigars (current) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/frequency">Cigars (current) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/cigar-size">Cigars (current) - cigar size</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/quantity">Cigars (current) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/has-quantity-changed">Cigars (current) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/more-frequency">Cigars (current) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/more-quantity">Cigars (current) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/more-duration">Cigars (current) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/another-period-more">Cigars (current) - another period more</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/less-frequency">Cigars (current) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/less-quantity">Cigars (current) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/less-duration">Cigars (current) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/current/another-period-less">Cigars (current) - another period less</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/years-smoked">Cigars (former) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/frequency">Cigars (former) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/cigar-size">Cigars (former) - cigar size</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/quantity">Cigars (former) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/has-quantity-changed">Cigars (former) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/more-frequency">Cigars (former) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/more-quantity">Cigars (former) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/more-duration">Cigars (former) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/less-frequency">Cigars (former) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/less-quantity">Cigars (former) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigars/former/less-duration">Cigars (former) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Tobacco Questionnaires - Cigarillos Section -->
+    <h2 class="nhsuk-heading-m">Tobacco - Cigarillos</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/do-you-currently-smoke">Do you currently smoke cigarillos</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/years-smoked">Cigarillos (current) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/frequency">Cigarillos (current) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/quantity">Cigarillos (current) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/has-quantity-changed">Cigarillos (current) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/more-frequency">Cigarillos (current) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/more-quantity">Cigarillos (current) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/more-duration">Cigarillos (current) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/another-period-more">Cigarillos (current) - another period more</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/less-frequency">Cigarillos (current) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/less-quantity">Cigarillos (current) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/less-duration">Cigarillos (current) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/another-period-less">Cigarillos (current) - another period less</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/current/stopped-years">Cigarillos (current) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/years-smoked">Cigarillos (former) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/frequency">Cigarillos (former) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/quantity">Cigarillos (former) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/has-quantity-changed">Cigarillos (former) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/more-frequency">Cigarillos (former) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/more-quantity">Cigarillos (former) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/more-duration">Cigarillos (former) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/less-frequency">Cigarillos (former) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/less-quantity">Cigarillos (former) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/less-duration">Cigarillos (former) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/cigarillos/former/stopped-years">Cigarillos (former) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Tobacco Questionnaires - Pipe Section -->
+    <h2 class="nhsuk-heading-m">Tobacco - Pipe</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/do-you-currently-smoke">Do you currently smoke pipe</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/years-smoked">Pipe (current) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/frequency">Pipe (current) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/quantity">Pipe (current) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/has-quantity-changed">Pipe (current) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/more-frequency">Pipe (current) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/more-quantity">Pipe (current) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/more-duration">Pipe (current) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/another-period-more">Pipe (current) - another period more</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/less-frequency">Pipe (current) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/less-quantity">Pipe (current) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/less-duration">Pipe (current) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/another-period-less">Pipe (current) - another period less</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/current/stopped-years">Pipe (current) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/years-smoked">Pipe (former) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/frequency">Pipe (former) - frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/quantity">Pipe (former) - quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/has-quantity-changed">Pipe (former) - has quantity changed</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/more-frequency">Pipe (former) - more frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/more-quantity">Pipe (former) - more quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/more-duration">Pipe (former) - more duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/less-frequency">Pipe (former) - less frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/less-quantity">Pipe (former) - less quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/less-duration">Pipe (former) - less duration</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/pipe/former/stopped-years">Pipe (former) - stopped years</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Tobacco Questionnaires - Shisha Section -->
+    <h2 class="nhsuk-heading-m">Tobacco - Shisha</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/do-you-currently-smoke">Do you currently smoke shisha</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/current/years-smoked">Shisha (current) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/current/group-or-alone">Shisha (current) - group or alone</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/current/group-frequency">Shisha (current) - group frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/current/group-quantity">Shisha (current) - group quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/current/alone-frequency">Shisha (current) - alone frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/current/alone-quantity">Shisha (current) - alone quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/former/years-smoked">Shisha (former) - years smoked</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/former/group-or-alone">Shisha (former) - group or alone</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/former/group-frequency">Shisha (former) - group frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/former/group-quantity">Shisha (former) - group quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/former/alone-frequency">Shisha (former) - alone frequency</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/tobacco/shisha/former/alone-quantity">Shisha (former) - alone quantity</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+    <!-- Check answers and submitted Section -->
+    <h2 class="nhsuk-heading-m">Check answers and submitted</h2>
+    <dl class="nhsuk-summary-list">
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/check-your-answers">Check your answers</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/results-pilot">Thank you for testing the online service</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/results-high-risk">MVP - Your results (high risk)</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+      <div class="nhsuk-summary-list__row">
+        <dt class="nhsuk-summary-list__key">
+          <a href="/prototype_v3/results-low-risk">MVP - Your results (low risk)</a>
+        </dt>
+        <dd class="nhsuk-summary-list__value"></dd>
+      </div>
+    </dl>
+
+  </div>
+</div>
+
+{% endblock %}

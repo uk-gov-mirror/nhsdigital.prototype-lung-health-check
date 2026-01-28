@@ -2,17 +2,13 @@
 {% from 'input/macro.njk' import input %}
 
 {% if data.shishaFormerAloneFrequency == "Daily" %}
-  {% set frequencyText = "a day" %}
-  {% set suffixText = "sessions" %}
+  {% set frequencyText = "day" %}
 {% elif data.shishaFormerAloneFrequency == "Weekly" %}
-  {% set frequencyText = "a week" %}
-  {% set suffixText = "sessions" %}
+  {% set frequencyText = "week" %}
 {% elif data.shishaFormerAloneFrequency == "Monthly" %}
-  {% set frequencyText = "a month" %}
-  {% set suffixText = "sessions" %}
+  {% set frequencyText = "month" %}
 {% elif data.shishaFormerAloneFrequency == "Yearly" %}
-  {% set frequencyText = "a year" %}
-  {% set suffixText = "sessions" %}
+  {% set frequencyText = "year" %}
 {% endif %}
 
 {% block pageTitle %}
@@ -31,7 +27,7 @@
         
         {{ input({
           label: {
-            text: "When you smoked shisha alone, roughly how many sessions did you normally have " + frequencyText + "?",
+            text: "Roughly, how many hours a " + frequencyText + " did you normally smoke shisha for by yourself?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },
@@ -42,7 +38,7 @@
           name: "shishaFormerAloneQuantity",
           classes: "nhsuk-input--width-3",
           suffix: {
-            text: suffixText
+            text: "hours"
           },
           value: data.shishaFormerAloneQuantity
         }) }}

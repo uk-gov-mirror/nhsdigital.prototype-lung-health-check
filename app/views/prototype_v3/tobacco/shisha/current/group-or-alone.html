@@ -1,5 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'radios/macro.njk' import radios %}
+{% from 'checkboxes/macro.njk' import checkboxes %}
 {% block pageTitle %}
   Shisha smoking - NHS
 {% endblock %}
@@ -12,34 +12,39 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
+
+<h1>Smoking shisha in a group or by yourself</h1>
+
+<p>This is a test of the online service. In the future, we will use this information to give you an accurate result</p>
+
+<p>If you smoked by yourself you are likely to have smoked more tobacco than if you shared a pipe in a group session.</p>
+
 <form action="/prototype_v3/tobacco/shisha/current/group-or-alone-answer" method="post">
-        
-        {{ radios({
+
+        {{ checkboxes({
           idPrefix: "shishaCurrentGroupOrAlone",
           name: "shishaCurrentGroupOrAlone",
           fieldset: {
             legend: {
-              text: "Do you smoke shisha in a group, alone, or both?",
-              classes: "nhsuk-fieldset__legend--l",
-              isPageHeading: true
+              text: "Do you smoke shisha with other people in a group or by yourself?",
+              classes: "nhsuk-fieldset__legend--l"
             }
+          },
+          hint: {
+            text: "Select all that apply"
           },
           items: [
             {
               value: "Group",
-              text: "In a group"
+              text: "In a group session"
             },
             {
               value: "Alone",
-              text: "Alone"
-            },
-            {
-              value: "Both",
-              text: "Both"
+              text: "By myself"
             }
           ]
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

@@ -43,10 +43,10 @@
 
 {% if data["smokedRegularly"] == "Yes-currently" %}
   {% set questionText = "Has the number of " + sizePlural + " you normally smoke changed over time?" %}
-  {% set fieldName = "cigarsCurrentChanges" %}
+  {% set fieldName = "cigar" + currentSize + "Changes" %}
 {% else %}
   {% set questionText = "Did the number of " + sizePlural + " you normally smoked change over time?" %}
-  {% set fieldName = "cigarsFormerChanges" %}
+  {% set fieldName = "cigar" + currentSize + "Changes" %}
 {% endif %}
 
 {% block beforeContent %}
