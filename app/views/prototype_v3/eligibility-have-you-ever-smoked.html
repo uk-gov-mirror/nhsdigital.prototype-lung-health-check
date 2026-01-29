@@ -17,7 +17,7 @@
 
       <form action="smokedRegularlyAnswer" method="post">
 
-        <h2>Tobacco smoking</h2>
+        <h1>Tobacco smoking</h1>
 
         <p>We will ask you questions about your smoking habits. This includes different types of tobacco smoking such as:</p>
 
@@ -26,7 +26,8 @@
           <li>rolled cigarettes, or roll ups</li>
           <li>a pipe</li>
           <li>cigars</li>
-          <li>hookah or shisha</li>
+          <li>cigarillos</li>
+          <li>shisha, also known as hookah or a water pipe</li>
         </ul>
 
         <p>It does not currently include vaping or e-cigarettes.</p>
@@ -40,6 +41,9 @@
               classes: "nhsuk-fieldset__legend--m",
               isPageHeading: false
             }
+          },
+          hint: {
+            text: "This includes social smoking"
           },
           value: data.smokedRegularly,
           items: [
