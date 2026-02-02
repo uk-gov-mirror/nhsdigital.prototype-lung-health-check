@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'checkboxes/macro.njk' import checkboxes %}
 {% block pageTitle %}
-  Did the number of rolled cigarettes you normally smoke change over time? - NHS
+  Did the number of grams of tobacco you normally smoke change over time? - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -26,7 +26,7 @@
           name: "rolledCigarettesFormerChanges",
           fieldset: {
             legend: {
-              text: "Did the number of rolled cigarettes you normally smoke change over time?",
+              text: "Did the number of grams of tobacco you normally smoke change over time?",
               classes: "nhsuk-fieldset__legend--l",
               isPageHeading: true
             }
@@ -37,11 +37,11 @@
           items: [
             {
               value: "more",
-              text: "Yes, I smoked more than " + data.rolledCigarettesFormerQuantity + " rolled cigarettes " + frequencyText
+              text: "Yes, I smoked more than " + data.rolledCigarettesFormerQuantity + " of tobacco " + frequencyText
             },
             {
               value: "less",
-              text: "Yes, I smoked fewer than " + data.rolledCigarettesFormerQuantity + " rolled cigarettes " + frequencyText
+              text: "Yes, I smoked less than " + data.rolledCigarettesFormerQuantity + " of tobacco " + frequencyText
             },
             {
               value: "stopped",

@@ -13,17 +13,13 @@
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-answer" method="post">
 
-        {% set baseFrequencyText = "a day" %}
-        {% if data.rolledCigarettesFormerFrequency == "Weekly" %}
-          {% set baseFrequencyText = "a week" %}
-        {% elif data.rolledCigarettesFormerFrequency == "Monthly" %}
+        {% set baseFrequencyText = "a week" %}
+        {% if data.rolledCigarettesFormerFrequency == "Monthly" %}
           {% set baseFrequencyText = "a month" %}
         {% endif %}
 
-        {% set lessFrequencyText = "a day" %}
-        {% if data.rolledCigarettesFormerLessFrequency == "Weekly" %}
-          {% set lessFrequencyText = "a week" %}
-        {% elif data.rolledCigarettesFormerLessFrequency == "Monthly" %}
+        {% set lessFrequencyText = "a week" %}
+        {% if data.rolledCigarettesFormerLessFrequency == "Monthly" %}
           {% set lessFrequencyText = "a month" %}
         {% endif %}
 

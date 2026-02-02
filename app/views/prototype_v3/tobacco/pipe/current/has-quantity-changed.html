@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'checkboxes/macro.njk' import checkboxes %}
 {% block pageTitle %}
-  Has the number of bowls you normally smoke changed over time? - NHS
+  Has the number of full pipe loads you normally smoke changed over time? - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -26,7 +26,7 @@
           name: "pipeCurrentChanges",
           fieldset: {
             legend: {
-              text: "Has the number of bowls you normally smoke changed over time?",
+              text: "Has the number of full pipe loads you normally smoke changed over time?",
               classes: "nhsuk-fieldset__legend--l",
               isPageHeading: true
             }
@@ -37,11 +37,11 @@
           items: [
             {
               value: "more",
-              text: "Yes, I used to smoke more than " + data.pipeCurrentQuantity + " bowls " + frequencyText
+              text: "Yes, I used to smoke more than " + data.pipeCurrentQuantity + " full pipe loads " + frequencyText
             },
             {
               value: "less",
-              text: "Yes, I used to smoke less than " + data.pipeCurrentQuantity + " bowls " + frequencyText
+              text: "Yes, I used to smoke less than " + data.pipeCurrentQuantity + " full pipe loads " + frequencyText
             },
             {
               value: "stopped",

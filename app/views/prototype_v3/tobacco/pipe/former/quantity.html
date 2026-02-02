@@ -23,13 +23,13 @@
           {% set frequencyText = "a month" %}
         {% endif %}
 
-<p>Telling us the number of bowls of pipe tobacco you smoked {{ frequencyText }} helps us check if you need a lung scan.</p>
+<p>This is a test of the online service. In the future, we will use this information to give you an accurate result.</p>
 
-<p>The question on the next page will ask if the number of bowls you smoked changed over time.</p>
+<p>The question on the next page will ask if the number of full pipe loads you smoked changed over time.</p>
 
         {{ input({
           label: {
-            text: "Roughly how many bowls of pipe tobacco did you normally smoke " + frequencyText + "?",
+            text: "Roughly how many full pipe loads did you normally smoke " + frequencyText + "?",
             classes: "nhsuk-label--m"
           },
           hint: {
@@ -39,7 +39,7 @@
           name: "pipeFormerQuantity",
           classes: "nhsuk-input--width-3",
           suffix: {
-            text: "bowls"
+            text: "full pipe loads"
           },
           value: data.pipeFormerQuantity
         }) }}

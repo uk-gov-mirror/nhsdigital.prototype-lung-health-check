@@ -28,20 +28,20 @@
           {% set moreFrequencyText = "a month" %}
         {% endif %}
 
-        <h2 class="nhsuk-heading-l">When you smoked more than {{ data.pipeFormerQuantity }} bowls {{ baseFrequencyText }}, roughly how many bowls did you normally smoke {{ moreFrequencyText }}?</h2>
+        <h2 class="nhsuk-heading-l">When you smoked more than {{ data.pipeFormerQuantity }} full pipe loads {{ baseFrequencyText }}, roughly how many full pipe loads did you normally smoke {{ moreFrequencyText }}?</h2>
 
         <p class="nhsuk-hint">Give an estimate if you are not sure</p>
 
         {{ input({
           label: {
-            text: "Bowls",
+            text: "Full pipe loads",
             classes: "nhsuk-u-visually-hidden"
           },
           id: "pipeFormerMoreQuantity",
           name: "pipeFormerMoreQuantity",
           classes: "nhsuk-input--width-3",
           suffix: {
-            text: "bowls"
+            text: "full pipe loads"
           },
           value: data.pipeFormerMoreQuantity
         }) }}

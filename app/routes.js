@@ -981,7 +981,7 @@ router.post('/prototype_v3/tobacco/cigarettes/current/has-quantity-changed-answe
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1007,7 +1007,7 @@ router.post('/prototype_v3/tobacco/cigarettes/current/more-duration-answer', fun
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarettes/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1031,15 +1031,12 @@ router.post('/prototype_v3/tobacco/cigarettes/current/less-duration-answer', fun
   
   // Check if they also selected 'stopped'
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarettes/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/current/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // CIGARETTES ROUTING - FORMER
@@ -1069,7 +1066,7 @@ router.post('/prototype_v3/tobacco/cigarettes/former/has-quantity-changed-answer
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1094,7 +1091,7 @@ router.post('/prototype_v3/tobacco/cigarettes/former/more-duration-answer', func
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarettes/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1117,15 +1114,12 @@ router.post('/prototype_v3/tobacco/cigarettes/former/less-duration-answer', func
   }
   
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarettes/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/cigarettes/former/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // "DO YOU CURRENTLY SMOKE" ROUTING - ROLLED CIGARETTES
@@ -1169,7 +1163,7 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/has-quantity-change
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1195,7 +1189,7 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-duration-answe
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1219,15 +1213,12 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-duration-answe
   
   // Check if they also selected 'stopped'
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // ROLLED CIGARETTES ROUTING - FORMER
@@ -1257,7 +1248,7 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/former/has-quantity-changed
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1282,7 +1273,7 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-duration-answer
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1305,15 +1296,12 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-duration-answer
   }
   
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // "DO YOU CURRENTLY SMOKE" ROUTING - PIPE
@@ -1357,7 +1345,7 @@ router.post('/prototype_v3/tobacco/pipe/current/has-quantity-changed-answer', fu
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1383,7 +1371,7 @@ router.post('/prototype_v3/tobacco/pipe/current/more-duration-answer', function(
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/pipe/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1407,15 +1395,12 @@ router.post('/prototype_v3/tobacco/pipe/current/less-duration-answer', function(
   
   // Check if they also selected 'stopped'
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/pipe/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/pipe/current/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // PIPE ROUTING - FORMER
@@ -1445,7 +1430,7 @@ router.post('/prototype_v3/tobacco/pipe/former/has-quantity-changed-answer', fun
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1470,7 +1455,7 @@ router.post('/prototype_v3/tobacco/pipe/former/more-duration-answer', function(r
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/pipe/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1493,15 +1478,12 @@ router.post('/prototype_v3/tobacco/pipe/former/less-duration-answer', function(r
   }
   
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/pipe/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/pipe/former/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // "DO YOU CURRENTLY SMOKE" ROUTING - CIGARS
@@ -1764,7 +1746,7 @@ router.post('/prototype_v3/tobacco/cigarillos/current/has-quantity-changed-answe
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1790,7 +1772,7 @@ router.post('/prototype_v3/tobacco/cigarillos/current/more-duration-answer', fun
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarillos/current/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1814,15 +1796,12 @@ router.post('/prototype_v3/tobacco/cigarillos/current/less-duration-answer', fun
   
   // Check if they also selected 'stopped'
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarillos/current/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/cigarillos/current/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // CIGARILLOS ROUTING - FORMER
@@ -1852,7 +1831,7 @@ router.post('/prototype_v3/tobacco/cigarillos/former/has-quantity-changed-answer
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1877,7 +1856,7 @@ router.post('/prototype_v3/tobacco/cigarillos/former/more-duration-answer', func
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigarillos/former/less-frequency')
   } else if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
@@ -1900,15 +1879,12 @@ router.post('/prototype_v3/tobacco/cigarillos/former/less-duration-answer', func
   }
   
   if (changes.includes('stopped')) {
-    response.redirect('/prototype_v3/tobacco/cigarillos/former/stopped-years')
+    moveToNextTobaccoType(request, response)
   } else {
     moveToNextTobaccoType(request, response)
   }
 })
 
-router.post('/prototype_v3/tobacco/cigarillos/former/stopped-years-answer', function(request, response) {
-  moveToNextTobaccoType(request, response)
-})
 
 // ============================================
 // "DO YOU CURRENTLY SMOKE" ROUTING - SHISHA

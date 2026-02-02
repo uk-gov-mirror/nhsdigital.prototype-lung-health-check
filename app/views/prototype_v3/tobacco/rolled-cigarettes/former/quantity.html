@@ -15,10 +15,8 @@
 
 <h1>Rolled cigarette smoking</h1>
 
-        {% set frequencyText = "a day" %}
-        {% if data.rolledCigarettesFormerFrequency == "Weekly" %}
-          {% set frequencyText = "a week" %}
-        {% elif data.rolledCigarettesFormerFrequency == "Monthly" %}
+        {% set frequencyText = "a week" %}
+        {% if data.rolledCigarettesFormerFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
         {% endif %}
 
