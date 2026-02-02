@@ -1,5 +1,4 @@
 {% extends 'layout.html' %}
-{% from 'input/macro.njk' import input %}
 {% block pageTitle %}
   Rolled cigarette smoking - NHS
 {% endblock %}
@@ -28,22 +27,38 @@
           {% set moreFrequencyText = "a month" %}
         {% endif %}
 
-        <h2 class="nhsuk-heading-l">When you smoked more than {{ data.rolledCigarettesFormerQuantity }} rolled cigarettes {{ baseFrequencyText }}, roughly how many rolled cigarettes did you normally smoke {{ moreFrequencyText }}?</h2>
-
-        <p class="nhsuk-hint">Give an estimate if you are not sure</p>
-
-        {{ input({
-          label: {
-            text: "Rolled cigarettes",
-            classes: "nhsuk-u-visually-hidden"
+        {{ radios({
+          fieldset: {
+            legend: {
+              text: "When you smoked more than " + data.rolledCigarettesFormerQuantity + " of tobacco " + baseFrequencyText + ", roughly how many grams of tobacco did you normally smoke " + moreFrequencyText + "?",
+              classes: "nhsuk-fieldset__legend--l",
+              isPageHeading: true
+            }
           },
-          id: "rolledCigarettesFormerMoreQuantity",
+          hint: {
+            text: "A standard size pouch usually contains 30g of tobacco, a larger pouch is usually 50g"
+          },
+          idPrefix: "rolledCigarettesFormerMoreQuantity",
           name: "rolledCigarettesFormerMoreQuantity",
-          classes: "nhsuk-input--width-3",
-          suffix: {
-            text: "rolled cigarettes"
-          },
-          value: data.rolledCigarettesFormerMoreQuantity
+          value: data.rolledCigarettesFormerMoreQuantity,
+          items: [
+            {
+              value: "10g to 30g",
+              text: "10g to 30g"
+            },
+            {
+              value: "30g to 50g",
+              text: "30g to 50g"
+            },
+            {
+              value: "50g to 75g",
+              text: "50g to 75g"
+            },
+            {
+              value: "75g to 100g",
+              text: "75g to 100g"
+            }
+          ]
         }) }}
         
         {{ button({

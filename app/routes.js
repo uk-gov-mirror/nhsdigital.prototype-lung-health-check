@@ -754,7 +754,7 @@ router.post('/prototype_v3/what-is-your-weight-answer', function(request, respon
     response.redirect("/prototype_v3/what-is-your-weight")
   } else {
     // No errors, continue to sex page
-    response.redirect("/prototype_v3/what-is-your-sex")
+    response.redirect("/prototype_v3/what-was-your-sex-at-birth")
   }
 })
 

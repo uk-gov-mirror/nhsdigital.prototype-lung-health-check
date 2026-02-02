@@ -1,5 +1,4 @@
 {% extends 'layout.html' %}
-{% from 'input/macro.njk' import input %}
 {% block pageTitle %}
   Rolled cigarette smoking - NHS
 {% endblock %}
@@ -23,25 +22,41 @@
           {% set frequencyText = "a month" %}
         {% endif %}
 
-<p>Telling us the number of rolled cigarettes you smoked {{ frequencyText }} helps us check if you need a lung scan.</p>
+<p>This is a test of the online service. In the future, we will use this information to give you an accurate result</p>
 
-<p>The question on the next page will ask if the number of rolled cigarettes you smoked changed over time.</p>
+<p>The question on the next page will ask if the amount of tobacco you smoked changed over time.</p>
 
-        {{ input({
-          label: {
-            text: "Roughly how many rolled cigarettes did you normally smoke " + frequencyText + "?",
-            classes: "nhsuk-label--m"
+        {{ radios({
+          fieldset: {
+            legend: {
+              text: "Roughly how many grams of tobacco did you normally smoke " + frequencyText + "?",
+              classes: "nhsuk-fieldset__legend--m"
+            }
           },
           hint: {
-            text: "Give an estimate if you are not sure"
+            text: "A standard size pouch usually contains 30g of tobacco, a larger pouch is usually 50g"
           },
-          id: "rolledCigarettesFormerQuantity",
+          idPrefix: "rolledCigarettesFormerQuantity",
           name: "rolledCigarettesFormerQuantity",
-          classes: "nhsuk-input--width-3",
-          suffix: {
-            text: "rolled cigarettes"
-          },
-          value: data.rolledCigarettesFormerQuantity
+          value: data.rolledCigarettesFormerQuantity,
+          items: [
+            {
+              value: "10g to 30g",
+              text: "10g to 30g"
+            },
+            {
+              value: "30g to 50g",
+              text: "30g to 50g"
+            },
+            {
+              value: "50g to 75g",
+              text: "50g to 75g"
+            },
+            {
+              value: "75g to 100g",
+              text: "75g to 100g"
+            }
+          ]
         }) }}
         
         {{ button({
