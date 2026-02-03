@@ -579,18 +579,27 @@ router.post('/prototype_v3/have-you-completed-by-phone-answer', function(request
 
 router.post('/prototype_v3/smokedRegularlyAnswer', function(request, response) {
   var smokedRegularly = request.session.data['smokedRegularly']
-  
-  if (smokedRegularly == "Yes-currently"){
-    response.redirect("/prototype_v3/eligibility-what-is-your-date-of-birth")
-  } else if (smokedRegularly == "Yes-usedToRegularly"){
-    response.redirect("/prototype_v3/eligibility-what-is-your-date-of-birth")
-  } else if (smokedRegularly == "Yes-usedToFewTimes"){
-    response.redirect("/prototype_v3/drop-out-never-smoked") 
-  } else if (smokedRegularly == "No"){
-    response.redirect("/prototype_v3/drop-out-never-smoked")
-  } else {
-    response.redirect("/prototype_v3/eligibility-have-you-ever-smoked")
+
+  // People who never smoked or smoked very little should be dropped out immediately
+  if (smokedRegularly === "Yes-usedToFewTimes"){
+    return response.redirect("/prototype_v3/drop-out-never-smoked")
   }
+
+  if (smokedRegularly === "No"){
+    return response.redirect("/prototype_v3/drop-out-never-smoked")
+  }
+
+  // People who currently smoke or used to smoke need to check age eligibility
+  if (smokedRegularly === "Yes-currently"){
+    return response.redirect("/prototype_v3/eligibility-what-is-your-date-of-birth")
+  }
+
+  if (smokedRegularly === "Yes-usedToRegularly"){
+    return response.redirect("/prototype_v3/eligibility-what-is-your-date-of-birth")
+  }
+
+  // If no match, redirect back to the form
+  return response.redirect("/prototype_v3/eligibility-have-you-ever-smoked")
 })
 
 router.post('/prototype_v3/dateOfBirthAnswer', function(request, response) {
@@ -914,16 +923,30 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
           // Multiple types - need to ask which ones they currently smoke
           tobaccoQueue.push(tobaccoRoutes[type] + '/do-you-currently-smoke')
         } else {
-          // Single type and they're a current smoker - go straight to frequency (skip years-smoked)
-          tobaccoQueue.push(tobaccoRoutes[type] + '/current/frequency')
+          // Single type and they're a current smoker
+          if (type === 'Shisha') {
+            // Shisha doesn't have frequency and years-smoked is only for multiple types
+            // Go directly to group-or-alone
+            tobaccoQueue.push(tobaccoRoutes[type] + '/current/group-or-alone')
+          } else {
+            // Other types go straight to frequency (skip years-smoked)
+            tobaccoQueue.push(tobaccoRoutes[type] + '/current/frequency')
+          }
         }
       } else if (smokedRegularly === "Yes-usedToRegularly") {
         if (multipleTypes) {
           // Multiple types - go to years-smoked first
           tobaccoQueue.push(tobaccoRoutes[type] + '/former/years-smoked')
         } else {
-          // Single type and they're a former smoker - go straight to frequency (skip years-smoked)
-          tobaccoQueue.push(tobaccoRoutes[type] + '/former/frequency')
+          // Single type and they're a former smoker
+          if (type === 'Shisha') {
+            // Shisha doesn't have frequency and years-smoked is only for multiple types
+            // Go directly to group-or-alone
+            tobaccoQueue.push(tobaccoRoutes[type] + '/former/group-or-alone')
+          } else {
+            // Other types go straight to frequency (skip years-smoked)
+            tobaccoQueue.push(tobaccoRoutes[type] + '/former/frequency')
+          }
         }
       }
     }
