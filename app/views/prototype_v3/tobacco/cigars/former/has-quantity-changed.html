@@ -45,7 +45,7 @@
   {% set questionText = "Has the number of " + sizePlural + " you normally smoke changed over time?" %}
   {% set fieldName = "cigarsCurrentChanges" %}
 {% else %}
-  {% set questionText = "Did the number of " + sizePlural + " you normally smoked change over time?" %}
+  {% set questionText = "Did the number of " + sizePlural + " you normally smoke change over time?" %}
   {% set fieldName = "cigarsFormerChanges" %}
 {% endif %}
 
@@ -77,11 +77,11 @@
         "items": [
           {
             "value": "more",
-            "text": "Yes, I used to smoke more than " + baselineText
+            "text": "Yes, I smoked more than " + baselineText
           },
           {
             "value": "less",
-            "text": "Yes, I used to smoke fewer than " + baselineText
+            "text": "Yes, I smoked fewer than " + baselineText
           },
           {
             "value": "stopped",
@@ -92,7 +92,7 @@
           },
           {
             "value": "No",
-            "text": "No, it has not changed",
+            "text": "No, it did not change",
             "behaviour": "exclusive"
           }
         ]

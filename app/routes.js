@@ -1568,8 +1568,7 @@ router.post('/prototype_v3/tobacco/cigars/current/quantity-answer', function(req
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/has-quantity-changed-answer', function(request, response) {
-  var currentSize = request.session.data['currentCigarSize']
-  var changes = request.session.data['cigar' + currentSize + 'Changes']
+  var changes = request.session.data['cigarsCurrentChanges']
 
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
@@ -1671,8 +1670,7 @@ router.post('/prototype_v3/tobacco/cigars/former/quantity-answer', function(requ
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/has-quantity-changed-answer', function(request, response) {
-  var currentSize = request.session.data['currentCigarSize']
-  var changes = request.session.data['cigar' + currentSize + 'Changes']
+  var changes = request.session.data['cigarsFormerChanges']
 
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []

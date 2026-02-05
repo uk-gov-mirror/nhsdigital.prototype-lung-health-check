@@ -33,9 +33,11 @@
 {% if data["smokedRegularly"] == "Yes-currently" %}
   {% set pageHeading = (currentSize | capitalize) + " cigar smoking" %}
   {% set questionText = "Roughly how many " + sizePlural + " do you currently smoke in a normal " + timePeriod + "?" %}
+  {% set nextPageText = "The question on the next page will ask if the number of " + sizePlural + " you smoke has changed over time." %}
 {% else %}
   {% set pageHeading = (currentSize | capitalize) + " cigar smoking" %}
   {% set questionText = "Roughly how many " + sizePlural + " did you normally smoke a " + timePeriod + "?" %}
+  {% set nextPageText = "The question on the next page will ask if the number of " + sizePlural + " you smoked changed over time." %}
 {% endif %}
 
 {% block beforeContent %}
@@ -54,7 +56,7 @@
       
       <p>This is a test of the online service. In the future, we will use this information to give you an accurate result.</p>
 
-      <p>The question on the next page will ask if the number of {{ sizePlural }} you smoke has changed over time.</p>
+      <p>{{ nextPageText }}</p>
 
       {{ input({
         "label": {
