@@ -1911,13 +1911,13 @@ router.post('/prototype_v3/tobacco/cigarillos/former/less-duration-answer', func
 // "DO YOU CURRENTLY SMOKE" ROUTING - SHISHA
 // ============================================
 
-router.post('/prototype_v3/tobacco/cigarillos/do-you-currently-smoke-answer', function(request, response) {
-  var currentlySmokesCigarillos = request.session.data['currentlySmokesCigarillos']
-  
-  if (currentlySmokesCigarillos === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/cigarillos/current/years-smoked')
+router.post('/prototype_v3/tobacco/shisha/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesShisha = request.session.data['currentlySmokesShisha']
+
+  if (currentlySmokesShisha === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/shisha/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/cigarillos/former/years-smoked')
+    response.redirect('/prototype_v3/tobacco/shisha/former/years-smoked')
   }
 })
 
