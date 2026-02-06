@@ -17,6 +17,7 @@
         {{ radios({
           idPrefix: "rolledCigarettesFormerFrequency",
           name: "rolledCigarettesFormerFrequency",
+        value: data["rolledCigarettesFormerFrequency"],
           fieldset: {
             legend: {
               text: "How often did you smoke rolled cigarettes?",
@@ -27,21 +28,18 @@
           items: [
             {
               value: "Daily",
-              text: "Daily",
-              checked: checked("rolledCigarettesFormerFrequency", "Daily")
+              text: "Daily"
             },
             {
               value: "Weekly",
               text: "Weekly",
               hint: {
                 text: "For example, on the weekend"
-              },
-              checked: checked("rolledCigarettesFormerFrequency", "Weekly")
+              }
             },
             {
               value: "Monthly",
-              text: "Monthly",
-              checked: checked("rolledCigarettesFormerFrequency", "Monthly")
+              text: "Monthly"
             }
           ]
         }) }}

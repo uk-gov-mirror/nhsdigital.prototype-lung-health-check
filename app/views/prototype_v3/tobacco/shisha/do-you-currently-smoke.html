@@ -19,6 +19,7 @@
       {{ radios({
         idPrefix: "currentlySmokesShisha",
         name: "currentlySmokesShisha",
+        value: data["currentlySmokesShisha"],
         fieldset: {
           legend: {
             text: "Do you currently smoke shisha?",
@@ -29,13 +30,11 @@
         items: [
           {
             value: "Yes",
-            text: "Yes",
-            checked: checked("currentlySmokesShisha", "Yes")
+            text: "Yes"
           },
           {
             value: "No",
-            text: "No",
-            checked: checked("currentlySmokesShisha", "No")
+            text: "No"
           }
         ]
       }) }}

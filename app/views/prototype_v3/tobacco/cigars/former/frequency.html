@@ -17,6 +17,7 @@
         {{ radios({
           idPrefix: "cigarsFormerFrequency",
           name: "cigarsFormerFrequency",
+        value: data["cigarsFormerFrequency"],
           fieldset: {
             legend: {
               text: "How often did you smoke cigars?",
@@ -27,24 +28,21 @@
           items: [
             {
               value: "Daily",
-              text: "Daily",
-              checked: checked("cigarsFormerFrequency", "Daily")
+              text: "Daily"
             },
             {
               value: "Weekly",
               text: "Weekly",
               hint: {
                 text: "For example, on the weekend"
-              },
-              checked: checked("cigarsFormerFrequency", "Weekly")
+              }
             },
             {
               value: "Monthly",
               text: "Monthly",
               hint: {
                 text: "Select this option if you smoked cigars once a month or once every few months"
-              },
-              checked: checked("cigarsFormerFrequency", "Monthly")
+              }
             }
           ]
         }) }}

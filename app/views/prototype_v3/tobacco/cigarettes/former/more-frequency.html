@@ -26,24 +26,22 @@
         {{ radios({
           idPrefix: "cigarettesFormerMoreFrequency",
           name: "cigarettesFormerMoreFrequency",
+        value: data["cigarettesFormerMoreFrequency"],
           items: [
             {
               value: "Daily",
-              text: "Daily",
-              checked: checked("cigarettesFormerMoreFrequency", "Daily")
+              text: "Daily"
             },
             {
               value: "Weekly",
               text: "Weekly",
               hint: {
                 text: "For example, on the weekend"
-              },
-              checked: checked("cigarettesFormerMoreFrequency", "Weekly")
+              }
             },
             {
               value: "Monthly",
-              text: "Monthly",
-              checked: checked("cigarettesFormerMoreFrequency", "Monthly")
+              text: "Monthly"
             }
           ]
         }) }}

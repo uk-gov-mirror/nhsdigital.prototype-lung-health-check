@@ -26,24 +26,22 @@
         {{ radios({
           idPrefix: "pipeFormerMoreFrequency",
           name: "pipeFormerMoreFrequency",
+        value: data["pipeFormerMoreFrequency"],
           items: [
             {
               value: "Daily",
-              text: "Daily",
-              checked: checked("pipeFormerMoreFrequency", "Daily")
+              text: "Daily"
             },
             {
               value: "Weekly",
               text: "Weekly",
               hint: {
                 text: "For example, on the weekend"
-              },
-              checked: checked("pipeFormerMoreFrequency", "Weekly")
+              }
             },
             {
               value: "Monthly",
-              text: "Monthly",
-              checked: checked("pipeFormerMoreFrequency", "Monthly")
+              text: "Monthly"
             }
           ]
         }) }}

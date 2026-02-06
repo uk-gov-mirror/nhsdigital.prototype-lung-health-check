@@ -48,13 +48,13 @@
     <link type="font/woff2" href="https://assets.nhs.uk/fonts/FrutigerLTW01-65Bold.woff2" rel="preload" as="font" crossorigin>
 
     {% block headCSS %}
-      <link href="/css/main.css" rel="stylesheet">
+      <link href="/assets/sass/main.css" rel="stylesheet">
     {% endblock %}
 
     {% block customStyles %}
     {% endblock %}
 
-    <script src="/nhsuk-frontend/nhsuk.min.js" defer></script>
+    <script type="module" src="/nhsuk-frontend/nhsuk-frontend.min.js"></script>
 
     {% block headIcons %}
     <link rel="shortcut icon" href="/nhsuk-frontend/assets/favicons/favicon.ico" type="image/x-icon">

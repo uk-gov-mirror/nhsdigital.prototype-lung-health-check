@@ -60,6 +60,7 @@
       {{ checkboxes({
         idPrefix: "tobaccoTypes",
         name: "tobaccoTypes",
+        values: data["tobaccoTypes"],
         fieldset: {
           legend: {
             text: legendText,
@@ -72,36 +73,30 @@
         items: [
           {
             value: "Cigarettes",
-            text: "Cigarettes",
-            checked: checked("tobaccoTypes", "Cigarettes")
+            text: "Cigarettes"
           },
           {
             value: "Rolled cigarettes",
-            text: "Rolled cigarettes, or roll-ups",
-            checked: checked("tobaccoTypes", "Rolled cigarettes")
+            text: "Rolled cigarettes, or roll-ups"
           },
           {
             value: "Pipe",
-            text: "Pipe",
-            checked: checked("tobaccoTypes", "Pipe")
+            text: "Pipe"
           },
           {
             value: "Cigars",
-            text: "Cigars",
-            checked: checked("tobaccoTypes", "Cigars")
+            text: "Cigars"
           },
           {
             value: "Cigarillos",
             text: "Cigarillos",
             hint: {
               text: "Cafe Creme or Signature cigars, roughly the size of a cigarette"
-            },
-            checked: checked("tobaccoTypes", "Cigarillos")
+            }
           },
           {
             value: "Shisha",
-            text: "Shisha",
-            checked: checked("tobaccoTypes", "Shisha")
+            text: "Shisha"
           }
         ]
       }) }}

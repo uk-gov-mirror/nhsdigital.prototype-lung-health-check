@@ -17,6 +17,7 @@
         {{ radios({
           idPrefix: "cigarillosFormerFrequency",
           name: "cigarillosFormerFrequency",
+        value: data["cigarillosFormerFrequency"],
           fieldset: {
             legend: {
               text: "How often did you smoke cigarillos?",
@@ -27,21 +28,18 @@
           items: [
             {
               value: "Daily",
-              text: "Daily",
-              checked: checked("cigarillosFormerFrequency", "Daily")
+              text: "Daily"
             },
             {
               value: "Weekly",
               text: "Weekly",
               hint: {
                 text: "For example, on the weekend"
-              },
-              checked: checked("cigarillosFormerFrequency", "Weekly")
+              }
             },
             {
               value: "Monthly",
-              text: "Monthly",
-              checked: checked("cigarillosFormerFrequency", "Monthly")
+              text: "Monthly"
             }
           ]
         }) }}

@@ -17,6 +17,7 @@
         {{ radios({
           idPrefix: "pipeCurrentFrequency",
           name: "pipeCurrentFrequency",
+        value: data["pipeCurrentFrequency"],
           fieldset: {
             legend: {
               text: "How often do you smoke a pipe?",
@@ -27,21 +28,18 @@
           items: [
             {
               value: "Daily",
-              text: "Daily",
-              checked: checked("pipeCurrentFrequency", "Daily")
+              text: "Daily"
             },
             {
               value: "Weekly",
               text: "Weekly",
               hint: {
                 text: "For example, on the weekend"
-              },
-              checked: checked("pipeCurrentFrequency", "Weekly")
+              }
             },
             {
               value: "Monthly",
-              text: "Monthly",
-              checked: checked("pipeCurrentFrequency", "Monthly")
+              text: "Monthly"
             }
           ]
         }) }}
