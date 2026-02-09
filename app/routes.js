@@ -533,6 +533,7 @@ router.get('/prototype_v3/start-journey', function (request, response) {
 })
 
 router.post('/prototype_v3/login', function (request, response) {
+  request.session.data['logged-in'] = true
   response.redirect('/prototype_v3/accept-terms')
 })
 

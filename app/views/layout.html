@@ -44,7 +44,20 @@ ariaLabel: "Check if you need a lung scan"
 service: {
 text: "Check if you need a lung scan",
 href: "/"
+},
+account: {
+items: [
+{
+text: "Alex Smith",
+href: "#",
+icon: true
+},
+{
+text: "Log out",
+href: "/prototype_v3/start-journey"
 }
+]
+} if data['logged-in']
 }) }}
 
 <!-- Phase banner (inside header block) -->
