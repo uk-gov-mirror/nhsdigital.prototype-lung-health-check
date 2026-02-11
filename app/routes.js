@@ -990,6 +990,17 @@ router.post('/prototype_v3/tobacco/cigarettes/current/frequency-answer', functio
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/current/quantity-answer', function(request, response) {
+  var quantity = request.session.data['cigarettesCurrentQuantity']
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data['cigarettesCurrentQuantity-error'] = true
+    return response.redirect('/prototype_v3/tobacco/cigarettes/current/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data['cigarettesCurrentQuantity-error']
+
   response.redirect('/prototype_v3/tobacco/cigarettes/current/has-quantity-changed')
 })
 
@@ -1075,6 +1086,17 @@ router.post('/prototype_v3/tobacco/cigarettes/former/frequency-answer', function
 })
 
 router.post('/prototype_v3/tobacco/cigarettes/former/quantity-answer', function(request, response) {
+  var quantity = request.session.data['cigarettesFormerQuantity']
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data['cigarettesFormerQuantity-error'] = true
+    return response.redirect('/prototype_v3/tobacco/cigarettes/former/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data['cigarettesFormerQuantity-error']
+
   response.redirect('/prototype_v3/tobacco/cigarettes/former/has-quantity-changed')
 })
 
@@ -1354,6 +1376,17 @@ router.post('/prototype_v3/tobacco/pipe/current/frequency-answer', function(requ
 })
 
 router.post('/prototype_v3/tobacco/pipe/current/quantity-answer', function(request, response) {
+  var quantity = request.session.data['pipeCurrentQuantity']
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data['pipeCurrentQuantity-error'] = true
+    return response.redirect('/prototype_v3/tobacco/pipe/current/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data['pipeCurrentQuantity-error']
+
   response.redirect('/prototype_v3/tobacco/pipe/current/has-quantity-changed')
 })
 
@@ -1439,6 +1472,17 @@ router.post('/prototype_v3/tobacco/pipe/former/frequency-answer', function(reque
 })
 
 router.post('/prototype_v3/tobacco/pipe/former/quantity-answer', function(request, response) {
+  var quantity = request.session.data['pipeFormerQuantity']
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data['pipeFormerQuantity-error'] = true
+    return response.redirect('/prototype_v3/tobacco/pipe/former/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data['pipeFormerQuantity-error']
+
   response.redirect('/prototype_v3/tobacco/pipe/former/has-quantity-changed')
 })
 
@@ -1565,6 +1609,19 @@ router.post('/prototype_v3/tobacco/cigars/current/cigar-size-answer', function(r
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/quantity-answer', function(request, response) {
+  var currentSize = request.session.data['currentCigarSize']
+  var fieldName = 'cigar' + currentSize + 'Quantity'
+  var quantity = request.session.data[fieldName]
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data[fieldName + '-error'] = true
+    return response.redirect('/prototype_v3/tobacco/cigars/current/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data[fieldName + '-error']
+
   response.redirect('/prototype_v3/tobacco/cigars/current/has-quantity-changed')
 })
 
@@ -1667,6 +1724,19 @@ router.post('/prototype_v3/tobacco/cigars/former/cigar-size-answer', function(re
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/quantity-answer', function(request, response) {
+  var currentSize = request.session.data['currentCigarSize']
+  var fieldName = 'cigar' + currentSize + 'Quantity'
+  var quantity = request.session.data[fieldName]
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data[fieldName + '-error'] = true
+    return response.redirect('/prototype_v3/tobacco/cigars/former/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data[fieldName + '-error']
+
   response.redirect('/prototype_v3/tobacco/cigars/former/has-quantity-changed')
 })
 
@@ -1753,6 +1823,17 @@ router.post('/prototype_v3/tobacco/cigarillos/current/frequency-answer', functio
 })
 
 router.post('/prototype_v3/tobacco/cigarillos/current/quantity-answer', function(request, response) {
+  var quantity = request.session.data['cigarillosCurrentQuantity']
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data['cigarillosCurrentQuantity-error'] = true
+    return response.redirect('/prototype_v3/tobacco/cigarillos/current/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data['cigarillosCurrentQuantity-error']
+
   response.redirect('/prototype_v3/tobacco/cigarillos/current/has-quantity-changed')
 })
 
@@ -1838,6 +1919,17 @@ router.post('/prototype_v3/tobacco/cigarillos/former/frequency-answer', function
 })
 
 router.post('/prototype_v3/tobacco/cigarillos/former/quantity-answer', function(request, response) {
+  var quantity = request.session.data['cigarillosFormerQuantity']
+
+  // Validate that quantity is at least 1
+  if (!quantity || parseInt(quantity) < 1) {
+    request.session.data['cigarillosFormerQuantity-error'] = true
+    return response.redirect('/prototype_v3/tobacco/cigarillos/former/quantity')
+  }
+
+  // Clear any previous errors
+  delete request.session.data['cigarillosFormerQuantity-error']
+
   response.redirect('/prototype_v3/tobacco/cigarillos/former/has-quantity-changed')
 })
 
@@ -2092,6 +2184,12 @@ router.get('/prototype_v3/check-your-answers', function(request, response) {
 
   // Only set calculated value for tobacco types that were actually selected
   var selectedTobaccoTypes = request.session.data['tobaccoTypes'] || []
+
+  // Ensure it's an array
+  if (!Array.isArray(selectedTobaccoTypes)) {
+    selectedTobaccoTypes = selectedTobaccoTypes ? [selectedTobaccoTypes] : []
+  }
+
   var isCurrent = request.session.data['smokedRegularly'] === 'Yes-currently'
 
   // Map tobacco type names to their data field names

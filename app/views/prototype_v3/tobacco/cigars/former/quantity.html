@@ -72,7 +72,10 @@
         "suffix": {
           "text": sizePlural
         },
-        "value": data["cigar" + currentSize + "Quantity"]
+        "value": data["cigar" + currentSize + "Quantity"],
+        "errorMessage": {
+          "text": "The number of " + sizePlural + " smoked must be at least 1"
+        } if data["cigar" + currentSize + "Quantity-error"]
       }) }}
 
       {{ button({

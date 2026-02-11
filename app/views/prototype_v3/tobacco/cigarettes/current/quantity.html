@@ -48,7 +48,10 @@
           suffix: {
             text: "cigarettes"
           },
-          value: data.cigarettesCurrentQuantity
+          value: data.cigarettesCurrentQuantity,
+          errorMessage: {
+            text: "The number of cigarettes smoked must be at least 1"
+          } if data['cigarettesCurrentQuantity-error']
         }) }}
         
         {{ button({

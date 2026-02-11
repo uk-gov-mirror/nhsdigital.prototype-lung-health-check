@@ -41,7 +41,10 @@
           suffix: {
             text: "full pipe loads"
           },
-          value: data.pipeFormerQuantity
+          value: data.pipeFormerQuantity,
+          errorMessage: {
+            text: "The number of full pipe loads smoked must be at least 1"
+          } if data['pipeFormerQuantity-error']
         }) }}
         
         {{ button({
