@@ -103,8 +103,8 @@ text: "Go back"
       <div class="nhsuk-summary-list__row">
         <dt class="nhsuk-summary-list__key">Weight</dt>
         <dd class="nhsuk-summary-list__value">
-          {% if data["weight"]["stones"] and data["weight"]["pounds"] %}
-          {{ data["weight"]["stones"] }} stones {{ data["weight"]["pounds"] }} pounds
+          {% if data["weight"]["stone"] and data["weight"]["pounds"] %}
+          {{ data["weight"]["stone"] }} stone {{ data["weight"]["pounds"] }} pounds
           {% elif data["weight"]["kilograms"] %}
           {{ data["weight"]["kilograms"] }} kg
           {% else %}
