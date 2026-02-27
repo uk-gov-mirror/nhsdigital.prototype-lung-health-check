@@ -19,6 +19,8 @@
           {% set frequencyText = "a week" %}
         {% elif data.cigarettesFormerFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
+        {% elif data.cigarettesFormerFrequency == "Yearly" %}
+          {% set frequencyText = "a year" %}
         {% endif %}
 
         <h2 class="nhsuk-heading-l">When you smoked more than {{ data.cigarettesFormerQuantity }} cigarettes {{ frequencyText }}, how often did you smoke cigarettes?</h2>
@@ -41,7 +43,17 @@
             },
             {
               value: "Monthly",
-              text: "Monthly"
+              text: "Monthly",
+              hint: {
+                text: "Select this option if you smoked at least once a month"
+              }
+            },
+            {
+              value: "Yearly",
+              text: "Yearly",
+              hint: {
+                text: "For example, 2 to 3 times a year or fewer"
+              }
             }
           ]
         }) }}

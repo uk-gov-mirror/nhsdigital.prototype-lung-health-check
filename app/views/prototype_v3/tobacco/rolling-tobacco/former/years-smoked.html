@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  Rolled cigarette smoking - NHS
+  Rolling tobacco smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,24 +12,24 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked-answer" method="post">
+<form action="/prototype_v3/tobacco/rolling-tobacco/former/years-smoked-answer" method="post">
 
         {{ input({
           label: {
-            text: "Roughly how many years did you smoke rolled cigarettes?",
+            text: "Roughly how many years did you smoke rolling tobacco?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "rolledCigarettesFormerYearsSmoked",
-          name: "rolledCigarettesFormerYearsSmoked",
+          id: "rollingTobaccoFormerYearsSmoked",
+          name: "rollingTobaccoFormerYearsSmoked",
           classes: "nhsuk-input--width-2",
           suffix: {
             text: "years"
           },
-          value: data.rolledCigarettesFormerYearsSmoked
+          value: data.rollingTobaccoFormerYearsSmoked
         }) }}
 
         {{ button({

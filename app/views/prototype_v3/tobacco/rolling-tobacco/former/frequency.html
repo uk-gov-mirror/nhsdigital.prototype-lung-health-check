@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'radios/macro.njk' import radios %}
 {% block pageTitle %}
-  How often do you smoke rolled cigarettes? - NHS
+  How often did you smoke rolling tobacco? - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,15 +12,15 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/current/frequency-answer" method="post">
+<form action="/prototype_v3/tobacco/rolling-tobacco/former/frequency-answer" method="post">
         
         {{ radios({
-          idPrefix: "rolledCigarettesCurrentFrequency",
-          name: "rolledCigarettesCurrentFrequency",
-        value: data["rolledCigarettesCurrentFrequency"],
+          idPrefix: "rollingTobaccoFormerFrequency",
+          name: "rollingTobaccoFormerFrequency",
+        value: data["rollingTobaccoFormerFrequency"],
           fieldset: {
             legend: {
-              text: "How often do you smoke rolled cigarettes?",
+              text: "How often did you smoke rolling tobacco?",
               classes: "nhsuk-fieldset__legend--l",
               isPageHeading: true
             }
@@ -39,7 +39,17 @@
             },
             {
               value: "Monthly",
-              text: "Monthly"
+              text: "Monthly",
+              hint: {
+                text: "Select this option if you smoked at least once a month"
+              }
+            },
+            {
+              value: "Yearly",
+              text: "Yearly",
+              hint: {
+                text: "For example, 2 to 3 times a year or fewer"
+              }
             }
           ]
         }) }}

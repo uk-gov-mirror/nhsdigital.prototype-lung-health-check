@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block pageTitle %}
-  Rolled cigarette smoking - NHS
+  Rolling tobacco smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -11,32 +11,40 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/former/quantity-answer" method="post">
+<form action="/prototype_v3/tobacco/rolling-tobacco/current/quantity-answer" method="post">
 
-<h1>Rolled cigarette smoking</h1>
+<h1>Rolling tobacco</h1>
 
         {% set frequencyText = "a week" %}
-        {% if data.rolledCigarettesFormerFrequency == "Monthly" %}
+        {% if data.rollingTobaccoCurrentFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
+        {% elif data.rollingTobaccoCurrentFrequency == "Yearly" %}
+          {% set frequencyText = "a year" %}
         {% endif %}
 
-<p>This is a test of the online service. In the future, we will use this information to give you an accurate result</p>
+        {% set frequencyTextInNormal = "in a normal week" %}
+        {% if data.rollingTobaccoCurrentFrequency == "Monthly" %}
+          {% set frequencyTextInNormal = "in a normal month" %}
+        {% elif data.rollingTobaccoCurrentFrequency == "Yearly" %}
+          {% set frequencyTextInNormal = "in a normal year" %}
+        {% endif %}
 
-<p>The question on the next page will ask if the amount of tobacco you smoked changed over time.</p>
+
+<p>The question on the next page will ask if the amount of tobacco you smoke has changed over time.</p>
 
         {{ radios({
           fieldset: {
             legend: {
-              text: "Roughly how many grams of tobacco did you normally smoke " + frequencyText + "?",
+              text: "Roughly how many grams of tobacco do you currently smoke " + frequencyTextInNormal + "?",
               classes: "nhsuk-fieldset__legend--m"
             }
           },
           hint: {
             text: "A standard size pouch usually contains 30g of tobacco, a larger pouch is usually 50g"
           },
-          idPrefix: "rolledCigarettesFormerQuantity",
-          name: "rolledCigarettesFormerQuantity",
-          value: data.rolledCigarettesFormerQuantity,
+          idPrefix: "rollingTobaccoCurrentQuantity",
+          name: "rollingTobaccoCurrentQuantity",
+          value: data.rollingTobaccoCurrentQuantity,
           items: [
             {
               value: "10g to 30g",

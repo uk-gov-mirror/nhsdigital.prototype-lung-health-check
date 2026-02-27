@@ -1,7 +1,10 @@
 {% extends 'layout.html' %}
 {% from 'radios/macro.njk' import radios %}
+
+{% set sizeName = (data['currentCigarSize'] | lower + " ") if data['currentCigarSize'] else "" %}
+
 {% block pageTitle %}
-  How often did you smoke cigars? - NHS
+  How often did you smoke {{ sizeName }}cigars? - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -13,14 +16,14 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/cigars/former/frequency-answer" method="post">
-        
+
         {{ radios({
           idPrefix: "cigarsFormerFrequency",
           name: "cigarsFormerFrequency",
         value: data["cigarsFormerFrequency"],
           fieldset: {
             legend: {
-              text: "How often did you smoke cigars?",
+              text: "How often did you smoke " + sizeName + "cigars?",
               classes: "nhsuk-fieldset__legend--l",
               isPageHeading: true
             }
@@ -41,7 +44,14 @@
               value: "Monthly",
               text: "Monthly",
               hint: {
-                text: "Select this option if you smoked cigars once a month or once every few months"
+                text: "Select this option if you smoked at least once a month"
+              }
+            },
+            {
+              value: "Yearly",
+              text: "Yearly",
+              hint: {
+                text: "For example, 2 to 3 times a year or fewer"
               }
             }
           ]

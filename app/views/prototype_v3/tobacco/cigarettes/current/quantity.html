@@ -21,6 +21,8 @@
           {% set frequencyText = "a week" %}
         {% elif data.cigarettesCurrentFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
+        {% elif data.cigarettesCurrentFrequency == "Yearly" %}
+          {% set frequencyText = "a year" %}
         {% endif %}
 
         {% set frequencyTextInNormal = "in a normal day" %}
@@ -28,9 +30,10 @@
           {% set frequencyTextInNormal = "in a normal week" %}
         {% elif data.cigarettesCurrentFrequency == "Monthly" %}
           {% set frequencyTextInNormal = "in a normal month" %}
+        {% elif data.cigarettesCurrentFrequency == "Yearly" %}
+          {% set frequencyTextInNormal = "in a normal year" %}
         {% endif %}
 
-<p>This is a test of the online service. In the future, we will use this information to give you an accurate result.</p>
 
 <p>The question on the next page will ask if the number of cigarettes you smoke has changed over time.</p>
 

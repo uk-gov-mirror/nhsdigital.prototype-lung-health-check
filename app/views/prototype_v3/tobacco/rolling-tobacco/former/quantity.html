@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 {% block pageTitle %}
-  Rolled cigarette smoking - NHS
+  Rolling tobacco smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -11,32 +11,33 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-answer" method="post">
+<form action="/prototype_v3/tobacco/rolling-tobacco/former/quantity-answer" method="post">
 
-        {% set baseFrequencyText = "a week" %}
-        {% if data.rolledCigarettesFormerFrequency == "Monthly" %}
-          {% set baseFrequencyText = "a month" %}
+<h1>Rolling tobacco</h1>
+
+        {% set frequencyText = "a week" %}
+        {% if data.rollingTobaccoFormerFrequency == "Monthly" %}
+          {% set frequencyText = "a month" %}
+        {% elif data.rollingTobaccoFormerFrequency == "Yearly" %}
+          {% set frequencyText = "a year" %}
         {% endif %}
 
-        {% set moreFrequencyText = "a week" %}
-        {% if data.rolledCigarettesFormerMoreFrequency == "Monthly" %}
-          {% set moreFrequencyText = "a month" %}
-        {% endif %}
+
+<p>The question on the next page will ask if the amount of tobacco you smoked changed over time.</p>
 
         {{ radios({
           fieldset: {
             legend: {
-              text: "When you smoked more than " + data.rolledCigarettesFormerQuantity + " of tobacco " + baseFrequencyText + ", roughly how many grams of tobacco did you normally smoke " + moreFrequencyText + "?",
-              classes: "nhsuk-fieldset__legend--l",
-              isPageHeading: true
+              text: "Roughly how many grams of tobacco did you normally smoke " + frequencyText + "?",
+              classes: "nhsuk-fieldset__legend--m"
             }
           },
           hint: {
             text: "A standard size pouch usually contains 30g of tobacco, a larger pouch is usually 50g"
           },
-          idPrefix: "rolledCigarettesFormerMoreQuantity",
-          name: "rolledCigarettesFormerMoreQuantity",
-          value: data.rolledCigarettesFormerMoreQuantity,
+          idPrefix: "rollingTobaccoFormerQuantity",
+          name: "rollingTobaccoFormerQuantity",
+          value: data.rollingTobaccoFormerQuantity,
           items: [
             {
               value: "10g to 30g",

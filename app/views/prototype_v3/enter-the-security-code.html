@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block pageTitle %}
+  Enter the security code - NHS
+{% endblock %}
+
+{% block beforeContent %}{% endblock %}
+
+{% block content %}
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+
+      <h1>Enter the security code</h1>
+
+      <p>We have sent a 6-digit security code to your phone number ending in 0887.</p>
+
+      <p>It may take a few minutes to arrive.</p>
+
+      {{ details({
+        "summaryText": "Not received a security code?",
+        "html": "<p>Make sure your device:</p>
+        <ul class=\"nhsuk-list nhsuk-list--bullet\">
+          <li>is not in flight mode and has a strong signal</li>
+          <li>can receive text messages from other senders</li>
+        </ul>
+        <p>Wait 30 seconds before you <a href=\"#\">send the security code again</a>.</p>"
+      }) }}
+
+      <form action="/prototype_v3/enter-the-security-code" method="post" novalidate>
+
+        {{ input({
+          "label": {
+            "text": "Security code"
+          },
+          "hint": {
+            "text": "The code is 6 digits"
+          },
+          "id": "securityCode",
+          "name": "securityCode",
+          "classes": "nhsuk-input--width-10"
+        }) }}
+
+        {{ checkboxes({
+          "idPrefix": "rememberDevice",
+          "name": "rememberDevice",
+          "items": [
+            {
+              "value": "yes",
+              "text": "Remember this device and stop sending security codes"
+            }
+          ]
+        }) }}
+
+        {{ details({
+          "summaryText": "What does remember this device mean?",
+          "html": "<p>We can remember the device you are using now, so you will not need to enter a security code when you log in with this device in the future.</p>
+          <p>To keep your NHS login secure, you should only do this on your own personal or trusted devices.</p>
+          <p>We may ask if you still want us to remember this device in the future.</p>"
+        }) }}
+
+        {{ details({
+          "summaryText": "I cannot log in using my mobile phone",
+          "html": "<p>If you no longer have access to it, you can <a href=\"#\">change the mobile phone number you use to log in</a>.</p>"
+        }) }}
+
+        {{ button({
+          "text": "Continue"
+        }) }}
+
+      </form>
+
+    </div>
+  </div>
+{% endblock %}

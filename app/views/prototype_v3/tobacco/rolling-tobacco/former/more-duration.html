@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
-  Rolled cigarette smoking - NHS
+  Rolling tobacco smoking - NHS
 {% endblock %}
 {% block beforeContent %}
   {{ backLink({
@@ -12,31 +12,31 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/former/less-duration-answer" method="post">
+<form action="/prototype_v3/tobacco/rolling-tobacco/former/more-duration-answer" method="post">
 
         {% set frequencyText = "a day" %}
-        {% if data.rolledCigarettesFormerLessFrequency == "Weekly" %}
+        {% if data.rollingTobaccoFormerMoreFrequency == "Weekly" %}
           {% set frequencyText = "a week" %}
-        {% elif data.rolledCigarettesFormerLessFrequency == "Monthly" %}
+        {% elif data.rollingTobaccoFormerMoreFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
         {% endif %}
 
         {{ input({
           label: {
-            text: "Roughly how many years did you smoke " + data.rolledCigarettesFormerLessQuantity + " rolled cigarettes " + frequencyText + "?",
+            text: "Roughly how many years did you smoke " + data.rollingTobaccoFormerMoreQuantity + " rolling tobacco " + frequencyText + "?",
             classes: "nhsuk-label--l",
             isPageHeading: true
           },
           hint: {
             text: "Give an estimate if you are not sure"
           },
-          id: "rolledCigarettesFormerLessDuration",
-          name: "rolledCigarettesFormerLessDuration",
+          id: "rollingTobaccoFormerMoreDuration",
+          name: "rollingTobaccoFormerMoreDuration",
           classes: "nhsuk-input--width-2",
           suffix: {
             text: "years"
           },
-          value: data.rolledCigarettesFormerLessDuration
+          value: data.rollingTobaccoFormerMoreDuration
         }) }}
         
         {{ button({

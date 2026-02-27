@@ -15,15 +15,15 @@
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
 
-      <h2>Call us to book an appointment</h2>
-
-      <p>A healthcare professional will check if you need a lung scan at your appointment.</p>
-
-      <p>They will take your height and weight measurements to calculate your body mass index (BMI).</p>
+      {{ panel({
+        titleText: "Call us to book an appointment"
+      }) }}
 
       <p>Call us on <a href="tel:02000000000">020 0000 0000</a> to book an appointment. If we do not hear from you in 2 weeks we will call you.</p>
 
-      <p><strong>Opening hours:</strong><br>
+      <p>At your face to face appointment a health professional will measure your height and weight. They will also ask you questions to check if you need a lung scan.</p>
+
+      <p><strong>Phone lines are open:</strong><br>
       Monday to Friday 8am to 8pm<br>
       Saturdays 8am to 1pm</p>
 
@@ -33,7 +33,7 @@
         descriptionHtml: "
           <p>You have any of the following symptoms:</p>
           <ul>
-            <li>a <a href='https://www.nhs.uk/conditions/cough/'>cough</a> that does not go away after 3 weeks</li>
+            <li>a cough that does not go away after 3 weeks</li>
             <li>a long-standing cough that gets worse</li>
             <li><a href='https://www.nhs.uk/conditions/chest-infection/'>chest infections</a> that keep coming back</li>
             <li><a href='https://www.nhs.uk/conditions/coughing-up-blood/'>coughing up blood</a></li>

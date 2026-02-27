@@ -12,18 +12,18 @@
 {% block content %}
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/rolled-cigarettes/current/has-quantity-changed-answer" method="post">
+<form action="/prototype_v3/tobacco/rolling-tobacco/current/has-quantity-changed-answer" method="post">
         
         {% set frequencyText = "a day" %}
-        {% if data.rolledCigarettesCurrentFrequency == "Weekly" %}
+        {% if data.rollingTobaccoCurrentFrequency == "Weekly" %}
           {% set frequencyText = "a week" %}
-        {% elif data.rolledCigarettesCurrentFrequency == "Monthly" %}
+        {% elif data.rollingTobaccoCurrentFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
         {% endif %}
         
         {{ checkboxes({
-          idPrefix: "rolledCigarettesCurrentChanges",
-          name: "rolledCigarettesCurrentChanges",
+          idPrefix: "rollingTobaccoCurrentChanges",
+          name: "rollingTobaccoCurrentChanges",
           fieldset: {
             legend: {
               text: "Did the number of grams of tobacco you normally smoke change over time?",
@@ -37,15 +37,11 @@
           items: [
             {
               value: "more",
-              text: "Yes, I smoked more than " + data.rolledCigarettesCurrentQuantity + " of tobacco " + frequencyText
+              text: "Yes, I smoked more than " + data.rollingTobaccoCurrentQuantity + " of tobacco " + frequencyText
             },
             {
               value: "less",
-              text: "Yes, I smoked less than " + data.rolledCigarettesCurrentQuantity + " of tobacco " + frequencyText
-            },
-            {
-              value: "stopped",
-              text: "Yes, I stopped smoking for a period of 1 year or longer"
+              text: "Yes, I smoked less than " + data.rollingTobaccoCurrentQuantity + " of tobacco " + frequencyText
             },
             {
               divider: "or"

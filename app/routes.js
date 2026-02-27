@@ -534,6 +534,14 @@ router.get('/prototype_v3/start-journey', function (request, response) {
 
 router.post('/prototype_v3/login', function (request, response) {
   request.session.data['logged-in'] = true
+  response.redirect('/prototype_v3/enter-the-security-code')
+})
+
+router.post('/prototype_v3/enter-the-security-code', function (_request, response) {
+  response.redirect('/prototype_v3/agree-to-share-login-info')
+})
+
+router.post('/prototype_v3/agree-to-share-login-info', function (_request, response) {
   response.redirect('/prototype_v3/accept-terms')
 })
 
@@ -852,33 +860,32 @@ function moveToNextTobaccoType(request, response) {
   }
 }
 
-// Helper function to move to next cigar size or next tobacco type
+// CIGAR SIZE SPLIT: moveToNextCigarSize is no longer used — cigar sizes now go through moveToNextTobaccoType.
+// To revert: restore this function and replace moveToNextTobaccoType calls in the cigars section with it.
+/*
 function moveToNextCigarSize(request, response, smokerType) {
   var sizeQueue = request.session.data['cigarSizeQueue'] || []
   var currentIndex = request.session.data['cigarSizeQueueIndex'] || 0
   var currentSize = request.session.data['currentCigarSize']
 
-  // Clear the changes for this size (so next size starts fresh)
   if (currentSize) {
     delete request.session.data['cigar' + currentSize + 'Changes']
   }
 
-  // Move to next size
   currentIndex++
   request.session.data['cigarSizeQueueIndex'] = currentIndex
 
   if (currentIndex < sizeQueue.length) {
-    // Set the next size as current and go back to quantity
     request.session.data['currentCigarSize'] = sizeQueue[currentIndex]
     response.redirect('/prototype_v3/tobacco/cigars/' + smokerType + '/quantity')
   } else {
-    // All sizes complete - clean up and move to next tobacco type
     delete request.session.data['cigarSizeQueue']
     delete request.session.data['cigarSizeQueueIndex']
     delete request.session.data['currentCigarSize']
     moveToNextTobaccoType(request, response)
   }
 }
+*/
 
 // ============================================
 // TOBACCO TYPE SELECTION
@@ -904,15 +911,18 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
   
   const tobaccoRoutes = {
     'Cigarettes': '/prototype_v3/tobacco/cigarettes',
-    'Rolled cigarettes': '/prototype_v3/tobacco/rolled-cigarettes',
+    'Rolling tobacco': '/prototype_v3/tobacco/rolling-tobacco',
     'Pipe': '/prototype_v3/tobacco/pipe',
-    'Cigars': '/prototype_v3/tobacco/cigars',
-    'Cigarillos': '/prototype_v3/tobacco/cigarillos',
-    'Shisha': '/prototype_v3/tobacco/shisha'
+    // CIGAR SIZE SPLIT - see MEMORY.md
+    'Small cigars': '/prototype_v3/tobacco/cigars/Small',
+    'Medium cigars': '/prototype_v3/tobacco/cigars/Medium',
+    'Large cigars': '/prototype_v3/tobacco/cigars/Large',
+    'Cigarillos': '/prototype_v3/tobacco/cigarillos'
+    // 'Shisha': '/prototype_v3/tobacco/shisha' // Temporarily removed - to be reinstated in a future version
   }
-  
+
   var tobaccoQueue = []
-  var tobaccoOrder = ['Cigarettes', 'Rolled cigarettes', 'Pipe', 'Cigars', 'Cigarillos', 'Shisha']
+  var tobaccoOrder = ['Cigarettes', 'Rolling tobacco', 'Pipe', 'Small cigars', 'Medium cigars', 'Large cigars', 'Cigarillos'] // Shisha temporarily removed
   
   // Check if user selected multiple tobacco types
   var multipleTypes = selectedTobacco.length > 1
@@ -1171,13 +1181,13 @@ router.post('/prototype_v3/tobacco/cigarettes/former/less-duration-answer', func
 // "DO YOU CURRENTLY SMOKE" ROUTING - ROLLED CIGARETTES
 // ============================================
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/do-you-currently-smoke-answer', function(request, response) {
-  var currentlySmokesRolledCigarettes = request.session.data['currentlySmokesRolledCigarettes']
+router.post('/prototype_v3/tobacco/rolling-tobacco/do-you-currently-smoke-answer', function(request, response) {
+  var currentlySmokesRollingTobacco = request.session.data['currentlySmokesRollingTobacco']
   
-  if (currentlySmokesRolledCigarettes === 'Yes') {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked')
+  if (currentlySmokesRollingTobacco === 'Yes') {
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/years-smoked')
   } else {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked')
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/years-smoked')
   }
 })
 
@@ -1185,29 +1195,29 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/do-you-currently-smoke-answ
 // ROLLED CIGARETTES ROUTING - CURRENT
 // ============================================
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/years-smoked-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/frequency')
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/frequency')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/quantity')
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/quantity')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/quantity-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/has-quantity-changed')
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/quantity-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/has-quantity-changed')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/has-quantity-changed-answer', function(request, response) {
-  var changes = request.session.data['rolledCigarettesCurrentChanges']
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/has-quantity-changed-answer', function(request, response) {
+  var changes = request.session.data['rollingTobaccoCurrentChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
   }
   
   if (changes.includes('more')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency')
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/more-frequency')
   } else if (changes.includes('less')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/less-frequency')
   } else if (changes.includes('stopped')) {
     moveToNextTobaccoType(request, response)
   } else {
@@ -1216,16 +1226,16 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/has-quantity-change
 })
 
 // MORE flow
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity')
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/more-frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/more-quantity')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-quantity-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/more-duration')
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/more-quantity-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/more-duration')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-duration-answer', function(request, response) {
-  var changes = request.session.data['rolledCigarettesCurrentChanges']
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/more-duration-answer', function(request, response) {
+  var changes = request.session.data['rollingTobaccoCurrentChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
@@ -1233,7 +1243,7 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-duration-answe
   
   // Check if they also selected 'less'
   if (changes.includes('less')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency')
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/less-frequency')
   } else if (changes.includes('stopped')) {
     moveToNextTobaccoType(request, response)
   } else {
@@ -1242,16 +1252,16 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/more-duration-answe
 })
 
 // LESS flow
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity')
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/less-frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/less-quantity')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-quantity-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/current/less-duration')
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/less-quantity-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/current/less-duration')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-duration-answer', function(request, response) {
-  var changes = request.session.data['rolledCigarettesCurrentChanges']
+router.post('/prototype_v3/tobacco/rolling-tobacco/current/less-duration-answer', function(request, response) {
+  var changes = request.session.data['rollingTobaccoCurrentChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
@@ -1270,29 +1280,29 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/current/less-duration-answe
 // ROLLED CIGARETTES ROUTING - FORMER
 // ============================================
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/years-smoked-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/frequency')
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/years-smoked-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/frequency')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/quantity')
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/quantity')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/quantity-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/has-quantity-changed')
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/quantity-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/has-quantity-changed')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/has-quantity-changed-answer', function(request, response) {
-  var changes = request.session.data['rolledCigarettesFormerChanges']
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/has-quantity-changed-answer', function(request, response) {
+  var changes = request.session.data['rollingTobaccoFormerChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
   }
   
   if (changes.includes('more')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency')
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/more-frequency')
   } else if (changes.includes('less')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/less-frequency')
   } else if (changes.includes('stopped')) {
     moveToNextTobaccoType(request, response)
   } else {
@@ -1301,23 +1311,23 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/former/has-quantity-changed
 })
 
 // MORE flow - FORMER
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity')
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/more-frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/more-quantity')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-quantity-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/more-duration')
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/more-quantity-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/more-duration')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-duration-answer', function(request, response) {
-  var changes = request.session.data['rolledCigarettesFormerChanges']
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/more-duration-answer', function(request, response) {
+  var changes = request.session.data['rollingTobaccoFormerChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
   }
   
   if (changes.includes('less')) {
-    response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency')
+    response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/less-frequency')
   } else if (changes.includes('stopped')) {
     moveToNextTobaccoType(request, response)
   } else {
@@ -1326,16 +1336,16 @@ router.post('/prototype_v3/tobacco/rolled-cigarettes/former/more-duration-answer
 })
 
 // LESS flow - FORMER
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity')
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/less-frequency-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/less-quantity')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-quantity-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/rolled-cigarettes/former/less-duration')
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/less-quantity-answer', function(request, response) {
+  response.redirect('/prototype_v3/tobacco/rolling-tobacco/former/less-duration')
 })
 
-router.post('/prototype_v3/tobacco/rolled-cigarettes/former/less-duration-answer', function(request, response) {
-  var changes = request.session.data['rolledCigarettesFormerChanges']
+router.post('/prototype_v3/tobacco/rolling-tobacco/former/less-duration-answer', function(request, response) {
+  var changes = request.session.data['rollingTobaccoFormerChanges']
   
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
@@ -1554,6 +1564,39 @@ router.post('/prototype_v3/tobacco/pipe/former/less-duration-answer', function(r
 
 
 // ============================================
+// CIGAR SIZE ENTRY ROUTES - CIGAR SIZE SPLIT (see MEMORY.md)
+// These set currentCigarSize in session before redirecting to the shared cigar pages.
+// ============================================
+
+var cigarSizes = ['Small', 'Medium', 'Large']
+
+cigarSizes.forEach(function(size) {
+  // Multiple types, current smoker: do-you-currently-smoke
+  router.get('/prototype_v3/tobacco/cigars/' + size + '/do-you-currently-smoke', function(request, response) {
+    request.session.data['currentCigarSize'] = size
+    response.redirect('/prototype_v3/tobacco/cigars/do-you-currently-smoke')
+  })
+
+  // Single type, current smoker: go direct to frequency
+  router.get('/prototype_v3/tobacco/cigars/' + size + '/current/frequency', function(request, response) {
+    request.session.data['currentCigarSize'] = size
+    response.redirect('/prototype_v3/tobacco/cigars/current/frequency')
+  })
+
+  // Multiple types, former smoker: years-smoked
+  router.get('/prototype_v3/tobacco/cigars/' + size + '/former/years-smoked', function(request, response) {
+    request.session.data['currentCigarSize'] = size
+    response.redirect('/prototype_v3/tobacco/cigars/former/years-smoked')
+  })
+
+  // Single type, former smoker: go direct to frequency
+  router.get('/prototype_v3/tobacco/cigars/' + size + '/former/frequency', function(request, response) {
+    request.session.data['currentCigarSize'] = size
+    response.redirect('/prototype_v3/tobacco/cigars/former/frequency')
+  })
+})
+
+// ============================================
 // "DO YOU CURRENTLY SMOKE" ROUTING - CIGARS
 // ============================================
 
@@ -1576,37 +1619,14 @@ router.post('/prototype_v3/tobacco/cigars/current/years-smoked-answer', function
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/cigars/current/cigar-size')
+  // CIGAR SIZE SPLIT: copies frequency to size-specific variable, skips cigar-size page (see MEMORY.md)
+  var currentSize = request.session.data['currentCigarSize']
+  request.session.data['cigar' + currentSize + 'Frequency'] = request.session.data['cigarsCurrentFrequency']
+  response.redirect('/prototype_v3/tobacco/cigars/current/quantity')
 })
 
-// NEW: Handle cigar size selection and initialize size queue
-router.post('/prototype_v3/tobacco/cigars/current/cigar-size-answer', function(request, response) {
-  var selectedSizes = request.session.data['cigarSize']
-
-  // Ensure it's an array
-  if (!Array.isArray(selectedSizes)) {
-    selectedSizes = selectedSizes ? [selectedSizes] : []
-  }
-
-  // Store the size queue and initialize index
-  request.session.data['cigarSizeQueue'] = selectedSizes
-  request.session.data['cigarSizeQueueIndex'] = 0
-
-  // Copy the global frequency to each size-specific frequency variable
-  var globalFrequency = request.session.data['cigarsCurrentFrequency']
-  selectedSizes.forEach(function(size) {
-    request.session.data['cigar' + size + 'Frequency'] = globalFrequency
-  })
-
-  // Set the first size as current
-  if (selectedSizes.length > 0) {
-    request.session.data['currentCigarSize'] = selectedSizes[0]
-    response.redirect('/prototype_v3/tobacco/cigars/current/quantity')
-  } else {
-    // No sizes selected, move to next tobacco type
-    moveToNextTobaccoType(request, response)
-  }
-})
+// cigar-size-answer not used - CIGAR SIZE SPLIT (see MEMORY.md)
+// router.post('/prototype_v3/tobacco/cigars/current/cigar-size-answer', ...)
 
 router.post('/prototype_v3/tobacco/cigars/current/quantity-answer', function(request, response) {
   var currentSize = request.session.data['currentCigarSize']
@@ -1637,8 +1657,7 @@ router.post('/prototype_v3/tobacco/cigars/current/has-quantity-changed-answer', 
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
   } else {
-    // No changes or only "stopped" - move to next size or next tobacco type
-    moveToNextCigarSize(request, response, 'current')
+    moveToNextTobaccoType(request, response)
   }
 })
 
@@ -1663,8 +1682,7 @@ router.post('/prototype_v3/tobacco/cigars/current/more-duration-answer', functio
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/current/less-frequency')
   } else {
-    // Move to next size or next tobacco type
-    moveToNextCigarSize(request, response, 'current')
+    moveToNextTobaccoType(request, response)
   }
 })
 
@@ -1678,8 +1696,7 @@ router.post('/prototype_v3/tobacco/cigars/current/less-quantity-answer', functio
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/less-duration-answer', function(request, response) {
-  // After less-duration, move to next size or next tobacco type
-  moveToNextCigarSize(request, response, 'current')
+  moveToNextTobaccoType(request, response)
 })
 
 // ============================================
@@ -1691,37 +1708,14 @@ router.post('/prototype_v3/tobacco/cigars/former/years-smoked-answer', function(
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/frequency-answer', function(request, response) {
-  response.redirect('/prototype_v3/tobacco/cigars/former/cigar-size')
+  // CIGAR SIZE SPLIT: copies frequency to size-specific variable, skips cigar-size page (see MEMORY.md)
+  var currentSize = request.session.data['currentCigarSize']
+  request.session.data['cigar' + currentSize + 'Frequency'] = request.session.data['cigarsFormerFrequency']
+  response.redirect('/prototype_v3/tobacco/cigars/former/quantity')
 })
 
-// NEW: Handle cigar size selection and initialize size queue
-router.post('/prototype_v3/tobacco/cigars/former/cigar-size-answer', function(request, response) {
-  var selectedSizes = request.session.data['cigarSize']
-
-  // Ensure it's an array
-  if (!Array.isArray(selectedSizes)) {
-    selectedSizes = selectedSizes ? [selectedSizes] : []
-  }
-
-  // Store the size queue and initialize index
-  request.session.data['cigarSizeQueue'] = selectedSizes
-  request.session.data['cigarSizeQueueIndex'] = 0
-
-  // Copy the global frequency to each size-specific frequency variable
-  var globalFrequency = request.session.data['cigarsFormerFrequency']
-  selectedSizes.forEach(function(size) {
-    request.session.data['cigar' + size + 'Frequency'] = globalFrequency
-  })
-
-  // Set the first size as current
-  if (selectedSizes.length > 0) {
-    request.session.data['currentCigarSize'] = selectedSizes[0]
-    response.redirect('/prototype_v3/tobacco/cigars/former/quantity')
-  } else {
-    // No sizes selected, move to next tobacco type
-    moveToNextTobaccoType(request, response)
-  }
-})
+// cigar-size-answer not used - CIGAR SIZE SPLIT (see MEMORY.md)
+// router.post('/prototype_v3/tobacco/cigars/former/cigar-size-answer', ...)
 
 router.post('/prototype_v3/tobacco/cigars/former/quantity-answer', function(request, response) {
   var currentSize = request.session.data['currentCigarSize']
@@ -1752,8 +1746,7 @@ router.post('/prototype_v3/tobacco/cigars/former/has-quantity-changed-answer', f
   } else if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
   } else {
-    // No changes or only "stopped" - move to next size or next tobacco type
-    moveToNextCigarSize(request, response, 'former')
+    moveToNextTobaccoType(request, response)
   }
 })
 
@@ -1777,8 +1770,7 @@ router.post('/prototype_v3/tobacco/cigars/former/more-duration-answer', function
   if (changes.includes('less')) {
     response.redirect('/prototype_v3/tobacco/cigars/former/less-frequency')
   } else {
-    // Move to next size or next tobacco type
-    moveToNextCigarSize(request, response, 'former')
+    moveToNextTobaccoType(request, response)
   }
 })
 
@@ -1792,8 +1784,7 @@ router.post('/prototype_v3/tobacco/cigars/former/less-quantity-answer', function
 })
 
 router.post('/prototype_v3/tobacco/cigars/former/less-duration-answer', function(request, response) {
-  // After less-duration, move to next size or next tobacco type
-  moveToNextCigarSize(request, response, 'former')
+  moveToNextTobaccoType(request, response)
 })
 
 // ============================================
@@ -2195,11 +2186,13 @@ router.get('/prototype_v3/check-your-answers', function(request, response) {
   // Map tobacco type names to their data field names
   var tobaccoTypeMapping = {
     'Cigarettes': isCurrent ? 'cigarettesCurrentYearsSmoked' : 'cigarettesFormerYearsSmoked',
-    'Rolled cigarettes': isCurrent ? 'rolledCigarettesCurrentYearsSmoked' : 'rolledCigarettesFormerYearsSmoked',
+    'Rolling tobacco': isCurrent ? 'rollingTobaccoCurrentYearsSmoked' : 'rollingTobaccoFormerYearsSmoked',
     'Pipe': isCurrent ? 'pipeCurrentYearsSmoked' : 'pipeFormerYearsSmoked',
-    'Cigars': isCurrent ? 'cigarsCurrentYearsSmoked' : 'cigarsFormerYearsSmoked',
-    'Cigarillos': isCurrent ? 'cigarillosCurrentYearsSmoked' : 'cigarillosFormerYearsSmoked',
-    'Shisha': isCurrent ? 'shishaCurrentYearsSmoked' : 'shishaFormerYearsSmoked'
+    'Small cigars': isCurrent ? 'cigarsCurrentYearsSmoked' : 'cigarsFormerYearsSmoked',
+    'Medium cigars': isCurrent ? 'cigarsCurrentYearsSmoked' : 'cigarsFormerYearsSmoked',
+    'Large cigars': isCurrent ? 'cigarsCurrentYearsSmoked' : 'cigarsFormerYearsSmoked',
+    'Cigarillos': isCurrent ? 'cigarillosCurrentYearsSmoked' : 'cigarillosFormerYearsSmoked'
+    // 'Shisha': isCurrent ? 'shishaCurrentYearsSmoked' : 'shishaFormerYearsSmoked' // Temporarily removed
   }
 
   // Only set years for selected tobacco types

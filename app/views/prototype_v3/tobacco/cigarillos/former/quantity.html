@@ -21,9 +21,10 @@
           {% set frequencyText = "a week" %}
         {% elif data.cigarillosFormerFrequency == "Monthly" %}
           {% set frequencyText = "a month" %}
+        {% elif data.cigarillosFormerFrequency == "Yearly" %}
+          {% set frequencyText = "a year" %}
         {% endif %}
 
-<p>This is a test of the online service. In the future, we will use this information to give you an accurate result.</p>
 
 <p>The question on the next page will ask if the number of cigarillos you smoked changed over time.</p>
 

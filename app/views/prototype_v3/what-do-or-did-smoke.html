@@ -26,7 +26,7 @@
 
     <p>Smoking affects your health in different ways depending on what you smoke.</p>
 
-    <p>We need to know what you smoke, or used to smoke, on a regular basis. For example, if you have smoked a pipe on a weekly basis for a year or longer.</p>
+    <p>We need to know what you smoke, or used to smoke, frequently. For example, if you have smoked a pipe on a weekly basis for a year or longer.</p>
 
     <p>You do not need to tell us about less frequent forms of smoking. For example, a cigar on special occasions.</p>
     {% elif data["smokedRegularly"] == "Yes-usedToRegularly" %}
@@ -34,7 +34,7 @@
 
     <p>Smoking affects your health in different ways depending on what you smoked.</p>
 
-    <p>We need to know what you smoked on a regular basis. For example, if you smoked a pipe on a weekly basis for a year or longer.</p>
+    <p>We need to know what you smoked frequently. For example, if you smoked a pipe on a weekly basis for a year or longer.</p>
 
     <p>You do not need to tell us about less frequent forms of smoking. For example, a cigar on special occasions.</p>
     {% else %}
@@ -42,7 +42,7 @@
 
     <p>Smoking affects your health in different ways depending on what you smoke.</p>
 
-    <p>We need to know what you smoke, or used to smoke, on a regular basis. For example, if you have smoked a pipe on a weekly basis for a year or longer.</p>
+    <p>We need to know what you smoke, or used to smoke, frequently. For example, if you have smoked a pipe on a weekly basis for a year or longer.</p>
 
     <p>You do not need to tell us about less frequent forms of smoking. For example, a cigar on special occasions.</p>
     {% endif %}
@@ -76,16 +76,33 @@
             text: "Cigarettes"
           },
           {
-            value: "Rolled cigarettes",
-            text: "Rolled cigarettes, or roll-ups"
+            value: "Rolling tobacco",
+            text: "Rolling tobacco, or roll-ups"
           },
           {
             value: "Pipe",
             text: "Pipe"
           },
           {
-            value: "Cigars",
-            text: "Cigars"
+            value: "Small cigars",
+            text: "Small cigars",
+            hint: {
+              text: "Petit Corona or Short Panetela, usually 4 to 5 inches long"
+            }
+          },
+          {
+            value: "Medium cigars",
+            text: "Medium cigars",
+            hint: {
+              text: "Robusto or Corona, usually 5 to 6 inches long"
+            }
+          },
+          {
+            value: "Large cigars",
+            text: "Large cigars",
+            hint: {
+              text: "Churchill or Double Corona, usually 7 to 8 inches long"
+            }
           },
           {
             value: "Cigarillos",
@@ -93,10 +110,6 @@
             hint: {
               text: "Cafe Creme or Signature cigars, roughly the size of a cigarette"
             }
-          },
-          {
-            value: "Shisha",
-            text: "Shisha"
           }
         ]
       }) }}
