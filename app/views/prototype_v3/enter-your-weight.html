@@ -27,7 +27,7 @@
         }) }}
       {% endif %}
 
-      <form action="what-is-your-weight-answer" method="post">
+      <form action="enter-your-weight-answer" method="post">
 
         <h2>Enter your weight</h2>
 
@@ -81,7 +81,7 @@
             </div>
           </fieldset>
           <input type="hidden" name="weightUnit" value="imperial">
-          <p><a href="./what-is-your-weight?weightUnit=metric&weight[stone]=&weight[pounds]=">Switch to kilograms</a></p>
+          <p><a href="./enter-your-weight?weightUnit=metric&weight[stone]=&weight[pounds]=">Switch to kilograms</a></p>
         {% else %}
           <div class="nhsuk-form-group{% if data.weightErrors.weight %} nhsuk-form-group--error{% endif %}">
             <label class="nhsuk-label nhsuk-label--m" for="weight-kilograms">
@@ -101,7 +101,7 @@
             </div>
           </div>
           <input type="hidden" name="weightUnit" value="metric">
-          <p><a href="./what-is-your-weight?weightUnit=imperial&weight[kilograms]=">Switch to stone and pounds</a></p>
+          <p><a href="./enter-your-weight?weightUnit=imperial&weight[kilograms]=">Switch to stone and pounds</a></p>
         {% endif %}
 
         {{ button({

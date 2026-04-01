@@ -642,7 +642,7 @@ router.post('/prototype_v3/who-should-not-use-answer', function(request, respons
   if (canContinue == "Yes"){
     response.redirect("/prototype_v3/drop-out-bmi")
   } else if (canContinue == "No"){
-    response.redirect("/prototype_v3/what-is-your-height")
+    response.redirect("/prototype_v3/enter-your-height")
   } else {
     response.redirect("/prototype_v3/who-should-not-use-this-online-service")
   }
@@ -652,7 +652,7 @@ router.post('/prototype_v3/who-should-not-use-answer', function(request, respons
 // HEIGHT AND WEIGHT VALIDATION
 // ============================================
 
-router.post('/prototype_v3/what-is-your-height-answer', function(request, response) {
+router.post('/prototype_v3/enter-your-height-answer', function(request, response) {
   var heightUnit = request.session.data['heightUnit']
   var height = request.session.data['height']
   var errors = {}
@@ -708,14 +708,14 @@ router.post('/prototype_v3/what-is-your-height-answer', function(request, respon
   // If there are errors, store them and redirect back
   if (Object.keys(errors).length > 0) {
     request.session.data['heightErrors'] = errors
-    response.redirect("/prototype_v3/what-is-your-height")
+    response.redirect("/prototype_v3/enter-your-height")
   } else {
     // No errors, continue to weight page
-    response.redirect("/prototype_v3/what-is-your-weight")
+    response.redirect("/prototype_v3/enter-your-weight")
   }
 })
 
-router.post('/prototype_v3/what-is-your-weight-answer', function(request, response) {
+router.post('/prototype_v3/enter-your-weight-answer', function(request, response) {
   var weightUnit = request.session.data['weightUnit']
   var weight = request.session.data['weight']
   var errors = {}
@@ -769,10 +769,10 @@ router.post('/prototype_v3/what-is-your-weight-answer', function(request, respon
   // If there are errors, store them and redirect back
   if (Object.keys(errors).length > 0) {
     request.session.data['weightErrors'] = errors
-    response.redirect("/prototype_v3/what-is-your-weight")
+    response.redirect("/prototype_v3/enter-your-weight")
   } else {
     // No errors, continue to sex page
-    response.redirect("/prototype_v3/what-was-your-sex-at-birth")
+    response.redirect("/prototype_v3/your-gender-identity")
   }
 })
 
@@ -917,12 +917,12 @@ router.post('/prototype_v3/what-do-or-did-smoke-answer', function(request, respo
     'Small cigars': '/prototype_v3/tobacco/cigars/Small',
     'Medium cigars': '/prototype_v3/tobacco/cigars/Medium',
     'Large cigars': '/prototype_v3/tobacco/cigars/Large',
-    'Cigarillos': '/prototype_v3/tobacco/cigarillos'
-    // 'Shisha': '/prototype_v3/tobacco/shisha' // Temporarily removed - to be reinstated in a future version
+    'Cigarillos': '/prototype_v3/tobacco/cigarillos',
+    'Shisha': '/prototype_v3/tobacco/shisha'
   }
 
   var tobaccoQueue = []
-  var tobaccoOrder = ['Cigarettes', 'Rolling tobacco', 'Pipe', 'Small cigars', 'Medium cigars', 'Large cigars', 'Cigarillos'] // Shisha temporarily removed
+  var tobaccoOrder = ['Cigarettes', 'Rolling tobacco', 'Pipe', 'Small cigars', 'Medium cigars', 'Large cigars', 'Cigarillos', 'Shisha']
   
   // Check if user selected multiple tobacco types
   var multipleTypes = selectedTobacco.length > 1
@@ -2191,8 +2191,8 @@ router.get('/prototype_v3/check-your-answers', function(request, response) {
     'Small cigars': isCurrent ? 'cigarsCurrentYearsSmoked' : 'cigarsFormerYearsSmoked',
     'Medium cigars': isCurrent ? 'cigarsCurrentYearsSmoked' : 'cigarsFormerYearsSmoked',
     'Large cigars': isCurrent ? 'cigarsCurrentYearsSmoked' : 'cigarsFormerYearsSmoked',
-    'Cigarillos': isCurrent ? 'cigarillosCurrentYearsSmoked' : 'cigarillosFormerYearsSmoked'
-    // 'Shisha': isCurrent ? 'shishaCurrentYearsSmoked' : 'shishaFormerYearsSmoked' // Temporarily removed
+    'Cigarillos': isCurrent ? 'cigarillosCurrentYearsSmoked' : 'cigarillosFormerYearsSmoked',
+    'Shisha': isCurrent ? 'shishaCurrentYearsSmoked' : 'shishaFormerYearsSmoked'
   }
 
   // Only set years for selected tobacco types
