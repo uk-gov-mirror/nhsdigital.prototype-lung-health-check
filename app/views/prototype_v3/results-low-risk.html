@@ -3,6 +3,7 @@
 {% from 'button/macro.njk' import button %}
 {% from 'do-dont-list/macro.njk' import list as doDontList %}
 {% from 'card/macro.njk' import card %}
+{% from 'inset-text/macro.njk' import insetText %}
 {% set pageHeading = "Your results" %}
 
 {% block beforeContent %}
@@ -93,16 +94,9 @@
     <h2>It's never too late to stop</h2>
     <p>When you stop smoking, your body can repair itself sooner than you might think. It does not matter how old you are, or how long you have smoked.</p>
 
-    <div class="nhsuk-inset-text">
-      <span class="nhsuk-u-visually-hidden">Information: </span>
-      <p><strong>When you stop smoking, in:</strong></p>
-      <ul>
-        <li>2 days, all harmful carbon monoxide leaves your body</li>
-        <li>2 to 12 weeks, your circulation improves</li>
-        <li>3 to 9 months, your lung function and breathing improves</li>
-        <li>1 year, your risk of a heart attack halves compared to a smoker</li>
-      </ul>
-    </div>
+    {{ insetText({
+      html: "<p><strong>When you stop smoking, in:</strong></p><ul><li>2 days, all harmful carbon monoxide leaves your body</li><li>2 to 12 weeks, your circulation improves</li><li>3 to 9 months, your lung function and breathing improves</li><li>1 year, your risk of a heart attack halves compared to a smoker</li></ul>"
+    }) }}
 
     {{ doDontList({
       title: "To help stop smoking:",

@@ -142,7 +142,7 @@ text: "Go back"
         <dt class="nhsuk-summary-list__key">Ethnic background</dt>
         <dd class="nhsuk-summary-list__value">{{ data["ethnicBackground"] }}</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="what-is-your-ethnic-background">Change<span class="nhsuk-u-visually-hidden"> ethnic
+          <a href="your-ethnic-background">Change<span class="nhsuk-u-visually-hidden"> ethnic
               background</span></a>
         </dd>
       </div>
@@ -153,7 +153,7 @@ text: "Go back"
         <dt class="nhsuk-summary-list__key">Education</dt>
         <dd class="nhsuk-summary-list__value">{{ data["educationCompleted"] }}</dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="highest-level-completed-education">Change<span class="nhsuk-u-visually-hidden"> education
+          <a href="your-education">Change<span class="nhsuk-u-visually-hidden"> education
               level</span></a>
         </dd>
       </div>
@@ -175,7 +175,7 @@ text: "Go back"
           {% endif %}
         </dd>
         <dd class="nhsuk-summary-list__actions">
-          <a href="diagnosed-pneumonia-emphysema">Change<span class="nhsuk-u-visually-hidden"> respiratory
+          <a href="respiratory-conditions">Change<span class="nhsuk-u-visually-hidden"> respiratory
               conditions</span></a>
         </dd>
       </div>
@@ -1061,9 +1061,7 @@ text: "Go back"
     </dl>
 
     <form action="/prototype_v3/results-pilot" method="post" novalidate="true">
-      <button class="nhsuk-button" data-module="nhsuk-button" type="submit">
-        {{buttonText}}
-      </button>
+      {{ button({ text: "Submit" }) }}
     </form>
 
   </div>

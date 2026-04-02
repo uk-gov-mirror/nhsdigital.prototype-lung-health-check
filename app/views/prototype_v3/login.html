@@ -15,19 +15,24 @@
 
       <form action="/prototype_v3/login" method="post" novalidate>
 
-        <div class="nhsuk-form-group">
-          <label class="nhsuk-label" for="email">
-            Email address
-          </label>
-          <input class="nhsuk-input nhsuk-input--width-20" id="email" name="email" type="email" autocomplete="email" spellcheck="false">
-        </div>
+        {{ input({
+          label: { text: "Email address" },
+          id: "email",
+          name: "email",
+          type: "email",
+          autocomplete: "email",
+          classes: "nhsuk-input--width-20",
+          value: data.email
+        }) }}
 
-        <div class="nhsuk-form-group">
-          <label class="nhsuk-label" for="password">
-            Password
-          </label>
-          <input class="nhsuk-input nhsuk-input--width-20" id="password" name="password" type="password" autocomplete="current-password">
-        </div>
+        {{ input({
+          label: { text: "Password" },
+          id: "password",
+          name: "password",
+          type: "password",
+          autocomplete: "current-password",
+          classes: "nhsuk-input--width-20"
+        }) }}
 
         <p><a href="#">Forgot password?</a></p>
 
@@ -41,11 +46,11 @@
 
       <p class="nhsuk-body-l"><strong>or</strong></p>
 
-      <p>
-        <a href="#" class="nhsuk-button nhsuk-button--secondary">
-          Create NHS account
-        </a>
-      </p>
+      {{ button({
+        text: "Create NHS account",
+        href: "#",
+        classes: "nhsuk-button--secondary"
+      }) }}
 
       <p>An NHS account allows you to access a range of online health services with one set of login details.</p>
       <p><a href="#">Learn more about NHS account</a>.</p>
