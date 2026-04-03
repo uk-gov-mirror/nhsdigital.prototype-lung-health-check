@@ -1646,7 +1646,8 @@ router.post('/prototype_v3/tobacco/cigars/current/quantity-answer', function(req
 })
 
 router.post('/prototype_v3/tobacco/cigars/current/has-quantity-changed-answer', function(request, response) {
-  var changes = request.session.data['cigarsCurrentChanges']
+  var currentSize = request.session.data['currentCigarSize']
+  var changes = request.session.data['cigar' + currentSize + 'Changes']
 
   if (!Array.isArray(changes)) {
     changes = changes ? [changes] : []
