@@ -1,6 +1,6 @@
 {
-  "name": "your-service-name-goes-here",
-  "description": "Rapidly create HTML prototypes of NHS websites and services.",
+  "name": "check-if-you-need-a-lung-scan",
+  "description": "A prototype of the digital questionnaire for lung health screening eligibility and risk assessment.",
   "main": "app.js",
   "scripts": {
     "start": "node .",
@@ -15,6 +15,7 @@
   "devDependencies": {
   },
   "engines": {
-    "node": "^22.11.0 || ^24.11.0"
+    "node": "24.x",
+    "npm": "11.x"
   }
 }
