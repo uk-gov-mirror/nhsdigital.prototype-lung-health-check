@@ -46,6 +46,12 @@ module.exports = function (env) { /* eslint-disable-line func-names,no-unused-va
       return ''
     }
 
+    const date = new Date(yearNum, monthNum - 1, dayNum)
+
+    if (date.getFullYear() !== yearNum || date.getMonth() !== monthNum - 1 || date.getDate() !== dayNum) {
+      return ''
+    }
+
     // Format: "1 January 2020"
     return `${dayNum} ${monthNames[monthNum - 1]} ${yearNum}`
   }
