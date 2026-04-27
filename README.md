@@ -8,22 +8,6 @@ This prototype tests a digital alternative to phone-based lung health check ques
 
 Currently, lung health check assessments are conducted over the phone, often taking over 30 minutes and involving personal questions. This prototype explores whether users would prefer to complete these assessments digitally, in their own time and privacy.
 
-## Current status
-
-**Version:** 1.0  
-**Status:** Research prototype for user testing
-
-### Key features at a glance
-- Complete end-to-end user journey
-- Age validation (55-74 years eligible)
-- NHS design system patterns and components
-- Responsive design following NHS accessibility standards
-
-### Known limitations
-- **Scoring system not implemented** - The prototype doesn't calculate weighted scores from answers in the background
-- **Fixed outcome** - Currently shows high-risk result by default (with option to view low-risk alternative)
-- **Research prototype only** - Not intended for clinical use
-
 ## User journey
 
 The prototype guides users through:
@@ -80,7 +64,7 @@ Built with the latest NHS prototype kit. No additional setup required beyond sta
 
 ```bash
 npm install
-npm run watch
+npm start
 ```
 
 The prototype will be available at `http://localhost:3000`
