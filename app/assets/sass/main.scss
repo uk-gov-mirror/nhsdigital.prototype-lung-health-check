@@ -2,3 +2,12 @@
 @import "nhsuk-frontend/dist/nhsuk";
 
 // Add your custom CSS/Sass styles below.
+.nhsuk-summary-list__row {
+  border-bottom: 1px solid #d8dde0;
+}
+
+.nhsuk-summary-list__key,
+.nhsuk-summary-list__value,
+.nhsuk-summary-list__actions {
+  border-bottom: none;
+}
