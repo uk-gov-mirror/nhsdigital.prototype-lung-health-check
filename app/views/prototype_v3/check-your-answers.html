@@ -725,7 +725,14 @@ text: "Go back"
       <!-- ============================================ -->
       <!-- CIGARS - unified per size using tobaccoTypes -->
       <!-- ============================================ -->
-      {% set tobaccoTypesList = data["tobaccoTypes"] if (data["tobaccoTypes"] is iterable and data["tobaccoTypes"] is not string) else ([data["tobaccoTypes"]] if data["tobaccoTypes"] else []) %}
+      {% set selectedTobaccoTypes = data["tobaccoTypes"] or data["whatSmokeNow"] or data["whatDidSmoke"] %}
+      {% if selectedTobaccoTypes and selectedTobaccoTypes is iterable and selectedTobaccoTypes is not string %}
+        {% set tobaccoTypesList = selectedTobaccoTypes %}
+      {% elif selectedTobaccoTypes %}
+        {% set tobaccoTypesList = [selectedTobaccoTypes] %}
+      {% else %}
+        {% set tobaccoTypesList = [] %}
+      {% endif %}
       {% set isCigarCurrent = data["smokedRegularly"] == "Yes-currently" %}
       {% set cigarsYearsField = "cigarsCurrentYearsSmoked" if isCigarCurrent else "cigarsFormerYearsSmoked" %}
       {% set cigarsState = "current" if isCigarCurrent else "former" %}
