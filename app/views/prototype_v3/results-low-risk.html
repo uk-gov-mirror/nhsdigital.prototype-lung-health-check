@@ -1,9 +1,5 @@
 {% extends 'layout.html' %}
-{% from 'details/macro.njk' import details %}
-{% from 'button/macro.njk' import button %}
-{% from 'do-dont-list/macro.njk' import list as doDontList %}
-{% from 'card/macro.njk' import card %}
-{% from 'inset-text/macro.njk' import insetText %}
+
 {% set pageHeading = "Your results" %}
 
 {% block beforeContent %}
@@ -40,7 +36,7 @@
                  <li>an ache or pain when breathing or coughing</li>
                   <li>loss of appetite or unexplained weight loss</li>
            </ul>
-           <h3>Local stop smoking services</h3>
+           <h3 class="nhsuk-heading-s">Local stop smoking services</h3>
          <p class="nhsuk-body">Stopping smoking is the single biggest change you can make for your health. <a href='https://www.nhs.uk/better-health/quit-smoking/ready-to-quit-smoking/find-your-local-stop-smoking-service/'>Find local services to help you stop smoking.</a> </p>
       </div>
     </div>
@@ -127,7 +123,7 @@
     }) }}
 
     {% set detailsHtml1 %}
-      <p class="nhsuk-body">Nearly two-thirds of people who use vapes with Stop Smoking Services quit smoking.</p><p class="nhsuk-body">Nicotine vapes are less harmful than cigarettes. They don't produce tar or carbon monoxide, which cause cancer, lung disease, and heart disease.</p><p class="nhsuk-body">Vaping mimics smoking with hand-to-mouth movement and helps manage nicotine cravings.</p><p class="nhsuk-body">Vaping also costs about a third as much as smoking, once you have the kit.</p><p class="nhsuk-body">Vaping is not risk-free. It is not recommended for non smokers or those under 18 years old.</p><h3>Useful resources</h3><p class="nhsuk-body">The following links open in a new tab.</p><p class="nhsuk-body">Visit a vape shop or <a href="https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/" target="_blank" rel="noreferrer nofollow">local Stop Smoking Service (opens in new tab)</a> for advice</p><p class="nhsuk-body">Read <a href="https://www.nhs.uk/better-health/quit-smoking/vaping-to-quit-smoking/" target="_blank" rel="noreferrer nofollow">NHS guidance on vaping to quit smoking (opens in new tab)</a></p><h3>Want to quit vaping?</h3><p class="nhsuk-body">To quit vaping, gradually reduce nicotine strength or usage. Seek advice from a vape shop or local Stop Smoking Service.</p>
+      <p class="nhsuk-body">Nearly two-thirds of people who use vapes with Stop Smoking Services quit smoking.</p><p class="nhsuk-body">Nicotine vapes are less harmful than cigarettes. They don't produce tar or carbon monoxide, which cause cancer, lung disease, and heart disease.</p><p class="nhsuk-body">Vaping mimics smoking with hand-to-mouth movement and helps manage nicotine cravings.</p><p class="nhsuk-body">Vaping also costs about a third as much as smoking, once you have the kit.</p><p class="nhsuk-body">Vaping is not risk-free. It is not recommended for non smokers or those under 18 years old.</p><h3 class="nhsuk-heading-m">Useful resources</h3><p class="nhsuk-body">The following links open in a new tab.</p><p class="nhsuk-body">Visit a vape shop or <a href="https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/" target="_blank" rel="noreferrer nofollow">local Stop Smoking Service (opens in new tab)</a> for advice</p><p class="nhsuk-body">Read <a href="https://www.nhs.uk/better-health/quit-smoking/vaping-to-quit-smoking/" target="_blank" rel="noreferrer nofollow">NHS guidance on vaping to quit smoking (opens in new tab)</a></p><h3 class="nhsuk-heading-m">Want to quit vaping?</h3><p class="nhsuk-body">To quit vaping, gradually reduce nicotine strength or usage. Seek advice from a vape shop or local Stop Smoking Service.</p>
     {% endset %}
 
     {{ details({
@@ -151,29 +147,29 @@
       type: "tick",
       items: [
         {
-          item: "find your nearest local <a href='https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/'>Stop Smoking Service</a>"
+          item: "find your nearest local <a class='nhsuk-link' href='https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/'>Stop Smoking Service</a>" | safe
         },
         {
-          item: "get a <a href='https://www.nhs.uk/better-health/quit-smoking/personal-quit-plan/'>free personal quit plan</a>"
+          item: "get a <a class='nhsuk-link' href='https://www.nhs.uk/better-health/quit-smoking/personal-quit-plan/'>free personal quit plan</a>" | safe
         },
         {
-          item: "join the <a href='https://www.facebook.com/groups/quitsmoking/'>Quit Smoking Group on Facebook</a>"
+          item: "join the <a class='nhsuk-link' href='https://www.facebook.com/groups/quitsmoking/'>Quit Smoking Group on Facebook</a>" | safe
         },
         {
-          item: "read <a href='https://www.nhs.uk/better-health/quit-smoking/'>NHS guidance on smoking</a>"
+          item: "read <a class='nhsuk-link' href='https://www.nhs.uk/better-health/quit-smoking/'>NHS guidance on smoking</a>" | safe
         },
         {
-          item: "call the free National Smokefree Helpline on <a href='tel:03001231044'>0300 123 1044</a> (England only)"
+          item: "call the free National Smokefree Helpline on <a class='nhsuk-link' href='tel:03001231044'>0300 123 1044</a> (England only)" | safe
         },
         {
-          item: "download the NHS Quit Smoking app from the <a href='https://apps.apple.com/gb/app/nhs-quit-smoking/id1452316449'>Apple App Store</a> or <a href='https://play.google.com/store/apps/details?id=uk.nhs.nhsapp.quitsmoking'>Google Play Store</a>"
+          item: "download the NHS Quit Smoking app from the <a class='nhsuk-link' href='https://apps.apple.com/gb/app/nhs-quit-smoking/id1452316449'>Apple App Store</a> or <a class='nhsuk-link' href='https://play.google.com/store/apps/details?id=uk.nhs.nhsapp.quitsmoking'>Google Play Store</a>" | safe
         }
       ]
     }) }}
 
     <p class="nhsuk-body">The following links open in a new tab:</p>
 
-    <h3>Help us improve this service</h3>
+    <h3 class="nhsuk-heading-m">Help us improve this service</h3>
     <p class="nhsuk-body">Tell us about your experience using this service today.</p>
     {{ button({
       text: "Give feedback",
