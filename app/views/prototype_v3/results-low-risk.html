@@ -45,28 +45,30 @@
       </div>
     </div>
 
+    {% set cardDescriptionHtml %}
+      <p class="nhsuk-body">You notice any new symptoms, such as:</p>
+      <ul class="nhsuk-list">
+        <li>a cough that does not go away after 3 weeks</li>
+        <li>an existing cough that changes or gets worse</li>
+        <li>chest infections that keep coming back</li>
+        <li>coughing up blood</li>
+        <li>being short of breath a lot</li>
+        <li>unexplained tiredness</li>
+        <li>an ache or pain when breathing or coughing</li>
+        <li>loss of appetite or unexplained weight loss</li>
+      </ul>
+    {% endset %}
+
     {{ card({
       type: "non-urgent",
       heading: "See a GP if:",
-      descriptionHtml: "
-        <p class="nhsuk-body">You notice any new symptoms, such as:</p>
-        <ul class="nhsuk-list">
-          <li>a cough that does not go away after 3 weeks</li>
-          <li>an existing cough that changes or gets worse</li>
-          <li>chest infections that keep coming back</li>
-          <li>coughing up blood</li>
-          <li>being short of breath a lot</li>
-          <li>unexplained tiredness</li>
-          <li>an ache or pain when breathing or coughing</li>
-          <li>loss of appetite or unexplained weight loss</li>
-        </ul>
-      "
+      descriptionHtml: cardDescriptionHtml
     }) }}
 
     <h2>Benefits of stopping smoking</h2>
     <p class="nhsuk-body">Stopping smoking is a great way to stay healthy, protect the health of those around you, and enjoy a better quality of life.</p>
 
-    {{ doDontList({
+    {{ list({
       title: "When you quit, you:",
       type: "tick",
       items: [
@@ -108,7 +110,7 @@
       html: insetTextHtml
     }) }}
 
-    {{ doDontList({
+    {{ list({
       title: "To help stop smoking:",
       type: "tick",
       items: [
@@ -144,7 +146,7 @@
       html: detailsHtml2
     }) }}
 
-    {{ doDontList({
+    {{ list({
       title: "For free help and support:",
       type: "tick",
       items: [

@@ -30,24 +30,26 @@
 
     <p class="nhsuk-body">As a thank you for testing the online service we will offer you a £10 voucher after you have completed your phone appointment.</p>
 
-    {{ card({
-      type: "non-urgent",
-      heading: "Speak to a GP if:",
-      descriptionHtml: "
-        <p class="nhsuk-body">You have any of the following symptoms:</p>
+    {% set cardDescriptionHtml %}
+      <p class="nhsuk-body">You have any of the following symptoms:</p>
         <ul class="nhsuk-list">
           <li>a cough that does not go away after 3 weeks</li>
           <li>a long-standing cough that gets worse</li>
-          <li><a href='https://www.nhs.uk/conditions/chest-infection/'>chest infections</a> that keep coming back</li>
-          <li><a href='https://www.nhs.uk/conditions/coughing-up-blood/'>coughing up blood</a></li>
+          <li><a href="https://www.nhs.uk/conditions/chest-infection/">chest infections</a> that keep coming back</li>
+          <li><a href="https://www.nhs.uk/conditions/coughing-up-blood/">coughing up blood</a></li>
           <li>an ache or pain when breathing or coughing</li>
-          <li>persistent <a href='https://www.nhs.uk/conditions/shortness-of-breath/'>breathlessness</a></li>
+          <li>persistent <a href="https://www.nhs.uk/conditions/shortness-of-breath/">breathlessness</a></li>
           <li>persistent tiredness or lack of energy</li>
           <li>loss of appetite or unexplained weight loss</li>
         </ul>
-        <p class="nhsuk-body">They could be <a href='https://www.nhs.uk/conditions/lung-cancer/symptoms/'>symptoms of lung cancer</a>. Your GP will ask about your general health and your symptoms.</p>
-        <p class="nhsuk-body">You may be asked to have a <a href='https://www.nhs.uk/conditions/blood-tests/'>blood test</a> to rule out some of the possible causes of your symptoms, such as a <a href='https://www.nhs.uk/conditions/chest-infection/'>chest infection</a>.</p>
-      "
+        <p class="nhsuk-body">They could be <a href="https://www.nhs.uk/conditions/lung-cancer/symptoms/">symptoms of lung cancer</a>. Your GP will ask about your general health and your symptoms.</p>
+        <p class="nhsuk-body">You may be asked to have a <a href="https://www.nhs.uk/conditions/blood-tests/">blood test</a> to rule out some of the possible causes of your symptoms, such as a <a href="https://www.nhs.uk/conditions/chest-infection/">chest infection</a>.</p>
+    {% endset %}
+
+    {{ card({
+      type: "non-urgent",
+      heading: "Speak to a GP if:",
+      descriptionHtml: cardDescriptionHtml
     }) }}
 
     <h2>Find your local Stop Smoking Service</h2>
@@ -56,7 +58,7 @@
     <h2>Benefits of stopping smoking</h2>
     <p class="nhsuk-body">When you stop smoking, you lower your risk of cancer, protect the health of those around you, and enjoy a better quality of life.</p>
 
-    {{ doDontList({
+    {{ list({
       title: "When you quit, you:",
       type: "tick",
       items: [
@@ -98,7 +100,7 @@
       html: insetTextHtml
     }) }}
 
-    {{ doDontList({
+    {{ list({
       title: "To help stop smoking:",
       type: "tick",
       items: [
@@ -124,7 +126,7 @@
       html: detailsHtml
     }) }}
 
-{{ doDontList({
+{{ list({
   title: "For free help and support:",
   type: "tick",
   items: [
