@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% if data["smokedRegularly"] == "Yes-currently" %}
+{% if data.smokedRegularly == "Yes-currently" %}
   {% set questionText = "What size cigar do you normally smoke?" %}
 {% else %}
   {% set questionText = "What size cigar did you normally smoke?" %}

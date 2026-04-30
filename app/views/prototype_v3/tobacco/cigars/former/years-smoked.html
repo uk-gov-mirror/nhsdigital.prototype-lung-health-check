@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% from 'input/macro.njk' import input %}
 
-{% set sizeName = (data['currentCigarSize'] | lower + " ") if data['currentCigarSize'] else "" %}
+{% set sizeName = (data.currentCigarSize | lower + " ") if data.currentCigarSize else "" %}
 
 {% block pageTitle %}
   Cigar smoking - NHS

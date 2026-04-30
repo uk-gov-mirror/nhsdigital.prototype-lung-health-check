@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {# Get the current size being processed #}
-{% set currentSize = data["currentCigarSize"] or "small" %}
+{% set currentSize = data.currentCigarSize or "small" %}
 {% set sizeLower = currentSize | lower %}
 
 {# Set size-specific text #}

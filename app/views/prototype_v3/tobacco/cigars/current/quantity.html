@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {# Get the current size being processed #}
-{% set currentSize = data["currentCigarSize"] or "small" %}
+{% set currentSize = data.currentCigarSize or "small" %}
 {% set sizeLower = currentSize | lower %}
 
 {# Set size-specific text #}
@@ -30,7 +30,7 @@
   {% set timePeriod = "day" %}
 {% endif %}
 
-{% if data["smokedRegularly"] == "Yes-currently" %}
+{% if data.smokedRegularly == "Yes-currently" %}
   {% set pageHeading = (currentSize | capitalize) + " cigar smoking" %}
   {% set questionText = "Roughly how many " + sizePlural + " do you currently smoke in a normal " + timePeriod + "?" %}
 {% else %}

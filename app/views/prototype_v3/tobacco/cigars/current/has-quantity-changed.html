@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
 {# Get current size being processed #}
-{% set currentSize = data["currentCigarSize"] or "Small" %}
+{% set currentSize = data.currentCigarSize or "Small" %}
 
 {# Get baseline quantity for THIS size #}
 {% set baselineQuantity = data["cigar" + currentSize + "Quantity"] %}
 
 {# Get frequency (shared across all sizes) #}
-{% set frequency = data["cigarsCurrentFrequency"] or data["cigarsFormerFrequency"] %}
+{% set frequency = data.cigarsCurrentFrequency or data.cigarsFormerFrequency %}
 
 {# Set frequency-based time period #}
 {% if frequency == "Daily" %}
@@ -41,7 +41,7 @@
   {% set baselineText = baselineQuantity + " " + sizePlural + " " + timePeriod %}
 {% endif %}
 
-{% if data["smokedRegularly"] == "Yes-currently" %}
+{% if data.smokedRegularly == "Yes-currently" %}
   {% set questionText = "Has the number of " + sizePlural + " you normally smoke changed over time?" %}
   {% set fieldName = "cigar" + currentSize + "Changes" %}
 {% else %}

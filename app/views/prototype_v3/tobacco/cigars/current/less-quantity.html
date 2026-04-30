@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {# Get the current size being processed #}
-{% set currentSize = data["currentCigarSize"] or "small" %}
+{% set currentSize = data.currentCigarSize or "small" %}
 {% set sizeLower = currentSize | lower %}
 
 {# Set size-specific text #}
@@ -47,7 +47,7 @@
   {% set timePeriod = "day" %}
 {% endif %}
 
-{% if data["smokedRegularly"] == "Yes-currently" %}
+{% if data.smokedRegularly == "Yes-currently" %}
   {% set questionText = "When you smoked fewer than " + baselineText + ", roughly how many " + sizePlural + " did you normally smoke a " + timePeriod + "?" %}
 {% else %}
   {% set questionText = "When you smoked fewer than " + baselineText + ", roughly how many " + sizePlural + " did you normally smoke a " + timePeriod + "?" %}

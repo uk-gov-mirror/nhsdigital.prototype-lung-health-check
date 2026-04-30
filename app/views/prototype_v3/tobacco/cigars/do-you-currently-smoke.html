@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 
-{% set sizeName = (data['currentCigarSize'] | lower + " ") if data['currentCigarSize'] else "" %}
+{% set sizeName = (data.currentCigarSize | lower + " ") if data.currentCigarSize else "" %}
 
 {% block pageTitle %}
   Do you currently smoke {{ sizeName }}cigars - NHS
@@ -21,7 +21,7 @@
         {{ radios({
           idPrefix: "currentlySmokesCigars",
           name: "currentlySmokesCigars",
-          value: data["currentlySmokesCigars"],
+          value: data.currentlySmokesCigars,
           fieldset: {
             legend: {
               text: "Do you currently smoke " + sizeName + "cigars?",

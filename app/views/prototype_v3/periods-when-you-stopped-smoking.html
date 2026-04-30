@@ -17,9 +17,9 @@
 
       <h1 class="nhsuk-heading-l">Periods when you stopped smoking</h1>
 
-      {% if data["smokedRegularly"] == "Yes-currently" %}
+      {% if data.smokedRegularly == "Yes-currently" %}
         <p class="nhsuk-body">There may have been periods when you stopped or quit smoking.</p>
-      {% elif data["smokedRegularly"] == "Yes-usedToRegularly" %}
+      {% elif data.smokedRegularly == "Yes-usedToRegularly" %}
         <p class="nhsuk-body">There may have been periods when you stopped smoking before you quit for the last time.</p>
       {% endif %}
 
@@ -27,9 +27,9 @@
 
       <form action="/prototype_v3/periods-when-you-stopped-smoking-answer" method="post" novalidate="true">
 
-        {% if data["smokedRegularly"] == "Yes-currently" %}
+        {% if data.smokedRegularly == "Yes-currently" %}
           {% set legendText = "Have you ever stopped smoking for periods of 1 year or longer?" %}
-        {% elif data["smokedRegularly"] == "Yes-usedToRegularly" %}
+        {% elif data.smokedRegularly == "Yes-usedToRegularly" %}
           {% set legendText = "Did you ever stop smoking for periods of 1 year or longer?" %}
         {% endif %}
 
@@ -48,7 +48,7 @@
               value: "Yes",
               text: "Yes",
               conditional: {
-                html: '<label class="nhsuk-label" for="totalYearsStoppedSmoking">Enter the total number of years you stopped smoking</label><p class="nhsuk-hint">Give an estimate if you are not sure</p><div class="nhsuk-input__wrapper"><input class="nhsuk-input nhsuk-input--width-4" id="totalYearsStoppedSmoking" name="totalYearsStoppedSmoking" type="number" value="' + data['totalYearsStoppedSmoking'] + '"><span class="nhsuk-input__suffix" aria-hidden="true">years</span></div>'
+                html: '<label class="nhsuk-label" for="totalYearsStoppedSmoking">Enter the total number of years you stopped smoking</label><p class="nhsuk-hint">Give an estimate if you are not sure</p><div class="nhsuk-input__wrapper"><input class="nhsuk-input nhsuk-input--width-4" id="totalYearsStoppedSmoking" name="totalYearsStoppedSmoking" type="number" value="' + data.totalYearsStoppedSmoking + '"><span class="nhsuk-input__suffix" aria-hidden="true">years</span></div>'
               }
             },
             {

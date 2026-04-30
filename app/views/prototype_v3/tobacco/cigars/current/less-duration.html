@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {# Get the current size being processed #}
-{% set currentSize = data["currentCigarSize"] or "small" %}
+{% set currentSize = data.currentCigarSize or "small" %}
 {% set sizeLower = currentSize | lower %}
 
 {# Set size-specific text #}
@@ -33,7 +33,7 @@
 {# Create the fewer text #}
 {% set fewerText = fewerQuantity + " " + (sizePlural if fewerQuantity != "1" else sizePlural | replace("cigars", "cigar")) + " " + timePeriod %}
 
-{% if data["smokedRegularly"] == "Yes-currently" %}
+{% if data.smokedRegularly == "Yes-currently" %}
   {% set questionText = "Roughly how many years did you smoke " + fewerText + "?" %}
 {% else %}
   {% set questionText = "Roughly how many years did you smoke " + fewerText + "?" %}

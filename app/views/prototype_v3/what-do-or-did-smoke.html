@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
 {% block pageTitle %}
-  {% if data["smokedRegularly"] == "Yes-currently" %}
+  {% if data.smokedRegularly == "Yes-currently" %}
     The type of tobacco you smoke or used to smoke - NHS
-  {% elif data["smokedRegularly"] == "Yes-usedToRegularly" %}
+  {% elif data.smokedRegularly == "Yes-usedToRegularly" %}
     The type of tobacco you smoked - NHS
   {% else %}
     The type of tobacco you smoke or used to smoke - NHS
@@ -21,7 +21,7 @@
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
 
-      {% if data["smokedRegularly"] == "Yes-currently" %}
+      {% if data.smokedRegularly == "Yes-currently" %}
         <h1 class="nhsuk-heading-l">The type of tobacco you smoke or used to smoke</h1>
 
         <p class="nhsuk-body">Smoking affects your health in different ways depending on what you smoke.</p>
@@ -29,7 +29,7 @@
         <p class="nhsuk-body">We need to know what you smoke, or used to smoke, frequently. For example, if you have smoked a pipe on a weekly basis for a year or longer.</p>
 
         <p class="nhsuk-body">You do not need to tell us about less frequent forms of smoking. For example, a cigar on special occasions.</p>
-      {% elif data["smokedRegularly"] == "Yes-usedToRegularly" %}
+      {% elif data.smokedRegularly == "Yes-usedToRegularly" %}
         <h1 class="nhsuk-heading-l">The type of tobacco you smoked</h1>
 
         <p class="nhsuk-body">Smoking affects your health in different ways depending on what you smoked.</p>
@@ -49,9 +49,9 @@
 
       <form action="/prototype_v3/what-do-or-did-smoke-answer" method="post">
 
-        {% if data["smokedRegularly"] == "Yes-currently" %}
+        {% if data.smokedRegularly == "Yes-currently" %}
           {% set legendText = "What do you or have you smoked?" %}
-        {% elif data["smokedRegularly"] == "Yes-usedToRegularly" %}
+        {% elif data.smokedRegularly == "Yes-usedToRegularly" %}
           {% set legendText = "What did you smoke?" %}
         {% else %}
           {% set legendText = "What do you or have you smoked?" %}
