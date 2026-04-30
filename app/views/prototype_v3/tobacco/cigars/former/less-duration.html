@@ -52,25 +52,25 @@
     <form action="less-duration-answer" method="post" novalidate>
 
       {{ input({
-        "label": {
-          "text": questionText,
-          "classes": "nhsuk-label--l",
-          "isPageHeading": true
+        label: {
+          text: questionText,
+          classes: "nhsuk-label--l",
+          isPageHeading: true
         },
-        "hint": {
-          "text": "Give an estimate if you are not sure"
+        hint: {
+          text: "Give an estimate if you are not sure"
         },
-        "id": "cigar" + currentSize + "FewerDuration",
-        "name": "cigar" + currentSize + "FewerDuration",
-        "classes": "nhsuk-input--width-3",
-        "suffix": {
-          "text": "years"
+        id: "cigar" + currentSize + "FewerDuration",
+        name: "cigar" + currentSize + "FewerDuration",
+        classes: "nhsuk-input--width-3",
+        suffix: {
+          text: "years"
         },
-        "value": data["cigar" + currentSize + "FewerDuration"]
+        value: data["cigar" + currentSize + "FewerDuration"]
       }) }}
 
       {{ button({
-        "text": "Continue"
+        text: "Continue"
       }) }}
 
     </form>

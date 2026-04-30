@@ -62,40 +62,40 @@
     <form action="has-quantity-changed-answer" method="post" novalidate>
 
       {{ checkboxes({
-        "idPrefix": fieldName,
-        "name": fieldName,
-        "fieldset": {
-          "legend": {
-            "text": questionText,
-            "classes": "nhsuk-fieldset__legend--l",
-            "isPageHeading": true
+        idPrefix: fieldName,
+        name: fieldName,
+        fieldset: {
+          legend: {
+            text: questionText,
+            classes: "nhsuk-fieldset__legend--l",
+            isPageHeading: true
           }
         },
-        "hint": {
-          "text": "Select all that apply"
+        hint: {
+          text: "Select all that apply"
         },
-        "items": [
+        items: [
           {
-            "value": "more",
-            "text": "Yes, I smoked more than " + baselineText
+            value: "more",
+            text: "Yes, I smoked more than " + baselineText
           },
           {
-            "value": "less",
-            "text": "Yes, I smoked fewer than " + baselineText
+            value: "less",
+            text: "Yes, I smoked fewer than " + baselineText
           },
           {
-            "divider": "or"
+            divider: "or"
           },
           {
-            "value": "No",
-            "text": "No, it did not change",
-            "behaviour": "exclusive"
+            value: "No",
+            text: "No, it did not change",
+            behaviour: "exclusive"
           }
         ]
       }) }}
 
       {{ button({
-        "text": "Continue"
+        text: "Continue"
       }) }}
 
     </form>

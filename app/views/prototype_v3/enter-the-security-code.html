@@ -33,24 +33,24 @@
       <form action="/prototype_v3/enter-the-security-code" method="post" novalidate>
 
         {{ input({
-          "label": {
-            "text": "Security code"
+          label: {
+            text: "Security code"
           },
-          "hint": {
-            "text": "The code is 6 digits"
+          hint: {
+            text: "The code is 6 digits"
           },
-          "id": "securityCode",
-          "name": "securityCode",
-          "classes": "nhsuk-input--width-10"
+          id: "securityCode",
+          name: "securityCode",
+          classes: "nhsuk-input--width-10"
         }) }}
 
         {{ checkboxes({
-          "idPrefix": "rememberDevice",
-          "name": "rememberDevice",
-          "items": [
+          idPrefix: "rememberDevice",
+          name: "rememberDevice",
+          items: [
             {
-              "value": "yes",
-              "text": "Remember this device and stop sending security codes"
+              value: "yes",
+              text: "Remember this device and stop sending security codes"
             }
           ]
         }) }}
@@ -76,7 +76,7 @@
         }) }}
 
         {{ button({
-          "text": "Continue"
+          text: "Continue"
         }) }}
 
       </form>

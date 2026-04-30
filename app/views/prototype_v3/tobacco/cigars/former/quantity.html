@@ -51,27 +51,27 @@
       <p class="nhsuk-body">{{ nextPageText }}</p>
 
       {{ input({
-        "label": {
-          "text": questionText,
-          "classes": "nhsuk-label--m"
+        label: {
+          text: questionText,
+          classes: "nhsuk-label--m"
         },
-        "hint": {
-          "text": "Give an estimate if you are not sure"
+        hint: {
+          text: "Give an estimate if you are not sure"
         },
-        "id": "cigar" + currentSize + "Quantity",
-        "name": "cigar" + currentSize + "Quantity",
-        "classes": "nhsuk-input--width-3",
-        "suffix": {
-          "text": sizePlural
+        id: "cigar" + currentSize + "Quantity",
+        name: "cigar" + currentSize + "Quantity",
+        classes: "nhsuk-input--width-3",
+        suffix: {
+          text: sizePlural
         },
-        "value": data["cigar" + currentSize + "Quantity"],
-        "errorMessage": {
-          "text": "The number of " + sizePlural + " smoked must be at least 1"
+        value: data["cigar" + currentSize + "Quantity"],
+        errorMessage: {
+          text: "The number of " + sizePlural + " smoked must be at least 1"
         } if data["cigar" + currentSize + "Quantity-error"]
       }) }}
 
       {{ button({
-        "text": "Continue"
+        text: "Continue"
       }) }}
 
     </form>

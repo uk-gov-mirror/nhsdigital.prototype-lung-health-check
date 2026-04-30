@@ -66,25 +66,25 @@
     <form action="less-quantity-answer" method="post" novalidate>
 
       {{ input({
-        "label": {
-          "text": questionText,
-          "classes": "nhsuk-label--l",
-          "isPageHeading": true
+        label: {
+          text: questionText,
+          classes: "nhsuk-label--l",
+          isPageHeading: true
         },
-        "hint": {
-          "text": "Give an estimate if you are not sure"
+        hint: {
+          text: "Give an estimate if you are not sure"
         },
-        "id": "cigar" + currentSize + "FewerQuantity",
-        "name": "cigar" + currentSize + "FewerQuantity",
-        "classes": "nhsuk-input--width-3",
-        "suffix": {
-          "text": sizePlural
+        id: "cigar" + currentSize + "FewerQuantity",
+        name: "cigar" + currentSize + "FewerQuantity",
+        classes: "nhsuk-input--width-3",
+        suffix: {
+          text: sizePlural
         },
-        "value": data["cigar" + currentSize + "FewerQuantity"]
+        value: data["cigar" + currentSize + "FewerQuantity"]
       }) }}
 
       {{ button({
-        "text": "Continue"
+        text: "Continue"
       }) }}
 
     </form>

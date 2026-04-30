@@ -19,45 +19,45 @@
 <form action="cigar-size-answer" method="post" novalidate>
 
       {{ checkboxes({
-        "idPrefix": "cigarSize",
-        "name": "cigarSize",
-        "fieldset": {
-          "legend": {
-            "text": questionText,
-            "classes": "nhsuk-fieldset__legend--l",
-            "isPageHeading": true
+        idPrefix: "cigarSize",
+        name: "cigarSize",
+        fieldset: {
+          legend: {
+            text: questionText,
+            classes: "nhsuk-fieldset__legend--l",
+            isPageHeading: true
           }
         },
-        "hint": {
-          "text": "Select all that apply"
+        hint: {
+          text: "Select all that apply"
         },
-        "items": [
+        items: [
           {
-            "value": "Small",
-            "text": "Small",
-            "hint": {
-              "text": "Petit Corona or Short Panetela, usually 4 to 5 inches long"
+            value: "Small",
+            text: "Small",
+            hint: {
+              text: "Petit Corona or Short Panetela, usually 4 to 5 inches long"
             }
           },
           {
-            "value": "Medium",
-            "text": "Medium",
-            "hint": {
-              "text": "Robusto or Corona, usually 5 to 6 inches long"
+            value: "Medium",
+            text: "Medium",
+            hint: {
+              text: "Robusto or Corona, usually 5 to 6 inches long"
             }
           },
           {
-            "value": "Large",
-            "text": "Large",
-            "hint": {
-              "text": "Churchill or Double Corona, usually 7 to 8 inches long"
+            value: "Large",
+            text: "Large",
+            hint: {
+              text: "Churchill or Double Corona, usually 7 to 8 inches long"
             }
           }
         ]
       }) }}
 
       {{ button({
-        "text": "Continue"
+        text: "Continue"
       }) }}
 
     </form>

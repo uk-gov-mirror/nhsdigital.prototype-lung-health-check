@@ -13,11 +13,11 @@
 
       {% if data['accept-terms-error'] %}
         {{ errorSummary({
-          "titleText": "There is a problem",
-          "errorList": [
+          titleText: "There is a problem",
+          errorList: [
             {
-              "text": "You must accept the terms of use to continue",
-              "href": "#accept-terms"
+              text: "You must accept the terms of use to continue",
+              href: "#accept-terms"
             }
           ]
         }) }}
@@ -30,21 +30,21 @@
       <form action="/prototype_v3/accept-terms" method="post" novalidate>
 
         {{ checkboxes({
-          "idPrefix": "accept-terms",
-          "name": "accept-terms",
-          "errorMessage": {
-            "text": "Agree to the terms of use to continue"
+          idPrefix: "accept-terms",
+          name: "accept-terms",
+          errorMessage: {
+            text: "Agree to the terms of use to continue"
           } if data['accept-terms-error'],
-          "items": [
+          items: [
             {
-              "value": "yes",
-              "text": "I agree"
+              value: "yes",
+              text: "I agree"
             }
           ]
         }) }}
 
         {{ button({
-          "text": "Continue"
+          text: "Continue"
         }) }}
 
       </form>

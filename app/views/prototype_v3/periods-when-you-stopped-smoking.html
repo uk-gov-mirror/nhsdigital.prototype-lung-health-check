@@ -34,31 +34,31 @@
       {% endif %}
 
       {{ radios({
-        "idPrefix": "stoppedSmokingPeriods",
-        "name": "stoppedSmokingPeriods",
-        "fieldset": {
-          "legend": {
-            "text": legendText,
-            "classes": "nhsuk-fieldset__legend--m"
+        idPrefix: "stoppedSmokingPeriods",
+        name: "stoppedSmokingPeriods",
+        fieldset: {
+          legend: {
+            text: legendText,
+            classes: "nhsuk-fieldset__legend--m"
           }
         },
-        "items": [
+        items: [
           {
-            "value": "Yes",
-            "text": "Yes",
-            "conditional": {
-              "html": '<label class="nhsuk-label" for="totalYearsStoppedSmoking">Enter the total number of years you stopped smoking</label><p class="nhsuk-hint">Give an estimate if you are not sure</p><div class="nhsuk-input__wrapper"><input class="nhsuk-input nhsuk-input--width-4" id="totalYearsStoppedSmoking" name="totalYearsStoppedSmoking" type="number" value="' + data['totalYearsStoppedSmoking'] + '"><span class="nhsuk-input__suffix" aria-hidden="true">years</span></div>'
+            value: "Yes",
+            text: "Yes",
+            conditional: {
+              html: '<label class="nhsuk-label" for="totalYearsStoppedSmoking">Enter the total number of years you stopped smoking</label><p class="nhsuk-hint">Give an estimate if you are not sure</p><div class="nhsuk-input__wrapper"><input class="nhsuk-input nhsuk-input--width-4" id="totalYearsStoppedSmoking" name="totalYearsStoppedSmoking" type="number" value="' + data['totalYearsStoppedSmoking'] + '"><span class="nhsuk-input__suffix" aria-hidden="true">years</span></div>'
             }
           },
           {
-            "value": "No",
-            "text": "No"
+            value: "No",
+            text: "No"
           }
         ]
       }) }}
 
       {{ button({
-        "text": buttonText
+        text: buttonText
       }) }}
 
     </form>

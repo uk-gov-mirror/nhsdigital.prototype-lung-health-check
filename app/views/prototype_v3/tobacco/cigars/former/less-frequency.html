@@ -52,46 +52,46 @@
     <form action="less-frequency-answer" method="post" novalidate>
 
       {{ radios({
-        "idPrefix": "cigar" + currentSize + "FewerFrequency",
-        "name": "cigar" + currentSize + "FewerFrequency",
-        "fieldset": {
-          "legend": {
-            "text": questionText,
-            "classes": "nhsuk-fieldset__legend--l",
-            "isPageHeading": true
+        idPrefix: "cigar" + currentSize + "FewerFrequency",
+        name: "cigar" + currentSize + "FewerFrequency",
+        fieldset: {
+          legend: {
+            text: questionText,
+            classes: "nhsuk-fieldset__legend--l",
+            isPageHeading: true
           }
         },
-        "items": [
+        items: [
           {
-            "value": "Daily",
-            "text": "Daily"
+            value: "Daily",
+            text: "Daily"
           },
           {
-            "value": "Weekly",
-            "text": "Weekly",
-            "hint": {
-              "text": "For example, on the weekend"
+            value: "Weekly",
+            text: "Weekly",
+            hint: {
+              text: "For example, on the weekend"
             }
           },
           {
-            "value": "Monthly",
-            "text": "Monthly",
-            "hint": {
-              "text": "Select this option if you smoked at least once a month"
+            value: "Monthly",
+            text: "Monthly",
+            hint: {
+              text: "Select this option if you smoked at least once a month"
             }
           },
           {
-            "value": "Yearly",
-            "text": "Yearly",
-            "hint": {
-              "text": "For example, 2 to 3 times a year or fewer"
+            value: "Yearly",
+            text: "Yearly",
+            hint: {
+              text: "For example, 2 to 3 times a year or fewer"
             }
           }
         ]
       }) }}
 
       {{ button({
-        "text": "Continue"
+        text: "Continue"
       }) }}
 
     </form>
