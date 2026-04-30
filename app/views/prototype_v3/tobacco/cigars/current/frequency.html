@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 {% from 'radios/macro.njk' import radios %}
 
 {% set sizeName = (data['currentCigarSize'] | lower + " ") if data['currentCigarSize'] else "" %}
@@ -56,7 +56,7 @@
             }
           ]
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

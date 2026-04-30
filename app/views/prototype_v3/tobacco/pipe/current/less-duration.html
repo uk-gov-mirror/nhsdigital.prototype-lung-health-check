@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
   Pipe smoking - NHS
@@ -38,7 +38,7 @@
           },
           value: data.pipeCurrentLessDuration
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

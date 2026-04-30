@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 {% from 'input/macro.njk' import input %}
 {% block pageTitle %}
   Cigarette smoking - NHS
@@ -38,7 +38,7 @@
           },
           value: data.cigarettesCurrentLessDuration
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}

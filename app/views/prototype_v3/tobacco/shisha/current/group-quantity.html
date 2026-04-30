@@ -1,4 +1,4 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 {% from 'input/macro.njk' import input %}
 
 {% if data.shishaCurrentGroupFrequency == "Daily" %}
@@ -24,7 +24,7 @@
 <div class="nhsuk-grid-row">
 <div class="nhsuk-grid-column-two-thirds">
 <form action="/prototype_v3/tobacco/shisha/current/group-quantity-answer" method="post">
-        
+
         {{ input({
           label: {
             text: "Roughly, how many hours a " + frequencyText + " do you normally smoke shisha for in a group?",
@@ -42,7 +42,7 @@
           },
           value: data.shishaCurrentGroupQuantity
         }) }}
-        
+
         {{ button({
           text: "Continue"
         }) }}
