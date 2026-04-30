@@ -18,12 +18,12 @@
     <h2>Periods when you stopped smoking</h2>
 
     {% if data["smokedRegularly"] == "Yes-currently" %}
-    <p>There may have been periods when you stopped or quit smoking.</p>
+    <p class="nhsuk-body">There may have been periods when you stopped or quit smoking.</p>
     {% elif data["smokedRegularly"] == "Yes-usedToRegularly" %}
-    <p>There may have been periods when you stopped smoking before you quit for the last time.</p>
+    <p class="nhsuk-body">There may have been periods when you stopped smoking before you quit for the last time.</p>
     {% endif %}
 
-    <p>If you stopped smoking for periods of 1 year or longer, tell us the total number of years you stopped smoking.</p>
+    <p class="nhsuk-body">If you stopped smoking for periods of 1 year or longer, tell us the total number of years you stopped smoking.</p>
 
     <form action="/prototype_v3/periods-when-you-stopped-smoking-answer" method="post" novalidate="true">
 

@@ -16,9 +16,9 @@
 {% block content %}
 <div class="nhsuk-grid-row">
   <div class="nhsuk-grid-column-two-thirds">
-    
+
     <h2>{{ pageHeading }}</h2>
-    
+
     <div class="nhsuk-card">
       <div class="nhsuk-card__content" style="padding-bottom: 0;">
         <h2 class="nhsuk-card__heading" style="margin-bottom: 10px;">You may benefit from further tests</h2>
@@ -26,23 +26,23 @@
       <div class="nhsuk-card__content" style="padding-top: 0;">
         <div class="nhsuk-inset-text nhsuk-u-margin-top-5 nhsuk-u-margin-bottom-5" style="border-left: 5px #005eb8 solid;">
           <span class="nhsuk-u-visually-hidden">Information: </span>
-          <p>Based on the information you have provided we recommend that you call to book an appointment to see a healthcare professional</p>
+          <p class="nhsuk-body">Based on the information you have provided we recommend that you call to book an appointment to see a healthcare professional</p>
         </div>
         <h3>About the appointment</h3>
-        <p>The appointment will be in person and offered within 2 weeks of your call.  A healthcare professional will review your responses and answer any questions you may have.</p>
-        <p>Your appointment will take place at your local hospital or a mobile unit in a convenient location such as a supermarket car park.</p>
+        <p class="nhsuk-body">The appointment will be in person and offered within 2 weeks of your call.  A healthcare professional will review your responses and answer any questions you may have.</p>
+        <p class="nhsuk-body">Your appointment will take place at your local hospital or a mobile unit in a convenient location such as a supermarket car park.</p>
         <h3>You may be offered a CT scan</h3>
-        <p>If the healthcare professional recommends a CT scan, a machine will take detailed pictures of the inside of your chest. It is non-invasive and pain free. The scan is used to detect any abnormalities in your lungs. </p>
-        <p>For every 100 people who are scanned 2 people are diagnosed with lung cancer. The aim is to find lung cancer early. Early diagnosis can make lung cancer more treatable and make treatment more successful. </p>
+        <p class="nhsuk-body">If the healthcare professional recommends a CT scan, a machine will take detailed pictures of the inside of your chest. It is non-invasive and pain free. The scan is used to detect any abnormalities in your lungs. </p>
+        <p class="nhsuk-body">For every 100 people who are scanned 2 people are diagnosed with lung cancer. The aim is to find lung cancer early. Early diagnosis can make lung cancer more treatable and make treatment more successful. </p>
         <h3>Book a CT scan</h3>
-        <p>Call <a href="tel:02012341234">020 1234 1234</a> to book an appointment.</p>
+        <p class="nhsuk-body">Call <a href="tel:02012341234">020 1234 1234</a> to book an appointment.</p>
       </div>
     </div>
 
     <h2>Find your local Stop Smoking Service</h2>
-    <p>Stopping smoking is the single biggest change you can make for your health. Find local services to help you stop smoking. </p>
+    <p class="nhsuk-body">Stopping smoking is the single biggest change you can make for your health. Find local services to help you stop smoking. </p>
     <h2>Benefits of stopping smoking</h2>
-    <p>Stopping smoking is a great way to stay healthy, protect the health of those around you, and enjoy a better quality of life.</p>
+    <p class="nhsuk-body">Stopping smoking is a great way to stay healthy, protect the health of those around you, and enjoy a better quality of life.</p>
 
     {{ doDontList({
       title: "When you quit, you:",
@@ -70,10 +70,20 @@
     }) }}
 
     <h2>It's never too late to stop</h2>
-    <p>When you stop smoking, your body can repair itself sooner than you might think. It does not matter how old you are, or how long you have smoked.</p>
+    <p class="nhsuk-body">When you stop smoking, your body can repair itself sooner than you might think. It does not matter how old you are, or how long you have smoked.</p>
+
+    {% set insetTextHtml %}
+      <p class="nhsuk-body"><strong>When you stop smoking, in:</strong></p>
+      <ul class="nhsuk-list">
+        <li>2 days, all harmful carbon monoxide leaves your body</li>
+        <li>2 to 12 weeks, your circulation improves</li>
+        <li>3 to 9 months, your lung function and breathing improves</li>
+        <li>1 year, your risk of a heart attack halves compared to a smoker</li>
+      </ul>
+    {% endset %}
 
     {{ insetText({
-      html: "<p><strong>When you stop smoking, in:</strong></p><ul><li>2 days, all harmful carbon monoxide leaves your body</li><li>2 to 12 weeks, your circulation improves</li><li>3 to 9 months, your lung function and breathing improves</li><li>1 year, your risk of a heart attack halves compared to a smoker</li></ul>"
+      html: insetTextHtml
     }) }}
 
     {{ doDontList({
@@ -92,16 +102,24 @@
       ]
     }) }}
 
+    {% set detailsHtml1 %}
+      <p class="nhsuk-body">Nearly two-thirds of people who use vapes with Stop Smoking Services quit smoking.</p><p class="nhsuk-body">Nicotine vapes are less harmful than cigarettes. They don't produce tar or carbon monoxide, which cause cancer, lung disease, and heart disease.</p><p class="nhsuk-body">Vaping mimics smoking with hand-to-mouth movement and helps manage nicotine cravings.</p><p class="nhsuk-body">Vaping also costs about a third as much as smoking, once you have the kit.</p><p class="nhsuk-body">Vaping is not risk-free. It is not recommended for non smokers or those under 18 years old.</p><h3>Useful resources</h3><p class="nhsuk-body">The following links open in a new tab.</p><p class="nhsuk-body">Visit a vape shop or <a href="https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/" target="_blank" rel="noreferrer nofollow">local Stop Smoking Service (opens in new tab)</a> for advice</p><p class="nhsuk-body">Read <a href='https://www.nhs.uk/better-health/quit-smoking/vaping-to-quit-smoking/' target='_blank'>NHS guidance on vaping to quit smoking</a></p><h3>Want to quit vaping?</h3><p class="nhsuk-body">To quit vaping, gradually reduce nicotine strength or usage. Seek advice from a vape shop or local Stop Smoking Service.</p>
+    {% endset %}
+
     {{ details({
       classes: "nhsuk-expander",
       summaryText: "Vaping to quit smoking",
-      html: "<p>Nearly two-thirds of people who use vapes with Stop Smoking Services quit smoking.</p><p>Nicotine vapes are less harmful than cigarettes. They don't produce tar or carbon monoxide, which cause cancer, lung disease, and heart disease.</p><p>Vaping mimics smoking with hand-to-mouth movement and helps manage nicotine cravings.</p><p>Vaping also costs about a third as much as smoking, once you have the kit.</p><p>Vaping is not risk-free. It is not recommended for non smokers or those under 18 years old.</p><h3>Useful resources</h3><p>The following links open in a new tab.</p><p>Visit a vape shop or <a href='https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/' target='_blank'>local Stop Smoking Service</a> for advice</p><p>Read <a href='https://www.nhs.uk/better-health/quit-smoking/vaping-to-quit-smoking/' target='_blank'>NHS guidance on vaping to quit smoking</a></p><h3>Want to quit vaping?</h3><p>To quit vaping, gradually reduce nicotine strength or usage. Seek advice from a vape shop or local Stop Smoking Service.</p>"
+      html: detailsHtml1
     }) }}
 
+    {% set detailsHtml2 %}
+      <p class="nhsuk-body">Quitting smoking can lift your mood, and ease stress, anxiety and depression.</p><p class="nhsuk-body">Smokers often think that smoking helps them relax. But in reality, nicotine cravings increase anxiety and tension.</p><p class="nhsuk-body">To manage cravings, try to:</p><ul class="nhsuk-list"><li>keep busy with hobbies and activities</li><li>relax with breathing techniques or meditation</li><li>seek support from friends, family, or support groups</li><li>use nicotine replacement therapy or medications</li></ul><p class="nhsuk-body">The following links open in a new tab.</p><p class="nhsuk-body">Read <a href="https://www.nhs.uk/live-well/quit-smoking/stopping-smoking-mental-health-benefits/" target="_blank" rel="noreferrer nofollow">NHS guidance on smoking and mental health (opens in new tab)</a></p><p class="nhsuk-body">Get your <a href="https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/your-mind-plan-quiz/" target="_blank" rel="noreferrer nofollow">free Mind Plan (opens in new tab)</a></p>
+    {% endset %}
+
     {{ details({
-      classes: "nhsuk-expander", 
+      classes: "nhsuk-expander",
       summaryText: "Smoking, anxiety and mood",
-      html: "<p>Quitting smoking can lift your mood, and ease stress, anxiety and depression.</p><p>Smokers often think that smoking helps them relax. But in reality, nicotine cravings increase anxiety and tension.</p><p>To manage cravings, try to:</p><ul><li>keep busy with hobbies and activities</li><li>relax with breathing techniques or meditation</li><li>seek support from friends, family, or support groups</li><li>use nicotine replacement therapy or medications</li></ul><p>The following links open in a new tab.</p><p>Read <a href='https://www.nhs.uk/live-well/quit-smoking/stopping-smoking-mental-health-benefits/' target='_blank'>NHS guidance on smoking and mental health</a></p><p>Get your <a href='https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/your-mind-plan-quiz/' target='_blank'>free Mind Plan</a></p>"
+      html: detailsHtml2
     }) }}
 
     {{ doDontList({
@@ -129,18 +147,18 @@
       ]
     }) }}
 
-    <p>The following links open in a new tab:</p>
+    <p class="nhsuk-body">The following links open in a new tab:</p>
 
     <h3>Help us improve this service</h3>
-    <p>Tell us about your experience using this service today.</p>
+    <p class="nhsuk-body">Tell us about your experience using this service today.</p>
     {{ button({
       text: "Give feedback",
       classes: "nhsuk-button--secondary"
     }) }}
-    
+
     <br>
     <a href="results-low-risk">[Show lower risk results page]</a>
-    
+
   </div>
 </div>
 {% endblock %}

@@ -16,26 +16,26 @@
 
     <h2>What happens next</h2>
 
-    <p>You will need to complete your NHS lung cancer screening by phone.</p>
+    <p class="nhsuk-body">You will need to complete your NHS lung cancer screening by phone.</p>
 
-    <p>Call us on <a href="tel:02012341234">020 1234 1234</a></p>
+    <p class="nhsuk-body">Call us on <a href="tel:02012341234">020 1234 1234</a></p>
 
-    <p>An advisor will ask you similar questions about your medical history and lifestyle. They will not have access to the answers you have submitted online. This is because we are testing the online service.</p>
+    <p class="nhsuk-body">An advisor will ask you similar questions about your medical history and lifestyle. They will not have access to the answers you have submitted online. This is because we are testing the online service.</p>
 
-    <p><strong>Phone lines are open:</strong><br>
+    <p class="nhsuk-body"><strong>Phone lines are open:</strong><br>
     Monday to Friday 8am to 8pm<br>
     Saturdays 8am to 1pm</p>
 
-    <p>If we do not hear from you in 14 days we will call you to complete the questionnaire by phone. If you are unable to answer the phone we will call you back.</p>
+    <p class="nhsuk-body">If we do not hear from you in 14 days we will call you to complete the questionnaire by phone. If you are unable to answer the phone we will call you back.</p>
 
-    <p>As a thank you for testing the online service we will offer you a £10 voucher after you have completed your phone appointment.</p>
+    <p class="nhsuk-body">As a thank you for testing the online service we will offer you a £10 voucher after you have completed your phone appointment.</p>
 
     {{ card({
       type: "non-urgent",
       heading: "Speak to a GP if:",
       descriptionHtml: "
-        <p>You have any of the following symptoms:</p>
-        <ul>
+        <p class="nhsuk-body">You have any of the following symptoms:</p>
+        <ul class="nhsuk-list">
           <li>a cough that does not go away after 3 weeks</li>
           <li>a long-standing cough that gets worse</li>
           <li><a href='https://www.nhs.uk/conditions/chest-infection/'>chest infections</a> that keep coming back</li>
@@ -45,16 +45,16 @@
           <li>persistent tiredness or lack of energy</li>
           <li>loss of appetite or unexplained weight loss</li>
         </ul>
-        <p>They could be <a href='https://www.nhs.uk/conditions/lung-cancer/symptoms/'>symptoms of lung cancer</a>. Your GP will ask about your general health and your symptoms.</p>
-        <p>You may be asked to have a <a href='https://www.nhs.uk/conditions/blood-tests/'>blood test</a> to rule out some of the possible causes of your symptoms, such as a <a href='https://www.nhs.uk/conditions/chest-infection/'>chest infection</a>.</p>
+        <p class="nhsuk-body">They could be <a href='https://www.nhs.uk/conditions/lung-cancer/symptoms/'>symptoms of lung cancer</a>. Your GP will ask about your general health and your symptoms.</p>
+        <p class="nhsuk-body">You may be asked to have a <a href='https://www.nhs.uk/conditions/blood-tests/'>blood test</a> to rule out some of the possible causes of your symptoms, such as a <a href='https://www.nhs.uk/conditions/chest-infection/'>chest infection</a>.</p>
       "
     }) }}
 
     <h2>Find your local Stop Smoking Service</h2>
-    <p>Stopping smoking is the single biggest change you can make for your health. <a href="https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/" target="_blank" rel="noopener noreferrer">Find local services to help you stop smoking</a>.</p>
+    <p class="nhsuk-body">Stopping smoking is the single biggest change you can make for your health. <a href="https://www.nhs.uk/better-health/quit-smoking/find-your-local-stop-smoking-service/" target="_blank" rel="noopener noreferrer">Find local services to help you stop smoking</a>.</p>
 
     <h2>Benefits of stopping smoking</h2>
-    <p>When you stop smoking, you lower your risk of cancer, protect the health of those around you, and enjoy a better quality of life.</p>
+    <p class="nhsuk-body">When you stop smoking, you lower your risk of cancer, protect the health of those around you, and enjoy a better quality of life.</p>
 
     {{ doDontList({
       title: "When you quit, you:",
@@ -82,10 +82,20 @@
     }) }}
 
     <h2>It's never too late to stop</h2>
-    <p>When you stop smoking, your body can repair itself sooner than you might think. It does not matter how old you are, or how long you have smoked.</p>
+    <p class="nhsuk-body">When you stop smoking, your body can repair itself sooner than you might think. It does not matter how old you are, or how long you have smoked.</p>
+
+    {% set insetTextHtml %}
+      <p class="nhsuk-body"><strong>When you stop smoking, in:</strong></p>
+      <ul class="nhsuk-list">
+        <li>2 days, all harmful carbon monoxide leaves your body</li>
+        <li>2 to 12 weeks, your circulation improves</li>
+        <li>3 to 9 months, your lung function and breathing improves</li>
+        <li>1 year, your risk of a heart attack halves compared to a smoker</li>
+      </ul>
+    {% endset %}
 
     {{ insetText({
-      html: "<p><strong>When you stop smoking, in:</strong></p><ul><li>2 days, all harmful carbon monoxide leaves your body</li><li>2 to 12 weeks, your circulation improves</li><li>3 to 9 months, your lung function and breathing improves</li><li>1 year, your risk of a heart attack halves compared to a smoker</li></ul>"
+      html: insetTextHtml
     }) }}
 
     {{ doDontList({
@@ -104,10 +114,14 @@
       ]
     }) }}
 
+    {% set detailsHtml %}
+      <p class="nhsuk-body">Quitting smoking can lift your mood, and ease stress, anxiety and depression.</p><p class="nhsuk-body">Smokers often think that smoking helps them relax. But in reality, nicotine cravings increase anxiety and tension.</p><p class="nhsuk-body">To manage cravings, try to:</p><ul class="nhsuk-list"><li>keep busy with hobbies and activities</li><li>relax with breathing techniques or meditation</li><li>seek support from friends, family, or support groups</li><li>use nicotine replacement therapy or medications</li></ul><p class="nhsuk-body">The following links open in a new tab.</p><p class="nhsuk-body">Read <a href="https://www.nhs.uk/live-well/quit-smoking/stopping-smoking-mental-health-benefits/" target="_blank" rel="noopener noreferrer">NHS guidance on smoking and mental health</a></p><p class="nhsuk-body">Get your <a href="https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/your-mind-plan-quiz/" target="_blank" rel="noopener noreferrer">free Mind Plan</a></p>
+    {% endset %}
+
     {{ details({
-      classes: "nhsuk-expander", 
+      classes: "nhsuk-expander",
       summaryText: "Smoking, anxiety and mood",
-      html: "<p>Quitting smoking can lift your mood, and ease stress, anxiety and depression.</p><p>Smokers often think that smoking helps them relax. But in reality, nicotine cravings increase anxiety and tension.</p><p>To manage cravings, try to:</p><ul><li>keep busy with hobbies and activities</li><li>relax with breathing techniques or meditation</li><li>seek support from friends, family, or support groups</li><li>use nicotine replacement therapy or medications</li></ul><p>The following links open in a new tab.</p><p>Read <a href='https://www.nhs.uk/live-well/quit-smoking/stopping-smoking-mental-health-benefits/' target='_blank' rel='noopener noreferrer'>NHS guidance on smoking and mental health</a></p><p>Get your <a href='https://www.nhs.uk/every-mind-matters/mental-wellbeing-tips/your-mind-plan-quiz/' target='_blank' rel='noopener noreferrer'>free Mind Plan</a></p>"
+      html: detailsHtml
     }) }}
 
 {{ doDontList({
@@ -136,7 +150,7 @@
 }) }}
 
     <h2>Help us improve this service</h2>
-    <p>Tell us about your experience using this service today.</p>
+    <p class="nhsuk-body">Tell us about your experience using this service today.</p>
     {{ button({
       text: "Give feedback",
       classes: "nhsuk-button--secondary",
@@ -146,7 +160,7 @@
     <br>
     <!-- Development link - remove in production -->
     <a href="results-high-risk">[Show high risk results page]</a>
-    
+
   </div>
 </div>
 

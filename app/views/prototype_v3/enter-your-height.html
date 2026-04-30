@@ -31,9 +31,9 @@
 
         <h2>Enter your height</h2>
 
-        <p>An accurate measurement is important.</p>
+        <p class="nhsuk-body">An accurate measurement is important.</p>
 
-        <p>You can measure your height at home with a measuring tape. Some pharmacies and gyms have machines to measure your height.</p>
+        <p class="nhsuk-body">You can measure your height at home with a measuring tape. Some pharmacies and gyms have machines to measure your height.</p>
 
         {% if data.heightUnit == "imperial" %}
           <fieldset class="nhsuk-fieldset">
@@ -81,7 +81,7 @@
             </div>
           </fieldset>
           <input type="hidden" name="heightUnit" value="imperial">
-          <p><a href="./enter-your-height?heightUnit=metric&height[feet]=&height[inches]=">Switch to centimetres</a></p>
+          <p class="nhsuk-body"><a href="./enter-your-height?heightUnit=metric&height[feet]=&height[inches]=">Switch to centimetres</a></p>
         {% else %}
           <div class="nhsuk-form-group{% if data.heightErrors.height %} nhsuk-form-group--error{% endif %}">
             <label class="nhsuk-label nhsuk-label--m" for="height-centimetres">
@@ -101,7 +101,7 @@
             </div>
           </div>
           <input type="hidden" name="heightUnit" value="metric">
-          <p><a href="./enter-your-height?heightUnit=imperial&height[centimetres]=">Switch to feet and inches</a></p>
+          <p class="nhsuk-body"><a href="./enter-your-height?heightUnit=imperial&height[centimetres]=">Switch to feet and inches</a></p>
         {% endif %}
 
         {{ button({
