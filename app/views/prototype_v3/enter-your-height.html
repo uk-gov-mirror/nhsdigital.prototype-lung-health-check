@@ -81,7 +81,7 @@
             </div>
           </fieldset>
           <input type="hidden" name="heightUnit" value="imperial">
-          <p class="nhsuk-body"><a href="./enter-your-height?heightUnit=metric&height[feet]=&height[inches]=">Switch to centimetres</a></p>
+          <p class="nhsuk-body"><a href="./enter-your-height?heightUnit=metric&height[feet]=&height[inches]=" class="nhsuk-link">Switch to centimetres</a></p>
         {% else %}
           <div class="nhsuk-form-group{% if data.heightErrors.height %} nhsuk-form-group--error{% endif %}">
             <label class="nhsuk-label nhsuk-label--m" for="height-centimetres">
@@ -101,7 +101,7 @@
             </div>
           </div>
           <input type="hidden" name="heightUnit" value="metric">
-          <p class="nhsuk-body"><a href="./enter-your-height?heightUnit=imperial&height[centimetres]=">Switch to feet and inches</a></p>
+          <p class="nhsuk-body"><a href="./enter-your-height?heightUnit=imperial&height[centimetres]=" class="nhsuk-link">Switch to feet and inches</a></p>
         {% endif %}
 
         {{ button({
