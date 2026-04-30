@@ -39,46 +39,46 @@
 {% endif %}
 
 {% block beforeContent %}
-{{ backLink({
-  href: "javascript:history.back();",
-  text: "Back"
-}) }}
+  {{ backLink({
+    href: "javascript:history.back();",
+    text: "Back"
+  }) }}
 {% endblock %}
 
 {% block content %}
-<div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="quantity-answer" method="post" novalidate>
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <form action="quantity-answer" method="post" novalidate>
 
-      <h1 class="nhsuk-heading-l">{{ pageHeading }}</h1>
+        <h1 class="nhsuk-heading-l">{{ pageHeading }}</h1>
 
-      <p class="nhsuk-body">The question on the next page will ask if the number of {{ sizePlural }} you smoke has changed over time.</p>
+        <p class="nhsuk-body">The question on the next page will ask if the number of {{ sizePlural }} you smoke has changed over time.</p>
 
-      {{ input({
-        label: {
-          text: questionText,
-          classes: "nhsuk-label--m"
-        },
-        hint: {
-          text: "Give an estimate if you are not sure"
-        },
-        id: "cigar" + currentSize + "Quantity",
-        name: "cigar" + currentSize + "Quantity",
-        classes: "nhsuk-input--width-3",
-        suffix: {
-          text: sizePlural
-        },
-        value: data["cigar" + currentSize + "Quantity"],
-        errorMessage: {
-          text: "The number of " + sizePlural + " smoked must be at least 1"
-        } if data["cigar" + currentSize + "Quantity-error"]
-      }) }}
+        {{ input({
+          label: {
+            text: questionText,
+            classes: "nhsuk-label--m"
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "cigar" + currentSize + "Quantity",
+          name: "cigar" + currentSize + "Quantity",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: sizePlural
+          },
+          value: data["cigar" + currentSize + "Quantity"],
+          errorMessage: {
+            text: "The number of " + sizePlural + " smoked must be at least 1"
+          } if data["cigar" + currentSize + "Quantity-error"]
+        }) }}
 
-      {{ button({
-        text: "Continue"
-      }) }}
+        {{ button({
+          text: "Continue"
+        }) }}
 
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 {% endblock %}

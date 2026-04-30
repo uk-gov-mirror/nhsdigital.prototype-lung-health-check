@@ -40,61 +40,61 @@
 {% endif %}
 
 {% block beforeContent %}
-{{ backLink({
-  href: "javascript:history.back();",
-  text: "Back"
-}) }}
+  {{ backLink({
+    href: "javascript:history.back();",
+    text: "Back"
+  }) }}
 {% endblock %}
 
 {% block content %}
-<div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="more-frequency-answer" method="post" novalidate>
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <form action="more-frequency-answer" method="post" novalidate>
 
-      {{ radios({
-        idPrefix: "cigar" + currentSize + "MoreFrequency",
-        name: "cigar" + currentSize + "MoreFrequency",
-        fieldset: {
-          legend: {
-            text: questionText,
-            classes: "nhsuk-fieldset__legend--l",
-            isPageHeading: true
-          }
-        },
-        items: [
-          {
-            value: "Daily",
-            text: "Daily"
-          },
-          {
-            value: "Weekly",
-            text: "Weekly",
-            hint: {
-              text: "For example, on the weekend"
+        {{ radios({
+          idPrefix: "cigar" + currentSize + "MoreFrequency",
+          name: "cigar" + currentSize + "MoreFrequency",
+          fieldset: {
+            legend: {
+              text: questionText,
+              classes: "nhsuk-fieldset__legend--l",
+              isPageHeading: true
             }
           },
-          {
-            value: "Monthly",
-            text: "Monthly",
-            hint: {
-              text: "Select this option if you smoked at least once a month"
+          items: [
+            {
+              value: "Daily",
+              text: "Daily"
+            },
+            {
+              value: "Weekly",
+              text: "Weekly",
+              hint: {
+                text: "For example, on the weekend"
+              }
+            },
+            {
+              value: "Monthly",
+              text: "Monthly",
+              hint: {
+                text: "Select this option if you smoked at least once a month"
+              }
+            },
+            {
+              value: "Yearly",
+              text: "Yearly",
+              hint: {
+                text: "For example, 2 to 3 times a year or fewer"
+              }
             }
-          },
-          {
-            value: "Yearly",
-            text: "Yearly",
-            hint: {
-              text: "For example, 2 to 3 times a year or fewer"
-            }
-          }
-        ]
-      }) }}
+          ]
+        }) }}
 
-      {{ button({
-        text: "Continue"
-      }) }}
+        {{ button({
+          text: "Continue"
+        }) }}
 
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 {% endblock %}

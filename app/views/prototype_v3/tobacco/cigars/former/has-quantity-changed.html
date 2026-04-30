@@ -50,55 +50,55 @@
 {% endif %}
 
 {% block beforeContent %}
-{{ backLink({
-  href: "javascript:history.back();",
-  text: "Back"
-}) }}
+  {{ backLink({
+    href: "javascript:history.back();",
+    text: "Back"
+  }) }}
 {% endblock %}
 
 {% block content %}
-<div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="has-quantity-changed-answer" method="post" novalidate>
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <form action="has-quantity-changed-answer" method="post" novalidate>
 
-      {{ checkboxes({
-        idPrefix: fieldName,
-        name: fieldName,
-        fieldset: {
-          legend: {
-            text: questionText,
-            classes: "nhsuk-fieldset__legend--l",
-            isPageHeading: true
-          }
-        },
-        hint: {
-          text: "Select all that apply"
-        },
-        items: [
-          {
-            value: "more",
-            text: "Yes, I smoked more than " + baselineText
+        {{ checkboxes({
+          idPrefix: fieldName,
+          name: fieldName,
+          fieldset: {
+            legend: {
+              text: questionText,
+              classes: "nhsuk-fieldset__legend--l",
+              isPageHeading: true
+            }
           },
-          {
-            value: "less",
-            text: "Yes, I smoked fewer than " + baselineText
+          hint: {
+            text: "Select all that apply"
           },
-          {
-            divider: "or"
-          },
-          {
-            value: "No",
-            text: "No, it did not change",
-            behaviour: "exclusive"
-          }
-        ]
-      }) }}
+          items: [
+            {
+              value: "more",
+              text: "Yes, I smoked more than " + baselineText
+            },
+            {
+              value: "less",
+              text: "Yes, I smoked fewer than " + baselineText
+            },
+            {
+              divider: "or"
+            },
+            {
+              value: "No",
+              text: "No, it did not change",
+              behaviour: "exclusive"
+            }
+          ]
+        }) }}
 
-      {{ button({
-        text: "Continue"
-      }) }}
+        {{ button({
+          text: "Continue"
+        }) }}
 
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 {% endblock %}

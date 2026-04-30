@@ -40,40 +40,40 @@
 {% endif %}
 
 {% block beforeContent %}
-{{ backLink({
-  href: "javascript:history.back();",
-  text: "Back"
-}) }}
+  {{ backLink({
+    href: "javascript:history.back();",
+    text: "Back"
+  }) }}
 {% endblock %}
 
 {% block content %}
-<div class="nhsuk-grid-row">
-  <div class="nhsuk-grid-column-two-thirds">
-    <form action="less-duration-answer" method="post" novalidate>
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <form action="less-duration-answer" method="post" novalidate>
 
-      {{ input({
-        label: {
-          text: questionText,
-          classes: "nhsuk-label--l",
-          isPageHeading: true
-        },
-        hint: {
-          text: "Give an estimate if you are not sure"
-        },
-        id: "cigar" + currentSize + "FewerDuration",
-        name: "cigar" + currentSize + "FewerDuration",
-        classes: "nhsuk-input--width-3",
-        suffix: {
-          text: "years"
-        },
-        value: data["cigar" + currentSize + "FewerDuration"]
-      }) }}
+        {{ input({
+          label: {
+            text: questionText,
+            classes: "nhsuk-label--l",
+            isPageHeading: true
+          },
+          hint: {
+            text: "Give an estimate if you are not sure"
+          },
+          id: "cigar" + currentSize + "FewerDuration",
+          name: "cigar" + currentSize + "FewerDuration",
+          classes: "nhsuk-input--width-3",
+          suffix: {
+            text: "years"
+          },
+          value: data["cigar" + currentSize + "FewerDuration"]
+        }) }}
 
-      {{ button({
-        text: "Continue"
-      }) }}
+        {{ button({
+          text: "Continue"
+        }) }}
 
-    </form>
+      </form>
+    </div>
   </div>
-</div>
 {% endblock %}

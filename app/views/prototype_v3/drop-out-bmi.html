@@ -24,11 +24,11 @@
       <p class="nhsuk-body">At your face to face appointment a health professional will measure your height and weight. They will also ask you questions to check if you need a lung scan.</p>
 
       <p class="nhsuk-body"><strong>Phone lines are open:</strong><br>
-      Monday to Friday 8am to 8pm<br>
-      Saturdays 8am to 1pm</p>
+        Monday to Friday 8am to 8pm<br>
+        Saturdays 8am to 1pm</p>
 
-      {% set cardDescriptionHtml %}
-        <p class="nhsuk-body">You have any of the following symptoms:</p>
+        {% set cardDescriptionHtml %}
+          <p class="nhsuk-body">You have any of the following symptoms:</p>
           <ul class="nhsuk-list">
             <li>a cough that does not go away after 3 weeks</li>
             <li>a long-standing cough that gets worse</li>
@@ -41,14 +41,14 @@
           </ul>
           <p class="nhsuk-body">They could be <a href="https://www.nhs.uk/conditions/lung-cancer/symptoms/" class="nhsuk-link">symptoms of lung cancer</a>. Your GP will ask about your general health and your symptoms.</p>
           <p class="nhsuk-body">You may be asked to have a <a href="https://www.nhs.uk/conditions/blood-tests/" class="nhsuk-link">blood test</a> to rule out some of the possible causes of your symptoms, such as a <a href="https://www.nhs.uk/conditions/chest-infection/" class="nhsuk-link">chest infection</a>.</p>
-      {% endset %}
+        {% endset %}
 
-      {{ card({
-        type: "non-urgent",
-        heading: "Speak to a GP if:",
-        descriptionHtml: cardDescriptionHtml
-      }) }}
+        {{ card({
+          type: "non-urgent",
+          heading: "Speak to a GP if:",
+          descriptionHtml: cardDescriptionHtml
+        }) }}
 
+      </div>
     </div>
-  </div>
-{% endblock %}
+  {% endblock %}

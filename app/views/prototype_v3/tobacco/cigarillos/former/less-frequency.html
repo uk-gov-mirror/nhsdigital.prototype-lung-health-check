@@ -10,9 +10,9 @@
   }) }}
 {% endblock %}
 {% block content %}
-<div class="nhsuk-grid-row">
-<div class="nhsuk-grid-column-two-thirds">
-<form action="/prototype_v3/tobacco/cigarillos/former/less-frequency-answer" method="post">
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      <form action="/prototype_v3/tobacco/cigarillos/former/less-frequency-answer" method="post">
 
         {% set frequencyText = "a day" %}
         {% if data.cigarillosFormerFrequency == "Weekly" %}
@@ -28,7 +28,7 @@
         {{ radios({
           idPrefix: "cigarillosFormerLessFrequency",
           name: "cigarillosFormerLessFrequency",
-        value: data["cigarillosFormerLessFrequency"],
+          value: data["cigarillosFormerLessFrequency"],
           items: [
             {
               value: "Daily",
@@ -61,7 +61,7 @@
         {{ button({
           text: "Continue"
         }) }}
-</form>
-</div>
-</div>
+      </form>
+    </div>
+  </div>
 {% endblock %}
